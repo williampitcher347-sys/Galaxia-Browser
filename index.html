@@ -4,116 +4,171 @@
   <title>Galaxia Browser</title>
   <style>
     body {
-      background: radial-gradient(circle at top, #041b3b, #000);
+      margin: 0;
+      background: radial-gradient(circle at top, #111 0, #000 60%);
       color: #0ff;
       font-family: monospace;
-      margin: 0;
-      padding: 0;
     }
-    header {
-      background: #020b1a;
-      padding: 15px;
-      text-align: center;
-      font-size: 24px;
-      border-bottom: 2px solid #0ff;
-      letter-spacing: 4px;
-    }
-    #top-bar {
+    .top-bar {
       display: flex;
-      gap: 8px;
-      padding: 10px;
-      background: #031124;
-      border-bottom: 1px solid #0ff;
       align-items: center;
+      padding: 8px 10px;
+      background: #05070b;
+      border-bottom: 1px solid #0ff3;
+      box-shadow: 0 0 10px #0ff3;
     }
-    #url {
+    .logo {
+      font-weight: bold;
+      margin-right: 10px;
+      color: #0ff;
+      letter-spacing: 2px;
+    }
+    .url-bar {
+      flex: 1;
+      display: flex;
+      gap: 6px;
+    }
+    .url-bar input {
       flex: 1;
       padding: 6px 8px;
-      background: #020814;
-      border: 1px solid #0ff;
+      background: #020308;
+      border: 1px solid #0ff5;
       color: #0ff;
-      font-family: monospace;
+      border-radius: 3px;
+      outline: none;
     }
-    button {
-      background: #0ff;
-      color: #000;
-      border: none;
+    .url-bar button {
       padding: 6px 10px;
+      background: #0ff2;
+      border: 1px solid #0ff8;
+      color: #0ff;
       cursor: pointer;
-      font-family: monospace;
+      border-radius: 3px;
     }
-    #tabs {
+    .url-bar button:hover {
+      background: #0ff4;
+    }
+    .tabs {
       display: flex;
       gap: 6px;
       padding: 6px 10px;
-      background: #020814;
-      border-bottom: 1px solid #0ff;
-      font-size: 12px;
+      background: #05070b;
+      border-bottom: 1px solid #0ff3;
     }
     .tab {
-      padding: 4px 8px;
-      border: 1px solid #0ff;
+      padding: 4px 10px;
+      border-radius: 3px;
+      border: 1px solid #0ff3;
       cursor: pointer;
+      font-size: 13px;
+      color: #0ff9;
     }
     .tab.active {
-      background: #0ff;
+      background: #0ff2;
       color: #000;
+      border-color: #0ff;
+      box-shadow: 0 0 8px #0ff6;
+    }
+    .content {
+      height: calc(100vh - 80px);
+      background: #020308;
     }
     iframe {
       width: 100%;
-      height: calc(100vh - 140px);
+      height: 100%;
       border: none;
       background: #000;
     }
   </style>
 </head>
 <body>
+  <div class="top-bar">
+    <div class="logo">GALAXIA</div>
+    <div class="url-bar">
+      <input id="url" type="text" placeholder="galaxia://home or google.com">
+      <button id="goBtn">GO</button>
+    </div>
+  </div>
 
-<header>GALAXIA BROWSER</header>
+  <div class="tabs">
+    <div class="tab active" data-target="home">HOME</div>
+    <div class="tab" data-target="apps">APPS</div>
+    <div class="tab" data-target="about">ABOUT</div>
+  </div>
 
-<div id="top-bar">
-  <span>URL:</span>
-  <input id="url" type="text" placeholder="galaxia://home">
-  <button id="goBtn">GO</button>
-</div>
+  <div class="content">
+    <iframe id="frame" src="home.html"></iframe>
+  </div>
 
-<div id="tabs">
-  <div class="tab active" data-target="home">HOME</div>
-  <div class="tab" data-target="apps">APPS</div>
-  <div class="tab" data-target="about">ABOUT</div>
-</div>
+  <script>
+    const urlInput = document.getElementById('url');
+    const goBtn = document.getElementById('goBtn');
+    const iframe = document.getElementById('frame');
+    const tabs = document.querySelectorAll('.tab');
 
-<iframe id="viewer" src="home.html"></iframe>
+    function setTab(page) {
+      // Update tabs
+      tabs.forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.target === page);
+      });
 
-<script>
-  const viewer = document.getElementById('viewer');
-  const urlInput = document.getElementById('url');
-  const goBtn = document.getElementById('goBtn');
-  const tabs = document.querySelectorAll('.tab');
-
-  function setTab(target) {
-    tabs.forEach(t => t.classList.remove('active'));
-    document.querySelector(`.tab[data-target="${target}"]`).classList.add('active');
-    viewer.src = target + '.html';
-    urlInput.value = 'galaxia://' + target;
-  }
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      setTab(tab.dataset.target);
-    });
-  });
-
-  goBtn.addEventListener('click', () => {
-    const value = urlInput.value.trim();
-    if (value.startsWith('galaxia://')) {
-      const page = value.replace('galaxia://', '');
-      setTab(page);
+      // Load internal page
+      if (page === 'home') {
+        iframe.src = 'home.html';
+        urlInput.value = 'galaxia://home';
+      } else if (page === 'apps') {
+        iframe.src = 'apps.html';
+        urlInput.value = 'galaxia://apps';
+      } else if (page === 'about') {
+        iframe.src = 'about.html';
+        urlInput.value = 'galaxia://about';
+      } else {
+        // Unknown internal page – you could point this to a custom 404 later
+        iframe.src = 'home.html';
+        urlInput.value = 'galaxia://home';
+      }
     }
-  });
 
-  setTab('home');
-</script>
+    // Tab click handling
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.target;
+        setTab(target);
+      });
+    });
 
+    // GO button logic
+    goBtn.addEventListener('click', () => {
+      const value = urlInput.value.trim();
+
+      // Internal Galaxia protocol
+      if (value.startsWith('galaxia://')) {
+        const page = value.replace('galaxia://', '');
+        setTab(page);
+        return;
+      }
+
+      // External full URLs
+      if (value.startsWith('http://') || value.startsWith('https://')) {
+        iframe.src = value;
+        return;
+      }
+
+      // Bare domains or search-like input → assume https
+      if (value.length > 0) {
+        iframe.src = 'https://' + value;
+      }
+    });
+
+    // Allow Enter key in URL bar
+    urlInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        goBtn.click();
+      }
+    });
+
+    // Initial state
+    setTab('home');
+  </script>
 </body>
 </html>
