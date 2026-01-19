@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Galaxia Browser</title>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #041b3b, #000);
+      color: #0ff;
+      font-family: monospace;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #020b1a;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+      border-bottom: 2px solid #0ff;
+      letter-spacing: 4px;
+    }
+    #top-bar {
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+      background: #031124;
+      border-bottom: 1px solid #0ff;
+      align-items: center;
+    }
+    #url {
+      flex: 1;
+      padding: 6px 8px;
+      background: #020814;
+      border: 1px solid #0ff;
+      color: #0ff;
+      font-family: monospace;
+    }
+    button {
+      background: #0ff;
+      color: #000;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-family: monospace;
+    }
+    #tabs {
+      display: flex;
+      gap: 6px;
+      padding: 6px 10px;
+      background: #020814;
+      border-bottom: 1px solid #0ff;
+      font-size: 12px;
+    }
+    .tab {
+      padding: 4px 8px;
+      border: 1px solid #0ff;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: #0ff;
+      color: #000;
+    }
+    iframe {
+      width: 100%;
+      height: calc(100vh - 140px);
+      border: none;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+
+<header>GALAXIA BROWSER</header>
+
+<div id="top-bar">
+  <span>URL:</span>
+  <input id="url" type="text" placeholder="galaxia://home">
+  <button id="goBtn">GO</button>
+</div>
+
+<div id="tabs">
+  <div class="tab active" data-target="home">HOME</div>
+  <div class="tab" data-target="apps">APPS</div>
+  <div class="tab" data-target="about">ABOUT</div>
+</div>
+
+<iframe id="viewer" src="home.html"></iframe>
+
+<script>
+  const viewer = document.getElementById('viewer');
+  const urlInput = document.getElementById('url');
+  const goBtn = document.getElementById('goBtn');
+  const tabs = document.querySelectorAll('.tab');
+
+  function setTab(target) {
+    tabs.forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[data-target="${target}"]`).classList.add('active');
+    viewer.src = target + '.html';
+    urlInput.value = 'galaxia://' + target;
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      setTab(tab.dataset.target);
+    });
+  });
+
+  goBtn.addEventListener('click', () => {
+    const value = urlInput.value.trim();
+    if (value.startsWith('galaxia://')) {
+      const page = value.replace('galaxia://', '');
+      setTab(page);
+    }
+  });
+
+  setTab('home');
+</script>
+
+</body>
+</html>
