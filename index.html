@@ -240,5 +240,70 @@
 
   setTab("home");
 </script>
+const urlInput = document.getElementById("url");
+const goBtn = document.getElementById("goBtn");
+const iframe = document.getElementById("frame");
+
+// PROXY SETTINGS
+let proxyEnabled = false;
+
+// Choose ONE proxy:
+let proxyURL = "https://api.codetabs.com/v1/proxy/?quest=";
+// let proxyURL = "https://thingproxy.freeboard.io/fetch/";
+// let proxyURL = "https://api.allorigins.win/raw?url=";
+
+function enableProxy() {
+  proxyEnabled = true;
+  console.log("Proxy enabled");
+}
+
+function disableProxy() {
+  proxyEnabled = false;
+  console.log("Proxy disabled");
+}
+
+function tryProxy(url) {
+  return proxyURL + encodeURIComponent(url);
+}
+
+function setTab(page) {
+  iframe.src = page + ".html";
+}
+
+function loadURL(value) {
+  let url = value.trim();
+
+  if (url.startsWith("galaxia://")) {
+    const page = url.replace("galaxia://", "");
+    setTab(page);
+    return;
+  }
+
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    if (url.includes(".")) {
+      url = "https://" + url;
+    } else {
+      iframe.src = "home.html";
+      return;
+    }
+  }
+
+  if (proxyEnabled) {
+    iframe.src = tryProxy(url);
+    return;
+  }
+
+  iframe.src = url;
+}
+
+goBtn.addEventListener("click", () => {
+  loadURL(urlInput.value);
+});
+
+urlInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") goBtn.click();
+});
+
+setTab("home");
 </body>
 </html>
