@@ -7,81 +7,94 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      background: radial-gradient(ellipse at center, #020308 0%, #000000 100%);
+      background: #000;
       font-family: system-ui, sans-serif;
       color: #e6ffff;
       overflow: hidden;
     }
 
+    /* Animated starfield background */
     .stars {
-      position: absolute;
+      position: fixed;
       width: 100%;
       height: 100%;
-      background: url('https://raw.githubusercontent.com/galaxia-assets/starfield/main/stars.gif') center center / cover no-repeat;
+      background: url('https://i.imgur.com/9aKxH8Z.gif') center/cover no-repeat;
+      opacity: 0.25;
       z-index: -1;
-      opacity: 0.3;
     }
 
     .container {
+      height: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: 100%;
+      align-items: center;
+      gap: 50px;
       text-align: center;
-      gap: 40px;
     }
 
+    /* Neon title */
     h1 {
-      font-size: 48px;
-      letter-spacing: 0.1em;
+      font-size: 60px;
       text-transform: uppercase;
+      letter-spacing: 0.15em;
       color: #00ffff;
-      text-shadow: 0 0 12px #00ffff;
+      text-shadow: 0 0 12px #00ffff, 0 0 24px #00ffff;
+      animation: glow 3s ease-in-out infinite alternate;
     }
 
+    @keyframes glow {
+      from { text-shadow: 0 0 12px #00ffff; }
+      to { text-shadow: 0 0 28px #00ffff; }
+    }
+
+    /* Button grid */
     .btn-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 20px;
       width: 80%;
       max-width: 600px;
     }
 
+    /* Buttons */
     .btn {
-      padding: 16px;
-      border-radius: 12px;
-      background: rgba(0,255,255,0.1);
-      border: 1px solid rgba(0,255,255,0.5);
+      padding: 18px;
+      border-radius: 14px;
+      background: rgba(0,255,255,0.12);
+      border: 1px solid rgba(0,255,255,0.4);
       color: #e6ffff;
-      font-size: 16px;
+      font-size: 17px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.25s ease;
     }
 
+    /* Hover effect */
     .btn:hover {
-      background: rgba(0,255,255,0.3);
-      border-color: rgba(0,255,255,0.8);
-      box-shadow: 0 0 12px rgba(0,255,255,0.4);
+      background: rgba(0,255,255,0.28);
+      border-color: rgba(0,255,255,0.9);
+      box-shadow: 0 0 20px rgba(0,255,255,0.6);
+      transform: scale(1.08);
     }
 
     @media (max-width: 600px) {
-      h1 {
-        font-size: 32px;
-      }
-      .btn {
-        font-size: 14px;
-        padding: 12px;
-      }
+      h1 { font-size: 40px; }
+      .btn { font-size: 15px; padding: 14px; }
     }
   </style>
 </head>
+
 <body>
   <div class="stars"></div>
+
   <div class="container">
     <h1>Galaxia</h1>
+
     <div class="btn-grid">
       <a href="browser.html" class="btn">Browser</a>
       <a href="apps.html" class="btn">Apps</a>
