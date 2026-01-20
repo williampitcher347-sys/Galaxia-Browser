@@ -3,372 +3,166 @@
 <head>
   <title>Galaxia Home</title>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      background: #000;
-      color: #0ff;
-      font-family: monospace;
-      overflow: hidden;
+      padding: 0;
     }
 
-    /* Starfield background */
-    .starfield {
+    body {
+      height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #02040a 0%, #000 70%);
+      font-family: system-ui, sans-serif;
+      color: #b8ffff;
+    }
+
+    /* Floating stars */
+    .stars, .stars2, .stars3 {
       position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at top, #111 0, #000 60%);
-      overflow: hidden;
-      z-index: -2;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background-repeat: repeat;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .star {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: #0ff;
-      opacity: 0.6;
-      border-radius: 50%;
-      animation: drift 12s linear infinite;
+    .stars {
+      background-image:
+        radial-gradient(2px 2px at 20px 20px, #fff, transparent),
+        radial-gradient(2px 2px at 80px 120px, #0ff, transparent),
+        radial-gradient(2px 2px at 200px 80px, #f0f, transparent);
+      animation: drift 80s linear infinite;
+      opacity: 0.4;
+    }
+
+    .stars2 {
+      background-image:
+        radial-gradient(1px 1px at 50px 50px, #0ff, transparent),
+        radial-gradient(1px 1px at 150px 200px, #fff, transparent),
+        radial-gradient(1px 1px at 300px 150px, #f0f, transparent);
+      animation: drift 120s linear infinite reverse;
+      opacity: 0.3;
+    }
+
+    .stars3 {
+      background-image:
+        radial-gradient(1px 1px at 100px 100px, #fff, transparent),
+        radial-gradient(1px 1px at 250px 250px, #0ff, transparent),
+        radial-gradient(1px 1px at 400px 200px, #f0f, transparent);
+      animation: drift 200s linear infinite;
+      opacity: 0.2;
     }
 
     @keyframes drift {
-      from { transform: translateY(0); }
-      to { transform: translateY(100vh); }
+      from { transform: translate3d(0, 0, 0); }
+      to   { transform: translate3d(-50%, -50%, 0); }
     }
 
-    /* Scanline overlay */
-    .scanlines {
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(0, 255, 255, 0.06),
-        rgba(0, 255, 255, 0.06) 1px,
-        transparent 1px,
-        transparent 3px
-      );
-      mix-blend-mode: screen;
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    /* Boot screen */
-    .boot-screen {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      color: #0f0;
-      font-size: 16px;
-      padding: 20px;
-      z-index: 10;
-    }
-
-    .boot-line {
-      opacity: 0;
-      margin: 4px 0;
-      white-space: pre;
-    }
-
-    .boot-line.show {
-      opacity: 1;
-      transition: opacity 0.3s;
-    }
-
-    /* Main dashboard */
-    .dashboard {
-      opacity: 0;
-      transition: opacity 0.8s;
-      padding: 30px;
+    /* Center container */
+    .center {
       position: relative;
-      z-index: 1;
-    }
-
-    /* Hex grid overlay */
-    .hex-grid {
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(30deg, rgba(0,255,255,0.08) 12%, transparent 12.5%, transparent 87%, rgba(0,255,255,0.08) 87.5%, rgba(0,255,255,0.08)),
-        linear-gradient(150deg, rgba(0,255,255,0.08) 12%, transparent 12.5%, transparent 87%, rgba(0,255,255,0.08) 87.5%, rgba(0,255,255,0.08)),
-        linear-gradient(90deg, rgba(0,255,255,0.05) 2%, transparent 2.5%, transparent 97%, rgba(0,255,255,0.05) 97.5%, rgba(0,255,255,0.05));
-      background-size: 80px 140px;
-      background-position: 0 0, 0 0, 0 0;
-      opacity: 0.25;
-      z-index: -1;
-    }
-
-    /* Glow animation */
-    @keyframes glow {
-      0% { box-shadow: 0 0 6px #0ff4; }
-      50% { box-shadow: 0 0 14px #0ff9; }
-      100% { box-shadow: 0 0 6px #0ff4; }
-    }
-
-    /* Title + logo */
-    .title-row {
+      z-index: 2;
+      height: 100%;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .title {
-      font-size: 32px;
-      text-shadow: 0 0 12px #0ff;
-      animation: flicker 3s infinite;
-    }
-
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      45% { opacity: 0.9; }
-      46% { opacity: 0.4; }
-      47% { opacity: 1; }
-      70% { opacity: 0.95; }
-      71% { opacity: 0.5; }
-      72% { opacity: 1; }
-    }
-
-    .logo-orb {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      border: 2px solid #0ff;
-      box-shadow: 0 0 15px #0ff;
-      display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      font-size: 18px;
-      animation: spinPulse 6s linear infinite;
-    }
-
-    @keyframes spinPulse {
-      0% { transform: rotate(0deg) scale(1); }
-      50% { transform: rotate(180deg) scale(1.1); }
-      100% { transform: rotate(360deg) scale(1); }
-    }
-
-    /* Dashboard grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      align-items: center;
       gap: 20px;
+      text-align: center;
+      padding: 20px;
     }
 
-    /* Panels */
-    .panel {
-      background: rgba(2, 11, 18, 0.9);
-      border: 1px solid #0ff4;
-      padding: 20px;
-      border-radius: 6px;
-      animation: glow 4s infinite;
-      box-shadow: 0 0 10px #0ff3;
-      transform: translateY(20px);
+    /* Glowing orb logo */
+    .orb {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #0ff 40%, #00f 70%, #000 100%);
+      box-shadow:
+        0 0 40px rgba(0, 255, 255, 0.8),
+        0 0 80px rgba(0, 0, 255, 0.6),
+        inset 0 0 40px rgba(255, 255, 255, 0.4);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%      { transform: scale(1.15); opacity: 0.85; }
+    }
+
+    /* Title */
+    h1 {
+      font-size: 48px;
+      letter-spacing: 0.2em;
+      color: #e6ffff;
+      text-shadow:
+        0 0 20px #0ff,
+        0 0 40px #00f;
+      animation: fadeIn 2s ease forwards;
       opacity: 0;
     }
 
-    .panel.show {
-      transform: translateY(0);
-      opacity: 1;
-      transition: transform 0.5s ease, opacity 0.5s ease;
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
 
-    .panel h2 {
-      margin-top: 0;
-      color: #0ff;
-      text-shadow: 0 0 8px #0ff;
+    /* Subtitle */
+    p {
+      font-size: 18px;
+      max-width: 600px;
+      opacity: 0.7;
+      animation: fadeIn 3s ease forwards;
+      opacity: 0;
     }
 
-    .stat {
-      font-size: 14px;
-      color: #8ff;
-      margin: 6px 0;
-    }
-
-    /* Fake bars */
-    .bar {
-      width: 100%;
-      height: 8px;
-      background: #022;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 4px;
-      margin-bottom: 8px;
-    }
-
-    .bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #0f0, #0ff);
-      width: 40%;
-      transition: width 1s;
-    }
-
-    /* Quick action buttons */
+    /* Buttons */
     .btn {
-      display: inline-block;
-      margin: 6px 0;
-      padding: 6px 10px;
-      border-radius: 4px;
-      border: 1px solid #0ff6;
-      color: #0ff;
+      margin-top: 20px;
+      padding: 12px 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 255, 255, 0.6);
+      background: radial-gradient(circle at top, rgba(0, 255, 255, 0.25), rgba(0, 0, 0, 0.9));
+      color: #e6ffff;
+      font-size: 14px;
+      letter-spacing: 0.1em;
       cursor: pointer;
-      font-size: 13px;
-      transition: 0.2s;
+      transition: 0.2s ease;
+      box-shadow:
+        0 0 12px rgba(0, 255, 255, 0.4),
+        0 0 30px rgba(0, 0, 0, 0.9);
+      animation: fadeIn 4s ease forwards;
+      opacity: 0;
     }
 
     .btn:hover {
-      background: #0ff3;
-      color: #000;
-      box-shadow: 0 0 10px #0ff;
+      transform: translateY(-2px) scale(1.05);
+      border-color: #fff;
+      background: radial-gradient(circle at top, rgba(0, 255, 255, 0.4), rgba(0, 0, 0, 0.95));
+      box-shadow:
+        0 0 20px rgba(0, 255, 255, 0.8),
+        0 0 50px rgba(0, 0, 0, 1);
     }
 
-    /* Footer */
-    .footer {
-      margin-top: 30px;
-      text-align: center;
-      color: #0ff6;
-      font-size: 14px;
-    }
   </style>
 </head>
+
 <body>
+  <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
 
-  <!-- Starfield -->
-  <div class="starfield" id="starfield"></div>
-  <div class="hex-grid"></div>
-  <div class="scanlines"></div>
+  <div class="center">
+    <div class="orb"></div>
+    <h1>GALAXIA</h1>
+    <p>Your gateway to the neon cosmos.  
+       Explore the web through a new dimension.</p>
 
-  <!-- Boot screen -->
-  <div class="boot-screen" id="boot">
-    <div class="boot-line" id="b1">GALAXIA CORE ONLINE...</div>
-    <div class="boot-line" id="b2">INITIALIZING SYSTEM MODULES...</div>
-    <div class="boot-line" id="b3">SYNCHRONIZING INTERFACE...</div>
-    <div class="boot-line" id="b4">AUTHENTICATION: WILLIAM</div>
-    <div class="boot-line" id="b5">STATUS: COMMAND ACCESS GRANTED</div>
-    <div class="boot-line" id="b6">WELCOME BACK, COMMANDER.</div>
+    <button class="btn" onclick="window.location.href='galaxia://apps'">
+      Open Apps
+    </button>
   </div>
-
-  <!-- Main dashboard -->
-  <div class="dashboard" id="dash">
-
-    <div class="title-row">
-      <div class="title">GALAXIA SYSTEM DASHBOARD</div>
-      <div class="logo-orb">G</div>
-    </div>
-
-    <div class="grid">
-
-      <!-- System Status -->
-      <div class="panel" id="p1">
-        <h2>System Status</h2>
-        <div class="stat">CPU Load: <span id="cpuVal">12%</span></div>
-        <div class="bar"><div class="bar-fill" id="cpuBar"></div></div>
-
-        <div class="stat">Memory Usage: <span id="ramVal">48%</span></div>
-        <div class="bar"><div class="bar-fill" id="ramBar"></div></div>
-
-        <div class="stat">Network: Stable</div>
-        <div class="stat">Uptime: 3h 22m</div>
-      </div>
-
-      <!-- Quick Actions -->
-      <div class="panel" id="p2">
-        <h2>Quick Actions</h2>
-        <div class="stat">Use these to jump around Galaxia:</div>
-        <div class="btn" onclick="parent.document.querySelector('.tab[data-target=&quot;apps&quot;]').click()">Open Apps</div><br>
-        <div class="btn" onclick="parent.document.querySelector('.tab[data-target=&quot;about&quot;]').click()">View About Page</div><br>
-        <div class="btn">Check Updates (coming soon)</div><br>
-        <div class="btn">System Settings (coming soon)</div>
-      </div>
-
-      <!-- System Info -->
-      <div class="panel" id="p3">
-        <h2>System Info</h2>
-        <div class="stat">Galaxia OS Version: 1.0</div>
-        <div class="stat">Build: Stable</div>
-        <div class="stat">Developer: William</div>
-        <div class="stat">Theme: Neon Pulse</div>
-        <div class="stat">Mode: Command Console</div>
-      </div>
-
-    </div>
-
-    <div class="footer">Welcome back, Commander.</div>
-
-  </div>
-
-  <script>
-    // Starfield generation
-    const starfield = document.getElementById('starfield');
-    for (let i = 0; i < 80; i++) {
-      const s = document.createElement('div');
-      s.className = 'star';
-      s.style.left = Math.random() * 100 + 'vw';
-      s.style.top = Math.random() * 100 + 'vh';
-      s.style.animationDelay = (Math.random() * 12) + 's';
-      starfield.appendChild(s);
-    }
-
-    // Boot sequence
-    const boot = document.getElementById('boot');
-    const dash = document.getElementById('dash');
-    const lines = [
-      document.getElementById('b1'),
-      document.getElementById('b2'),
-      document.getElementById('b3'),
-      document.getElementById('b4'),
-      document.getElementById('b5'),
-      document.getElementById('b6')
-    ];
-
-    let step = 0;
-    function showNextLine() {
-      if (step < lines.length) {
-        lines[step].classList.add('show');
-        step++;
-        setTimeout(showNextLine, 500);
-      } else {
-        setTimeout(() => {
-          boot.style.opacity = '0';
-          setTimeout(() => {
-            boot.style.display = 'none';
-            dash.style.opacity = '1';
-            // Show panels with stagger
-            ['p1','p2','p3'].forEach((id, i) => {
-              setTimeout(() => {
-                document.getElementById(id).classList.add('show');
-              }, i * 200);
-            });
-            animateStats();
-          }, 500);
-        }, 600);
-      }
-    }
-    showNextLine();
-
-    // Fake stat animation
-    function animateStats() {
-      const cpuVal = document.getElementById('cpuVal');
-      const ramVal = document.getElementById('ramVal');
-      const cpuBar = document.getElementById('cpuBar');
-      const ramBar = document.getElementById('ramBar');
-
-      function randRange(base, spread) {
-        return base + Math.round((Math.random() - 0.5) * spread);
-      }
-
-      setInterval(() => {
-        const cpu = Math.min(100, Math.max(5, randRange(18, 20)));
-        const ram = Math.min(100, Math.max(20, randRange(52, 18)));
-        cpuVal.textContent = cpu + '%';
-        ramVal.textContent = ram + '%';
-        cpuBar.style.width = cpu + '%';
-        ramBar.style.width = ram + '%';
-      }, 1500);
-    }
-  </script>
-
 </body>
 </html>
