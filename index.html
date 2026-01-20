@@ -13,7 +13,7 @@
       color: #0ff;
     }
 
-    /* --- TRIPLE STARFIELD BACKGROUND --- */
+    /* Triple starfield */
     .stars, .stars2, .stars3 {
       position: fixed;
       width: 200%;
@@ -27,41 +27,47 @@
       animation: drift 120s linear infinite;
     }
 
-    .stars {
-      background-image: url('https://i.imgur.com/9aKxH8Z.gif');
-      animation-duration: 140s;
-    }
-
-    .stars2 {
-      background-image: url('https://i.imgur.com/9aKxH8Z.gif');
-      animation-duration: 100s;
-      opacity: 0.16;
-    }
-
-    .stars3 {
-      background-image: url('https://i.imgur.com/9aKxH8Z.gif');
-      animation-duration: 70s;
-      opacity: 0.1;
-    }
+    .stars { background-image: url('https://i.imgur.com/9aKxH8Z.gif'); animation-duration: 140s; }
+    .stars2 { background-image: url('https://i.imgur.com/9aKxH8Z.gif'); animation-duration: 100s; opacity: 0.16; }
+    .stars3 { background-image: url('https://i.imgur.com/9aKxH8Z.gif'); animation-duration: 70s; opacity: 0.1; }
 
     @keyframes drift {
       from { transform: translate(0,0) scale(1.2); }
       to { transform: translate(20%,20%) scale(1.2); }
     }
 
-    /* --- TOP NAV BAR --- */
+    /* Top bar */
     .top-bar {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 14px;
+      padding: 16px;
       background: rgba(0, 20, 30, 0.55);
-      border-bottom: 1px solid rgba(0, 255, 255, 0.25);
       backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,255,255,0.25);
       box-shadow: 0 0 20px rgba(0,255,255,0.15);
     }
 
-    /* URL INPUT */
+    /* Holographic underline */
+    .top-bar::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -20%;
+      width: 40%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #0ff, transparent);
+      animation: sweep 4s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes sweep {
+      from { transform: translateX(0); }
+      to { transform: translateX(300%); }
+    }
+
+    /* Search bar */
     .url-input {
       flex: 1;
       padding: 12px 18px;
@@ -76,12 +82,13 @@
 
     .url-input:focus {
       border-color: #0ff;
-      box-shadow: 0 0 14px rgba(0,255,255,0.5);
+      box-shadow: 0 0 18px rgba(0,255,255,0.5);
+      transform: scale(1.02);
     }
 
-    /* GO BUTTON */
+    /* Go button */
     .btn {
-      padding: 10px 20px;
+      padding: 10px 22px;
       border-radius: 999px;
       border: 1px solid rgba(0,255,255,0.6);
       background: rgba(0,0,0,0.8);
@@ -94,39 +101,15 @@
     .btn:hover {
       background: rgba(0,255,255,0.25);
       box-shadow: 0 0 14px rgba(0,255,255,0.5);
-      transform: scale(1.05);
+      transform: translateY(-2px) scale(1.05);
     }
 
-    /* --- SHORTCUT REMINDER PANEL --- */
-    .shortcut-panel {
-      padding: 10px;
-      text-align: center;
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      background: rgba(0, 20, 30, 0.45);
-      border-bottom: 1px solid rgba(0,255,255,0.25);
-      backdrop-filter: blur(10px);
-      color: #b8ffff;
-    }
-
-    .shortcut-panel span {
-      margin: 0 12px;
-      opacity: 0.85;
-      transition: 0.2s;
-      cursor: pointer;
-    }
-
-    .shortcut-panel span:hover {
-      color: #0ff;
-      text-shadow: 0 0 8px #0ff;
-    }
-
-    /* --- IFRAME AREA --- */
+    /* Iframe */
     .iframe-wrap {
       position: absolute;
       bottom: 0;
       width: 100%;
-      height: calc(100% - 130px);
+      height: calc(100% - 80px);
       background: rgba(0,0,0,0.6);
       border-top: 1px solid rgba(0,255,255,0.25);
     }
@@ -145,21 +128,13 @@
   <div class="stars2"></div>
   <div class="stars3"></div>
 
-  <!-- TOP BAR WITH URL + GO BUTTON -->
+  <!-- Top bar -->
   <div class="top-bar">
     <input id="url" class="url-input" placeholder="Enter URL or Galaxia:home">
     <button id="goBtn" class="btn">Go</button>
   </div>
 
-  <!-- SHORTCUT REMINDER -->
-  <div class="shortcut-panel">
-    <span>Galaxia:home</span>
-    <span>Galaxia:apps</span>
-    <span>Galaxia:about</span>
-    <span>Galaxia:chatroom</span>
-  </div>
-
-  <!-- IFRAME -->
+  <!-- Iframe -->
   <div class="iframe-wrap">
     <iframe id="frame" src="home.html"></iframe>
   </div>
