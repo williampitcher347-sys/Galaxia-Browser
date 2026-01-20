@@ -1,19 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Galaxia – Home</title>
+  <title>Galaxia Home</title>
   <style>
     body {
-      background: black;
+      margin: 0;
+      background: #000;
       color: #0ff;
       font-family: monospace;
+      overflow: hidden;
+    }
+
+    /* Glow animation */
+    @keyframes glow {
+      0% { box-shadow: 0 0 6px #0ff4; }
+      50% { box-shadow: 0 0 14px #0ff9; }
+      100% { box-shadow: 0 0 6px #0ff4; }
+    }
+
+    /* Page container */
+    .container {
+      padding: 30px;
+    }
+
+    /* Title */
+    .title {
+      font-size: 32px;
+      text-shadow: 0 0 12px #0ff;
+      margin-bottom: 20px;
+    }
+
+    /* Dashboard grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    /* Panels */
+    .panel {
+      background: #020b12;
+      border: 1px solid #0ff4;
       padding: 20px;
+      border-radius: 6px;
+      animation: glow 4s infinite;
+      box-shadow: 0 0 10px #0ff3;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff;
+    }
+
+    .stat {
+      font-size: 14px;
+      color: #8ff;
+      margin: 6px 0;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      color: #0ff6;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <h1>GALAXIA HOME</h1>
-  <p>Welcome to your custom sci‑fi browser.</p>
-  <p>Use the tabs or type <code>galaxia://apps</code> or <code>galaxia://about</code> in the URL bar.</p>
+
+  <div class="container">
+
+    <div class="title">GALAXIA SYSTEM DASHBOARD</div>
+
+    <div class="grid">
+
+      <!-- System Status -->
+      <div class="panel">
+        <h2>System Status</h2>
+        <div class="stat">CPU Load: 12%</div>
+        <div class="stat">Memory Usage: 48%</div>
+        <div class="stat">Network: Stable</div>
+        <div class="stat">Uptime: 3h 22m</div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="panel">
+        <h2>Quick Actions</h2>
+        <div class="stat">• Open Apps</div>
+        <div class="stat">• View About Page</div>
+        <div class="stat">• Check Updates</div>
+        <div class="stat">• System Settings</div>
+      </div>
+
+      <!-- System Info -->
+      <div class="panel">
+        <h2>System Info</h2>
+        <div class="stat">Galaxia OS Version: 1.0</div>
+        <div class="stat">Build: Stable</div>
+        <div class="stat">Developer: William</div>
+        <div class="stat">Theme: Neon Pulse</div>
+      </div>
+
+    </div>
+
+    <div class="footer">Welcome back, Commander.</div>
+
+  </div>
+
 </body>
 </html>
