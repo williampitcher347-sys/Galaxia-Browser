@@ -276,10 +276,15 @@
     setTab('home');
   </script>
 let proxyEnabled = false;
-const proxyURL = "https://corsproxy.io/?";
+let proxyURL = "https://corsproxy.io/?";
+
+function toggleProxyPanel() {
+  const panel = document.getElementById("proxyPanel");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
 
 function updateProxyUI() {
-  const box = document.getElementById("proxyStatus");
+  const box = document.getElementById("proxyPanelStatus");
 
   if (proxyEnabled) {
     box.textContent = "Proxy: CONNECTED";
@@ -298,12 +303,18 @@ function updateProxyUI() {
 
 function enableProxy() {
   proxyEnabled = true;
+  proxyURL = document.getElementById("proxyServer").value;
   updateProxyUI();
 }
 
 function disableProxy() {
   proxyEnabled = false;
   updateProxyUI();
+}
+
+// Auto-retry if proxy fails
+function tryProxy(url) {
+  return proxyURL + encodeURIComponent(url);
 }
 </body>
 </html>
