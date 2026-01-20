@@ -3,166 +3,54 @@
 <head>
   <title>Galaxia Home</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
+      margin: 0;
       height: 100vh;
       overflow: hidden;
       background: radial-gradient(circle at center, #02040a 0%, #000 70%);
       font-family: system-ui, sans-serif;
       color: #b8ffff;
-    }
-
-    /* Floating stars */
-    .stars, .stars2, .stars3 {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 200%;
-      height: 200%;
-      background-repeat: repeat;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .stars {
-      background-image:
-        radial-gradient(2px 2px at 20px 20px, #fff, transparent),
-        radial-gradient(2px 2px at 80px 120px, #0ff, transparent),
-        radial-gradient(2px 2px at 200px 80px, #f0f, transparent);
-      animation: drift 80s linear infinite;
-      opacity: 0.4;
-    }
-
-    .stars2 {
-      background-image:
-        radial-gradient(1px 1px at 50px 50px, #0ff, transparent),
-        radial-gradient(1px 1px at 150px 200px, #fff, transparent),
-        radial-gradient(1px 1px at 300px 150px, #f0f, transparent);
-      animation: drift 120s linear infinite reverse;
-      opacity: 0.3;
-    }
-
-    .stars3 {
-      background-image:
-        radial-gradient(1px 1px at 100px 100px, #fff, transparent),
-        radial-gradient(1px 1px at 250px 250px, #0ff, transparent),
-        radial-gradient(1px 1px at 400px 200px, #f0f, transparent);
-      animation: drift 200s linear infinite;
-      opacity: 0.2;
-    }
-
-    @keyframes drift {
-      from { transform: translate3d(0, 0, 0); }
-      to   { transform: translate3d(-50%, -50%, 0); }
-    }
-
-    /* Center container */
-    .center {
-      position: relative;
-      z-index: 2;
-      height: 100%;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       gap: 20px;
-      text-align: center;
-      padding: 20px;
     }
 
-    /* Glowing orb logo */
     .orb {
-      width: 140px;
-      height: 140px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #fff, #0ff 40%, #00f 70%, #000 100%);
       box-shadow:
         0 0 40px rgba(0, 255, 255, 0.8),
-        0 0 80px rgba(0, 0, 255, 0.6),
-        inset 0 0 40px rgba(255, 255, 255, 0.4);
+        0 0 80px rgba(0, 0, 255, 0.6);
       animation: pulse 4s ease-in-out infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50%      { transform: scale(1.15); opacity: 0.85; }
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.15); }
     }
 
-    /* Title */
     h1 {
       font-size: 48px;
       letter-spacing: 0.2em;
-      color: #e6ffff;
-      text-shadow:
-        0 0 20px #0ff,
-        0 0 40px #00f;
-      animation: fadeIn 2s ease forwards;
-      opacity: 0;
+      text-shadow: 0 0 20px #0ff;
     }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-
-    /* Subtitle */
     p {
       font-size: 18px;
-      max-width: 600px;
       opacity: 0.7;
-      animation: fadeIn 3s ease forwards;
-      opacity: 0;
+      max-width: 600px;
+      text-align: center;
     }
-
-    /* Buttons */
-    .btn {
-      margin-top: 20px;
-      padding: 12px 28px;
-      border-radius: 999px;
-      border: 1px solid rgba(0, 255, 255, 0.6);
-      background: radial-gradient(circle at top, rgba(0, 255, 255, 0.25), rgba(0, 0, 0, 0.9));
-      color: #e6ffff;
-      font-size: 14px;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      transition: 0.2s ease;
-      box-shadow:
-        0 0 12px rgba(0, 255, 255, 0.4),
-        0 0 30px rgba(0, 0, 0, 0.9);
-      animation: fadeIn 4s ease forwards;
-      opacity: 0;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px) scale(1.05);
-      border-color: #fff;
-      background: radial-gradient(circle at top, rgba(0, 255, 255, 0.4), rgba(0, 0, 0, 0.95));
-      box-shadow:
-        0 0 20px rgba(0, 255, 255, 0.8),
-        0 0 50px rgba(0, 0, 0, 1);
-    }
-
   </style>
 </head>
 
 <body>
-  <div class="stars"></div>
-  <div class="stars2"></div>
-  <div class="stars3"></div>
-
-  <div class="center">
-    <div class="orb"></div>
-    <h1>GALAXIA</h1>
-    <p>Your gateway to the neon cosmos.  
-       Explore the web through a new dimension.</p>
-
-    <button class="btn" onclick="window.location.href='galaxia://apps'">
-      Open Apps
-    </button>
-  </div>
+  <div class="orb"></div>
+  <h1>GALAXIA</h1>
+  <p>Welcome to your neon‑lit gateway to the cosmos.</p>
 </body>
 </html>
