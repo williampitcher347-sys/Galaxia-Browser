@@ -1,129 +1,227 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-  background: radial-gradient(circle at center, #050014, #000);
-  font-family: 'Orbitron', system-ui, sans-serif;
-  color: #0ff;
-}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Galaxia Browser</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #050014, #000);
+      font-family: 'Orbitron', system-ui, sans-serif;
+      color: #0ff;
+    }
 
-/* --- STARFIELD 2.0 (Cinematic Parallax) --- */
-.stars, .stars2, .stars3 {
-  position: fixed;
-  width: 200%;
-  height: 200%;
-  top: -50%;
-  left: -50%;
-  background-repeat: repeat;
-  background-size: 900px;
-  opacity: 0.25;
-  z-index: -3;
-  animation: drift 120s linear infinite;
-  filter: brightness(1.4);
-}
+    /* --- GALAXIA INTRO --- */
+    .galaxia-intro {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.6rem;
+      color: #0ff;
+      text-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+      opacity: 0;
+      animation: galaxiaIntro 4s ease-out forwards;
+      z-index: 9999;
+      pointer-events: none;
+    }
 
-.stars  { animation-duration: 160s; opacity: 0.35; }
-.stars2 { animation-duration: 110s; opacity: 0.22; }
-.stars3 { animation-duration: 70s;  opacity: 0.12; }
+    @keyframes galaxiaIntro {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); filter: blur(8px); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+      70% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); filter: blur(12px); }
+    }
 
-@keyframes drift {
-  from { transform: translate(0,0) scale(1.3); }
-  to   { transform: translate(20%,20%) scale(1.3); }
-}
+    /* --- STARFIELD --- */
+    .stars, .stars2, .stars3 {
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background-repeat: repeat;
+      background-size: cover;
+      opacity: 0.25;
+      z-index: -3;
+      animation: drift 120s linear infinite;
+      filter: brightness(1.4);
+    }
 
-/* --- TOP BAR (Holographic Glass Panel) --- */
-.top-bar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  background: rgba(0, 25, 40, 0.55);
-  backdrop-filter: blur(14px) saturate(180%);
-  border-bottom: 1px solid rgba(0,255,255,0.25);
-  box-shadow: 0 0 25px rgba(0,255,255,0.18);
-}
+    .stars  { background-image: url('https://i.imgur.com/9aKxH8Z.gif'); animation-duration: 160s; opacity: 0.35; }
+    .stars2 { background-image: url('https://i.imgur.com/9aKxH8Z.gif'); animation-duration: 110s; opacity: 0.22; }
+    .stars3 { background-image: url('https://i.imgur.com/9aKxH8Z.gif'); animation-duration: 70s;  opacity: 0.12; }
 
-/* Animated scanning line */
-.top-bar::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: -30%;
-  width: 40%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #0ff, transparent);
-  animation: sweep 3.5s linear infinite;
-  opacity: 0.8;
-}
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1.3); }
+      to   { transform: translate(20%,20%) scale(1.3); }
+    }
 
-@keyframes sweep {
-  from { transform: translateX(0); }
-  to   { transform: translateX(350%); }
-}
+    /* --- TOP BAR --- */
+    .top-bar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: rgba(0, 25, 40, 0.55);
+      backdrop-filter: blur(14px) saturate(180%);
+      border-bottom: 1px solid rgba(0,255,255,0.25);
+      box-shadow: 0 0 25px rgba(0,255,255,0.18);
+    }
 
-/* --- SEARCH BAR (Hologram Input) --- */
-.url-input {
-  flex: 1;
-  padding: 14px 20px;
-  border-radius: 999px;
-  border: 1px solid rgba(0,255,255,0.4);
-  background: rgba(0,0,0,0.55);
-  color: #eaffff;
-  font-size: 16px;
-  outline: none;
-  transition: 0.25s;
-  box-shadow: 0 0 12px rgba(0,255,255,0.15);
-}
+    .top-bar::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -30%;
+      width: 40%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #0ff, transparent);
+      animation: sweep 3.5s linear infinite;
+      opacity: 0.8;
+    }
 
-.url-input:focus {
-  border-color: #0ff;
-  box-shadow: 0 0 25px rgba(0,255,255,0.55);
-  transform: scale(1.03);
-}
+    @keyframes sweep {
+      from { transform: translateX(0); }
+      to   { transform: translateX(350%); }
+    }
 
-/* --- BUTTON (Neon Plasma Glow) --- */
-.btn {
-  padding: 10px 26px;
-  border-radius: 999px;
-  border: 1px solid rgba(0,255,255,0.6);
-  background: rgba(0,0,0,0.85);
-  color: #eaffff;
-  cursor: pointer;
-  font-size: 15px;
-  letter-spacing: 0.5px;
-  transition: 0.25s;
-  box-shadow: 0 0 15px rgba(0,255,255,0.25);
-}
+    /* --- SEARCH BAR --- */
+    .url-input {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,255,255,0.4);
+      background: rgba(0,0,0,0.55);
+      color: #eaffff;
+      font-size: 16px;
+      outline: none;
+      transition: 0.25s;
+      box-shadow: 0 0 12px rgba(0,255,255,0.15);
+    }
 
-.btn:hover {
-  background: rgba(0,255,255,0.25);
-  box-shadow: 0 0 25px rgba(0,255,255,0.7);
-  transform: translateY(-2px) scale(1.08);
-}
+    .url-input:focus {
+      border-color: #0ff;
+      box-shadow: 0 0 25px rgba(0,255,255,0.55);
+      transform: scale(1.03);
+    }
 
-/* --- IFRAME WRAPPER (Glass Panel) --- */
-.iframe-wrap {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: calc(100% - 80px);
-  background: rgba(0,0,0,0.55);
-  border-top: 1px solid rgba(0,255,255,0.25);
-  backdrop-filter: blur(6px);
-  animation: fadeIn 0.6s ease-out;
-}
+    /* --- BUTTON --- */
+    .btn {
+      padding: 10px 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,255,255,0.6);
+      background: rgba(0,0,0,0.85);
+      color: #eaffff;
+      cursor: pointer;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      transition: 0.25s;
+      box-shadow: 0 0 15px rgba(0,255,255,0.25);
+    }
 
-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: #000;
-}
+    .btn:hover {
+      background: rgba(0,255,255,0.25);
+      box-shadow: 0 0 25px rgba(0,255,255,0.7);
+      transform: translateY(-2px) scale(1.08);
+    }
 
-/* Smooth fade for page loads */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+    /* --- IFRAME --- */
+    .iframe-wrap {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: calc(100% - 80px);
+      background: rgba(0,0,0,0.55);
+      border-top: 1px solid rgba(0,255,255,0.25);
+      backdrop-filter: blur(6px);
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- INTRO -->
+  <div class="galaxia-intro">Made with Galaxia</div>
+
+  <!-- STARFIELD -->
+  <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <input id="url" class="url-input" placeholder="Enter URL or search…">
+    <button id="goBtn" class="btn">Go</button>
+  </div>
+
+  <!-- IFRAME -->
+  <div class="iframe-wrap">
+    <iframe id="frame" src="home.html"></iframe>
+  </div>
+
+  <script>
+    const urlInput = document.getElementById("url");
+    const goBtn = document.getElementById("goBtn");
+    const iframe = document.getElementById("frame");
+
+    function setTab(page) {
+      iframe.src = page + ".html";
+    }
+
+    function loadURL(value) {
+      let url = value.trim();
+      if (!url) return;
+
+      // Galaxia internal pages
+      if (url.toLowerCase().startsWith("galaxia:")) {
+        const page = url.split(":")[1].toLowerCase();
+        setTab(page);
+        return;
+      }
+
+      // Search queries (spaces)
+      if (url.includes(" ")) {
+        iframe.src = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
+        return;
+      }
+
+      // Domain detection
+      if (url.includes(".")) {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+          url = "https://" + url;
+        }
+        iframe.src = url;
+        return;
+      }
+
+      // Single word → search
+      iframe.src = "https://duckduckgo.com/?q=" + encodeURIComponent(url);
+    }
+
+    goBtn.addEventListener("click", () => loadURL(urlInput.value));
+    urlInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") loadURL(urlInput.value);
+    });
+
+    setTab("home");
+  </script>
+
+</body>
+</html>
