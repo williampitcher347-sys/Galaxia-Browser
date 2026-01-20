@@ -222,6 +222,46 @@
 
     setTab("home");
   </script>
+<script>
+  const urlInput = document.getElementById("url");
+  const goBtn = document.getElementById("goBtn");
+  const iframe = document.getElementById("frame");
+
+  function setTab(page) {
+    iframe.src = page + ".html";
+  }
+
+  function loadURL(value) {
+    let url = value.trim();
+    if (!url) return;
+
+    // Galaxia internal pages
+    if (url.toLowerCase().startsWith("galaxia:")) {
+      const page = url.split(":")[1].toLowerCase();
+      setTab(page);
+      return;
+    }
+
+    // Only load real URLs (must contain a dot)
+    if (url.includes(".")) {
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = "https://" + url;
+      }
+      iframe.src = url;
+      return;
+    }
+
+    // Ignore anything that isn't a URL
+    console.log("Ignored non‑URL input:", url);
+  }
+
+  goBtn.addEventListener("click", () => loadURL(urlInput.value));
+  urlInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") loadURL(urlInput.value);
+  });
+
+  setTab("home");
+</script>
 
 </body>
 </html>
