@@ -13,16 +13,44 @@
       overflow: hidden;
     }
 
-    /* Animated starfield background */
-    .stars {
+    /* --- MULTI-LAYER STARFIELD --- */
+    .stars, .stars2, .stars3 {
       position: fixed;
-      width: 100%;
-      height: 100%;
-      background: url('https://i.imgur.com/9aKxH8Z.gif') center/cover no-repeat;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background-repeat: repeat;
+      background-size: cover;
       opacity: 0.25;
-      z-index: -1;
+      z-index: -3;
+      animation: drift 120s linear infinite;
     }
 
+    .stars {
+      background-image: url('https://i.imgur.com/9aKxH8Z.gif');
+      animation-duration: 140s;
+      opacity: 0.22;
+    }
+
+    .stars2 {
+      background-image: url('https://i.imgur.com/9aKxH8Z.gif');
+      animation-duration: 100s;
+      opacity: 0.18;
+    }
+
+    .stars3 {
+      background-image: url('https://i.imgur.com/9aKxH8Z.gif');
+      animation-duration: 70s;
+      opacity: 0.12;
+    }
+
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1.2); }
+      to { transform: translate(20%,20%) scale(1.2); }
+    }
+
+    /* --- CENTER LAYOUT --- */
     .container {
       height: 100%;
       display: flex;
@@ -31,24 +59,36 @@
       align-items: center;
       gap: 50px;
       text-align: center;
+      position: relative;
+      z-index: 10;
     }
 
-    /* Neon title */
+    /* --- FLOATING NEON LOGO --- */
     h1 {
-      font-size: 60px;
+      font-size: 70px;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.18em;
       color: #00ffff;
-      text-shadow: 0 0 12px #00ffff, 0 0 24px #00ffff;
-      animation: glow 3s ease-in-out infinite alternate;
+      text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+      animation: float 4s ease-in-out infinite alternate;
     }
 
-    @keyframes glow {
-      from { text-shadow: 0 0 12px #00ffff; }
-      to { text-shadow: 0 0 28px #00ffff; }
+    @keyframes float {
+      from { transform: translateY(0); }
+      to { transform: translateY(-12px); }
     }
 
-    /* Button grid */
+    /* --- GLASS PANEL FOR BUTTONS --- */
+    .panel {
+      background: rgba(0, 20, 30, 0.35);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,255,255,0.25);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0,255,255,0.15);
+    }
+
+    /* --- BUTTON GRID --- */
     .btn-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -57,11 +97,11 @@
       max-width: 600px;
     }
 
-    /* Buttons */
+    /* --- HOLOGRAPHIC BUTTONS --- */
     .btn {
       padding: 18px;
       border-radius: 14px;
-      background: rgba(0,255,255,0.12);
+      background: rgba(0,255,255,0.1);
       border: 1px solid rgba(0,255,255,0.4);
       color: #e6ffff;
       font-size: 17px;
@@ -72,18 +112,42 @@
       justify-content: center;
       align-items: center;
       transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* Hover effect */
+    /* HOLOGRAPHIC SHINE */
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 300%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(0,255,255,0.4),
+        transparent
+      );
+      transform: rotate(25deg);
+      transition: 0.4s;
+    }
+
+    .btn:hover::before {
+      top: -20%;
+    }
+
+    /* HOVER EFFECT */
     .btn:hover {
       background: rgba(0,255,255,0.28);
       border-color: rgba(0,255,255,0.9);
-      box-shadow: 0 0 20px rgba(0,255,255,0.6);
+      box-shadow: 0 0 25px rgba(0,255,255,0.6);
       transform: scale(1.08);
     }
 
     @media (max-width: 600px) {
-      h1 { font-size: 40px; }
+      h1 { font-size: 42px; }
       .btn { font-size: 15px; padding: 14px; }
     }
   </style>
@@ -91,15 +155,19 @@
 
 <body>
   <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
 
   <div class="container">
     <h1>Galaxia</h1>
 
-    <div class="btn-grid">
-      <a href="browser.html" class="btn">Browser</a>
-      <a href="apps.html" class="btn">Apps</a>
-      <a href="chatroom.html" class="btn">Chatroom</a>
-      <a href="about.html" class="btn">About</a>
+    <div class="panel">
+      <div class="btn-grid">
+        <a href="browser.html" class="btn">Browser</a>
+        <a href="apps.html" class="btn">Apps</a>
+        <a href="chatroom.html" class="btn">Chatroom</a>
+        <a href="about.html" class="btn">About</a>
+      </div>
     </div>
   </div>
 </body>
