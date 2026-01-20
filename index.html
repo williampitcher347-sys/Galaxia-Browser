@@ -3,28 +3,87 @@
 <head>
   <title>Galaxia Browser</title>
   <style>
-    body {<div id="proxyStatus" style="
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  padding: 8px 14px;
-  border-radius: 6px;
+    body<!-- Floating Proxy Panel -->
+<div id="proxyPanel" style="
+  position: fixed;
+  top: 120px;
+  right: 40px;
+  width: 260px;
+  background: #020b12;
+  border: 1px solid #0ff6;
+  box-shadow: 0 0 15px #0ff6;
+  border-radius: 8px;
+  padding: 15px;
+  z-index: 9999;
+  display: none;
+  color: #0ff;
   font-family: monospace;
-  font-size: 14px;
-  background: #220000;
-  color: #ff4444;
-  border: 1px solid #ff4444;
-  box-shadow: 0 0 10px #ff4444;
 ">
-  Proxy: DISCONNECTED
-</div>
-      margin: 0;
-      background: radial-gradient(circle at top, #0a0a0a 0, #000 70%);
-      color: #0ff;
-      font-family: monospace;
-      overflow: hidden;
-    }
+  <div style="font-size: 18px; margin-bottom: 10px; text-shadow: 0 0 10px #0ff;">
+    Proxy Control
+  </div>
 
+  <label>Server:</label>
+  <select id="proxyServer" style="
+    width: 100%;
+    padding: 6px;
+    background: #011;
+    border: 1px solid #0ff6;
+    color: #0ff;
+    margin-bottom: 10px;
+  ">
+    <option value="https://corsproxy.io/?">USA</option>
+    <option value="https://api.allorigins.win/raw?url=">UK</option>
+    <option value="https://thingproxy.freeboard.io/fetch/">Germany</option>
+    <option value="https://corsproxy.io/?">Japan</option>
+  </select>
+
+  <button onclick="enableProxy()" style="
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 6px;
+    background: #011;
+    border: 1px solid #0f06;
+    color: #0f0;
+  ">Connect</button>
+
+  <button onclick="disableProxy()" style="
+    width: 100%;
+    padding: 6px;
+    background: #011;
+    border: 1px solid #f006;
+    color: #f00;
+  ">Disconnect</button>
+
+  <div id="proxyPanelStatus" style="
+    margin-top: 10px;
+    padding: 6px;
+    text-align: center;
+    border-radius: 4px;
+    background: #220000;
+    color: #ff4444;
+    border: 1px solid #ff4444;
+    box-shadow: 0 0 10px #ff4444;
+  ">
+    Proxy: DISCONNECTED
+  </div>
+</div>
+
+<!-- Button to open floating panel -->
+<button onclick="toggleProxyPanel()" style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 14px;
+  background: #011;
+  border: 1px solid #0ff6;
+  color: #0ff;
+  border-radius: 6px;
+  z-index: 9999;
+  font-family: monospace;
+">
+  Proxy Panel
+</button>
     /* Neon glow animation */
     @keyframes pulse {
       0% { box-shadow: 0 0 6px #0ff4; }
