@@ -5,87 +5,128 @@
   <style>
     body {
       margin: 0;
-      background: radial-gradient(circle at top, #111 0, #000 60%);
+      background: radial-gradient(circle at top, #0a0a0a 0, #000 70%);
       color: #0ff;
       font-family: monospace;
+      overflow: hidden;
     }
+
+    /* Neon glow animation */
+    @keyframes pulse {
+      0% { box-shadow: 0 0 6px #0ff4; }
+      50% { box-shadow: 0 0 14px #0ff9; }
+      100% { box-shadow: 0 0 6px #0ff4; }
+    }
+
+    /* Top bar */
     .top-bar {
       display: flex;
       align-items: center;
-      padding: 8px 10px;
-      background: #05070b;
-      border-bottom: 1px solid #0ff3;
-      box-shadow: 0 0 10px #0ff3;
+      padding: 10px;
+      background: #03060a;
+      border-bottom: 1px solid #0ff4;
+      animation: pulse 3s infinite;
     }
+
     .logo {
       font-weight: bold;
-      margin-right: 10px;
+      margin-right: 12px;
       color: #0ff;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
+      text-shadow: 0 0 8px #0ff;
     }
+
+    /* URL bar */
     .url-bar {
       flex: 1;
       display: flex;
-      gap: 6px;
+      gap: 8px;
     }
+
     .url-bar input {
       flex: 1;
-      padding: 6px 8px;
-      background: #020308;
-      border: 1px solid #0ff5;
+      padding: 7px 10px;
+      background: #010308;
+      border: 1px solid #0ff6;
       color: #0ff;
-      border-radius: 3px;
+      border-radius: 4px;
       outline: none;
+      transition: 0.2s;
     }
+
+    .url-bar input:focus {
+      box-shadow: 0 0 10px #0ff8;
+    }
+
     .url-bar button {
-      padding: 6px 10px;
-      background: #0ff2;
-      border: 1px solid #0ff8;
-      color: #0ff;
+      padding: 7px 14px;
+      background: #0ff3;
+      border: 1px solid #0ff9;
+      color: #000;
       cursor: pointer;
-      border-radius: 3px;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: 0.2s;
     }
+
     .url-bar button:hover {
-      background: #0ff4;
+      background: #0ff7;
+      box-shadow: 0 0 10px #0ff;
     }
+
+    /* Tabs */
     .tabs {
       display: flex;
-      gap: 6px;
-      padding: 6px 10px;
-      background: #05070b;
+      gap: 8px;
+      padding: 8px 10px;
+      background: #03060a;
       border-bottom: 1px solid #0ff3;
     }
+
     .tab {
-      padding: 4px 10px;
-      border-radius: 3px;
+      padding: 5px 12px;
+      border-radius: 4px;
       border: 1px solid #0ff3;
       cursor: pointer;
       font-size: 13px;
       color: #0ff9;
+      transition: 0.2s;
     }
-    .tab.active {
+
+    .tab:hover {
       background: #0ff2;
       color: #000;
-      border-color: #0ff;
-      box-shadow: 0 0 8px #0ff6;
+      box-shadow: 0 0 10px #0ff;
     }
+
+    .tab.active {
+      background: #0ff;
+      color: #000;
+      border-color: #0ff;
+      box-shadow: 0 0 12px #0ff;
+    }
+
+    /* Content frame */
     .content {
-      height: calc(100vh - 80px);
+      height: calc(100vh - 90px);
       background: #020308;
     }
+
     iframe {
       width: 100%;
       height: 100%;
       border: none;
       background: #000;
+      animation: pulse 4s infinite;
     }
   </style>
 </head>
 <body>
+
   <div class="top-bar">
     <div class="logo">GALAXIA</div>
     <div class="url-bar">
-      <input id="url" type="text" placeholder="galaxia://home or google.com">
+      <input id="url" type="text" placeholder="galaxia://home or website.com">
       <button id="goBtn">GO</button>
     </div>
   </div>
@@ -107,12 +148,10 @@
     const tabs = document.querySelectorAll('.tab');
 
     function setTab(page) {
-      // Update tabs
       tabs.forEach(tab => {
         tab.classList.toggle('active', tab.dataset.target === page);
       });
 
-      // Load internal page
       if (page === 'home') {
         iframe.src = 'home.html';
         urlInput.value = 'galaxia://home';
@@ -122,53 +161,47 @@
       } else if (page === 'about') {
         iframe.src = 'about.html';
         urlInput.value = 'galaxia://about';
-      } else {
-        // Unknown internal page – you could point this to a custom 404 later
-        iframe.src = 'home.html';
-        urlInput.value = 'galaxia://home';
       }
     }
 
-    // Tab click handling
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
-        const target = tab.dataset.target;
-        setTab(target);
+        setTab(tab.dataset.target);
       });
     });
 
-    // GO button logic
     goBtn.addEventListener('click', () => {
       const value = urlInput.value.trim();
 
-      // Internal Galaxia protocol
+      // Internal pages
       if (value.startsWith('galaxia://')) {
         const page = value.replace('galaxia://', '');
         setTab(page);
         return;
       }
 
-      // External full URLs
+      // Full URLs
       if (value.startsWith('http://') || value.startsWith('https://')) {
         iframe.src = value;
         return;
       }
 
-      // Bare domains or search-like input → assume https
-      if (value.length > 0) {
+      // Bare domains
+      if (value.includes('.')) {
         iframe.src = 'https://' + value;
+        return;
       }
+
+      // No search engine fallback
+      iframe.src = 'home.html';
     });
 
-    // Allow Enter key in URL bar
     urlInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        goBtn.click();
-      }
+      if (e.key === 'Enter') goBtn.click();
     });
 
-    // Initial state
     setTab('home');
   </script>
+
 </body>
 </html>
