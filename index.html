@@ -8,69 +8,134 @@
       padding: 0;
       height: 100%;
       overflow: hidden;
-      background: radial-gradient(circle at top, #08101f 0, #020308 40%, #000 100%);
+      background: #000;
       font-family: system-ui, sans-serif;
       color: #0ff;
     }
 
+    /* Multi-layer starfield */
+    .stars, .stars2, .stars3 {
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background-repeat: repeat;
+      background-size: cover;
+      opacity: 0.22;
+      z-index: -3;
+      animation: drift 120s linear infinite;
+    }
+
+    .stars {
+      background-image: url('https://i.imgur.com/9aKxH8Z.gif');
+      animation-duration: 140s;
+      opacity: 0.22;
+    }
+
+    .stars2 {
+      background-image: url('https://i.imgur.com/9aKxH8Z.gif');
+      animation-duration: 100s;
+      opacity: 0.16;
+    }
+
+    .stars3 {
+      background-image: url('https://i.imgur.com/9aKxH8Z.gif');
+      animation-duration: 70s;
+      opacity: 0.1;
+    }
+
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1.2); }
+      to { transform: translate(20%,20%) scale(1.2); }
+    }
+
+    /* Browser container */
     .browser {
       position: relative;
-      z-index: 2;
+      z-index: 10;
       display: flex;
       flex-direction: column;
       height: 100%;
       width: 100%;
+      backdrop-filter: blur(6px);
     }
 
+    /* Shortcut bar */
     .shortcut-bar {
-      padding: 6px 12px;
+      padding: 8px 12px;
       font-size: 12px;
-      background: rgba(0, 0, 0, 0.7);
-      border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+      background: rgba(0, 20, 30, 0.45);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.25);
       color: #b8ffff;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
 
     .shortcut-bar span {
-      margin: 0 8px;
-      opacity: 0.8;
+      margin: 0 10px;
+      opacity: 0.85;
+      cursor: pointer;
+      transition: 0.2s;
     }
 
+    .shortcut-bar span:hover {
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff;
+    }
+
+    /* Top bar */
     .top-bar {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.8);
-      border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-      flex-shrink: 0;
+      padding: 12px;
+      background: rgba(0, 20, 30, 0.55);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.25);
+      backdrop-filter: blur(12px);
     }
 
+    /* URL bar */
     .url-input {
       flex: 1;
-      padding: 8px 12px;
+      padding: 10px 16px;
       border-radius: 999px;
-      border: 1px solid rgba(0, 255, 255, 0.5);
-      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(0, 255, 255, 0.4);
+      background: rgba(0, 0, 0, 0.55);
       color: #e6ffff;
-      font-size: 14px;
+      font-size: 15px;
       outline: none;
+      transition: 0.25s;
     }
 
+    .url-input:focus {
+      border-color: #0ff;
+      box-shadow: 0 0 12px rgba(0,255,255,0.5);
+    }
+
+    /* Go button */
     .btn {
-      padding: 7px 14px;
+      padding: 9px 18px;
       border-radius: 999px;
       border: 1px solid rgba(0, 255, 255, 0.6);
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.7);
       color: #e6ffff;
       cursor: pointer;
+      transition: 0.25s;
     }
 
+    .btn:hover {
+      background: rgba(0,255,255,0.2);
+      box-shadow: 0 0 12px rgba(0,255,255,0.5);
+    }
+
+    /* Iframe container */
     .iframe-wrap {
       flex: 1;
       min-height: 0;
       overflow: hidden;
+      background: rgba(0, 0, 0, 0.6);
     }
 
     iframe {
@@ -84,6 +149,10 @@
 </head>
 
 <body>
+  <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
+
   <div class="browser">
     <div class="shortcut-bar">
       <span>Galaxia:home</span>
