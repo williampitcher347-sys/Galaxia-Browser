@@ -23,6 +23,13 @@ async function saveMessage(text) {
   });
 }
 
+async function deleteMessage(id) {
+  await fetch(`${API_URL}/${id}`, {
+    method: "DELETE"
+  });
+  renderMessages();
+}
+
 async function renderMessages() {
   const res = await fetch(API_URL);
   const messages = await res.json();
@@ -31,11 +38,22 @@ async function renderMessages() {
   messages.forEach(msg => {
     const bubble = document.createElement("div");
     bubble.className = "bubble me";
+
     bubble.innerHTML = `
       <div>${msg.text}</div>
       <div class="meta">${msg.time}</div>
+      <button class="delete-btn" data-id="${msg.id}">❌</button>
     `;
+
     chat.appendChild(bubble);
+  });
+
+  // Attach delete button events
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-id");
+      deleteMessage(id);
+    });
   });
 
   chat.scrollTop = chat.scrollHeight;
