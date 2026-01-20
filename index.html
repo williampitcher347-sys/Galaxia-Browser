@@ -119,23 +119,21 @@
 
     setTab("home");
   </script>
+<script>
 const urlInput = document.getElementById("url");
 const goBtn = document.getElementById("goBtn");
 const iframe = document.getElementById("frame");
 
 let proxyEnabled = false;
 
-// ✅ Iframe-safe proxy (not corsproxy.io)
 let proxyURL = "https://api.allorigins.win/raw?url=";
 
 function enableProxy() {
   proxyEnabled = true;
-  console.log("Proxy ON");
 }
 
 function disableProxy() {
   proxyEnabled = false;
-  console.log("Proxy OFF");
 }
 
 function tryProxy(url) {
@@ -167,6 +165,15 @@ function loadURL(value) {
   iframe.src = proxyEnabled ? tryProxy(url) : url;
 }
 
-goBtn.addEventListener
+goBtn.addEventListener("click", () => {
+  loadURL(urlInput.value);
+});
+
+urlInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") goBtn.click();
+});
+
+setTab("home");
+</script>
 </body>
 </html>
