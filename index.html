@@ -2,27 +2,26 @@
 <html>
 <head>
   <title>Galaxia Browser</title>
-  <style>/* --- GALAXIA SHORTCUT PANEL --- */
-.gx-shortcuts {
+  <style>.gx-shortcuts {
   position: fixed;
   top: 100px;
-  right: 20px;
-  width: 180px;
-  padding: 15px;
-  background: rgba(0, 20, 40, 0.55);
+  left: 20px;
+  width: 160px;
+  padding: 12px;
+  background: rgba(0, 20, 40, 0.6);
   border: 1px solid #0ff;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0,255,255,0.25);
+  box-shadow: 0 0 15px rgba(0,255,255,0.3);
   backdrop-filter: blur(10px);
   z-index: 999;
   color: #0ff;
-  text-align: center;
   font-family: 'Orbitron', sans-serif;
 }
 
 .gx-shortcuts h3 {
   margin: 0 0 10px 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
   text-shadow: 0 0 10px #0ff;
 }
 
@@ -30,29 +29,23 @@
   width: 100%;
   margin: 5px 0;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid #0ff;
   background: rgba(0,0,0,0.7);
   color: #eaffff;
   cursor: pointer;
-  font-size: 0.85rem;
-  transition: 0.25s;
-  box-shadow: 0 0 10px rgba(0,255,255,0.25);
+  font-size: 0.8rem;
+  transition: 0.2s;
 }
 
 .gx-shortcuts button:hover {
   background: rgba(0,255,255,0.25);
-  box-shadow: 0 0 20px rgba(0,255,255,0.6);
+  box-shadow: 0 0 15px #0ff;
   transform: scale(1.05);
 }
 
-    html, body {<div class="gx-shortcuts">
-  <h3>Shortcuts</h3>
-  <button onclick="setTab('home')">Galaxia:home</button>
-  <button onclick="setTab('apps')">Galaxia:apps</button>
-  <button onclick="setTab('chatroom')">Galaxia:chatroom</button>
-  <button onclick="setTab('about')">Galaxia:about</button>
-</div>
+
+    html, body 
 
       margin: 0;
       padding: 0;
@@ -313,5 +306,12 @@
   setTab("home");
 </script>
 
-</body>
+</body><div class="gx-shortcuts">
+  <h3>Shortcuts</h3>
+  <button onclick="setTab('home')">Home</button>
+  <button onclick="setTab('apps')">Apps</button>
+  <button onclick="setTab('chatroom')">Chatroom</button>
+  <button onclick="setTab('about')">About</button>
+</div>
+
 </html>
