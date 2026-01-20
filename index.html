@@ -13,52 +13,6 @@
       color: #0ff;
     }
 
-    /* Starfield */
-    .stars, .stars2, .stars3 {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 200%;
-      height: 200%;
-      background-repeat: repeat;
-      pointer-events: none;
-      z-index: 0;
-      transform: translateZ(0);
-    }
-
-    .stars {
-      background-image:
-        radial-gradient(2px 2px at 20px 20px, #fff, transparent),
-        radial-gradient(2px 2px at 80px 120px, #0ff, transparent),
-        radial-gradient(2px 2px at 200px 80px, #f0f, transparent);
-      animation: drift 80s linear infinite;
-      opacity: 0.4;
-    }
-
-    .stars2 {
-      background-image:
-        radial-gradient(1px 1px at 50px 50px, #0ff, transparent),
-        radial-gradient(1px 1px at 150px 200px, #fff, transparent),
-        radial-gradient(1px 1px at 300px 150px, #f0f, transparent);
-      animation: drift 120s linear infinite reverse;
-      opacity: 0.3;
-    }
-
-    .stars3 {
-      background-image:
-        radial-gradient(1px 1px at 100px 100px, #fff, transparent),
-        radial-gradient(1px 1px at 250px 250px, #0ff, transparent),
-        radial-gradient(1px 1px at 400px 200px, #f0f, transparent);
-      animation: drift 200s linear infinite;
-      opacity: 0.2;
-    }
-
-    @keyframes drift {
-      from { transform: translate3d(0, 0, 0); }
-      to   { transform: translate3d(-50%, -50%, 0); }
-    }
-
-    /* Layout */
     .browser {
       position: relative;
       z-index: 2;
@@ -68,7 +22,6 @@
       width: 100%;
     }
 
-    /* Shortcut bar */
     .shortcut-bar {
       padding: 6px 12px;
       font-size: 12px;
@@ -84,7 +37,6 @@
       opacity: 0.8;
     }
 
-    /* URL bar */
     .top-bar {
       display: flex;
       align-items: center;
@@ -104,12 +56,6 @@
       color: #e6ffff;
       font-size: 14px;
       outline: none;
-      transition: 0.15s;
-    }
-
-    .url-input:focus {
-      border-color: #fff;
-      box-shadow: 0 0 12px #0ff;
     }
 
     .btn {
@@ -119,20 +65,12 @@
       background: rgba(0, 0, 0, 0.8);
       color: #e6ffff;
       cursor: pointer;
-      transition: 0.2s;
     }
 
-    .btn:hover {
-      background: rgba(0, 255, 255, 0.3);
-      color: #000;
-    }
-
-    /* Iframe */
     .iframe-wrap {
       flex: 1;
       min-height: 0;
       overflow: hidden;
-      transform: translateZ(0);
     }
 
     iframe {
@@ -146,13 +84,7 @@
 </head>
 
 <body>
-  <div class="stars"></div>
-  <div class="stars2"></div>
-  <div class="stars3"></div>
-
   <div class="browser">
-
-    <!-- OFFICIAL GALAXIA COMMANDS -->
     <div class="shortcut-bar">
       <span>Galaxia:home</span>
       <span>Galaxia:apps</span>
@@ -183,14 +115,12 @@
       let url = value.trim();
       if (!url) return;
 
-      // Internal Galaxia commands
       if (url.toLowerCase().startsWith("galaxia:")) {
         const page = url.split(":")[1].toLowerCase();
         setTab(page);
         return;
       }
 
-      // Auto-add https://
       if (!url.startsWith("http://") && !url.startsWith("https://")) {
         url = "https://" + url;
       }
