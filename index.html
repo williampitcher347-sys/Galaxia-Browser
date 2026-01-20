@@ -187,5 +187,58 @@
 
   setTab("home");
 </script>
+  <script>
+  // ALL your JavaScript goes here
+  let proxyEnabled = false;
+  let proxyURL = "https://corsproxy.io/?";
+
+  function enableProxy() {
+    proxyEnabled = true;
+  }
+
+  function disableProxy() {
+    proxyEnabled = false;
+  }
+
+  function tryProxy(url) {
+    return proxyURL + encodeURIComponent(url);
+  }
+
+  function loadURL(value) {
+    let url = value.trim();
+
+    if (url.startsWith("galaxia://")) {
+      const page = url.replace("galaxia://", "");
+      setTab(page);
+      return;
+    }
+
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      if (url.includes(".")) {
+        url = "https://" + url;
+      } else {
+        iframe.src = "home.html";
+        return;
+      }
+    }
+
+    if (proxyEnabled) {
+      iframe.src = tryProxy(url);
+      return;
+    }
+
+    iframe.src = url;
+  }
+
+  goBtn.addEventListener("click", () => {
+    loadURL(urlInput.value);
+  });
+
+  urlInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") goBtn.click();
+  });
+
+  setTab("home");
+</script>
 </body>
 </html>
