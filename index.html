@@ -13,7 +13,7 @@
       color: #0ff;
     }
 
-    /* GPU-accelerated starfield */
+    /* Starfield */
     .stars, .stars2, .stars3 {
       position: fixed;
       top: 0;
@@ -58,7 +58,7 @@
       to   { transform: translate3d(-50%, -50%, 0); }
     }
 
-    /* Main layout */
+    /* Layout */
     .browser {
       position: relative;
       z-index: 2;
@@ -66,6 +66,21 @@
       flex-direction: column;
       height: 100%;
       width: 100%;
+    }
+
+    .shortcut-bar {
+      padding: 6px 12px;
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+      color: #b8ffff;
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+
+    .shortcut-bar span {
+      margin: 0 8px;
+      opacity: 0.8;
     }
 
     .top-bar {
@@ -76,7 +91,6 @@
       background: rgba(0, 0, 0, 0.8);
       border-bottom: 1px solid rgba(0, 255, 255, 0.3);
       flex-shrink: 0;
-      backdrop-filter: blur(6px);
     }
 
     .url-input {
@@ -111,7 +125,6 @@
       color: #000;
     }
 
-    /* Fullscreen iframe container */
     .iframe-wrap {
       flex: 1;
       min-height: 0;
@@ -135,8 +148,18 @@
   <div class="stars3"></div>
 
   <div class="browser">
+
+    <!-- NEW SHORTCUT BAR -->
+    <div class="shortcut-bar">
+      <span>Galaxia:home</span>
+      <span>Galaxia:apps</span>
+      <span>Galaxia:about</span>
+      <span>Galaxia:chatroom</span>
+      <span>Galaxia:voicemessage</span>
+    </div>
+
     <div class="top-bar">
-      <input id="url" class="url-input" placeholder="Enter URL or galaxia://home">
+      <input id="url" class="url-input" placeholder="Enter URL or Galaxia:home">
       <button id="goBtn" class="btn">Go</button>
     </div>
 
@@ -158,9 +181,9 @@
       let url = value.trim();
       if (!url) return;
 
-      // Internal pages
-      if (url.startsWith("galaxia://")) {
-        const page = url.replace("galaxia://", "");
+      // Internal Galaxia commands
+      if (url.toLowerCase().startsWith("galaxia:")) {
+        const page = url.split(":")[1].toLowerCase();
         setTab(page);
         return;
       }
