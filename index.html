@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Galaxia Home</title>
+  <title>Galaxia Browser</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
+      overflow: hidden;
       background: #000;
       font-family: system-ui, sans-serif;
-      color: #e6ffff;
-      overflow: hidden;
+      color: #0ff;
     }
 
-    /* --- MULTI-LAYER STARFIELD --- */
+    /* --- TRIPLE STARFIELD BACKGROUND --- */
     .stars, .stars2, .stars3 {
       position: fixed;
       width: 200%;
@@ -22,7 +22,7 @@
       left: -50%;
       background-repeat: repeat;
       background-size: cover;
-      opacity: 0.25;
+      opacity: 0.22;
       z-index: -3;
       animation: drift 120s linear infinite;
     }
@@ -30,19 +30,18 @@
     .stars {
       background-image: url('https://i.imgur.com/9aKxH8Z.gif');
       animation-duration: 140s;
-      opacity: 0.22;
     }
 
     .stars2 {
       background-image: url('https://i.imgur.com/9aKxH8Z.gif');
       animation-duration: 100s;
-      opacity: 0.18;
+      opacity: 0.16;
     }
 
     .stars3 {
       background-image: url('https://i.imgur.com/9aKxH8Z.gif');
       animation-duration: 70s;
-      opacity: 0.12;
+      opacity: 0.1;
     }
 
     @keyframes drift {
@@ -50,105 +49,93 @@
       to { transform: translate(20%,20%) scale(1.2); }
     }
 
-    /* --- CENTER LAYOUT --- */
-    .container {
-      height: 100%;
+    /* --- TOP NAV BAR --- */
+    .top-bar {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      gap: 50px;
-      text-align: center;
-      position: relative;
-      z-index: 10;
-    }
-
-    /* --- FLOATING NEON LOGO --- */
-    h1 {
-      font-size: 70px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: #00ffff;
-      text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
-      animation: float 4s ease-in-out infinite alternate;
-    }
-
-    @keyframes float {
-      from { transform: translateY(0); }
-      to { transform: translateY(-12px); }
-    }
-
-    /* --- GLASS PANEL FOR BUTTONS --- */
-    .panel {
-      background: rgba(0, 20, 30, 0.35);
+      gap: 10px;
+      padding: 14px;
+      background: rgba(0, 20, 30, 0.55);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.25);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(0,255,255,0.25);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 0 25px rgba(0,255,255,0.15);
+      box-shadow: 0 0 20px rgba(0,255,255,0.15);
     }
 
-    /* --- BUTTON GRID --- */
-    .btn-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 20px;
-      width: 80%;
-      max-width: 600px;
-    }
-
-    /* --- HOLOGRAPHIC BUTTONS --- */
-    .btn {
-      padding: 18px;
-      border-radius: 14px;
-      background: rgba(0,255,255,0.1);
+    /* URL INPUT */
+    .url-input {
+      flex: 1;
+      padding: 12px 18px;
+      border-radius: 999px;
       border: 1px solid rgba(0,255,255,0.4);
+      background: rgba(0,0,0,0.55);
       color: #e6ffff;
-      font-size: 17px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      text-decoration: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: all 0.25s ease;
-      position: relative;
-      overflow: hidden;
+      font-size: 16px;
+      outline: none;
+      transition: 0.25s;
     }
 
-    /* HOLOGRAPHIC SHINE */
-    .btn::before {
-      content: "";
-      position: absolute;
-      top: -100%;
-      left: 0;
-      width: 100%;
-      height: 300%;
-      background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(0,255,255,0.4),
-        transparent
-      );
-      transform: rotate(25deg);
-      transition: 0.4s;
+    .url-input:focus {
+      border-color: #0ff;
+      box-shadow: 0 0 14px rgba(0,255,255,0.5);
     }
 
-    .btn:hover::before {
-      top: -20%;
+    /* GO BUTTON */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,255,255,0.6);
+      background: rgba(0,0,0,0.8);
+      color: #e6ffff;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.25s;
     }
 
-    /* HOVER EFFECT */
     .btn:hover {
-      background: rgba(0,255,255,0.28);
-      border-color: rgba(0,255,255,0.9);
-      box-shadow: 0 0 25px rgba(0,255,255,0.6);
-      transform: scale(1.08);
+      background: rgba(0,255,255,0.25);
+      box-shadow: 0 0 14px rgba(0,255,255,0.5);
+      transform: scale(1.05);
     }
 
-    @media (max-width: 600px) {
-      h1 { font-size: 42px; }
-      .btn { font-size: 15px; padding: 14px; }
+    /* --- SHORTCUT REMINDER PANEL --- */
+    .shortcut-panel {
+      padding: 10px;
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      background: rgba(0, 20, 30, 0.45);
+      border-bottom: 1px solid rgba(0,255,255,0.25);
+      backdrop-filter: blur(10px);
+      color: #b8ffff;
+    }
+
+    .shortcut-panel span {
+      margin: 0 12px;
+      opacity: 0.85;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .shortcut-panel span:hover {
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff;
+    }
+
+    /* --- IFRAME AREA --- */
+    .iframe-wrap {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: calc(100% - 130px);
+      background: rgba(0,0,0,0.6);
+      border-top: 1px solid rgba(0,255,255,0.25);
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
     }
   </style>
 </head>
@@ -158,17 +145,57 @@
   <div class="stars2"></div>
   <div class="stars3"></div>
 
-  <div class="container">
-    <h1>Galaxia</h1>
-
-    <div class="panel">
-      <div class="btn-grid">
-        <a href="browser.html" class="btn">Browser</a>
-        <a href="apps.html" class="btn">Apps</a>
-        <a href="chatroom.html" class="btn">Chatroom</a>
-        <a href="about.html" class="btn">About</a>
-      </div>
-    </div>
+  <!-- TOP BAR WITH URL + GO BUTTON -->
+  <div class="top-bar">
+    <input id="url" class="url-input" placeholder="Enter URL or Galaxia:home">
+    <button id="goBtn" class="btn">Go</button>
   </div>
+
+  <!-- SHORTCUT REMINDER -->
+  <div class="shortcut-panel">
+    <span>Galaxia:home</span>
+    <span>Galaxia:apps</span>
+    <span>Galaxia:about</span>
+    <span>Galaxia:chatroom</span>
+  </div>
+
+  <!-- IFRAME -->
+  <div class="iframe-wrap">
+    <iframe id="frame" src="home.html"></iframe>
+  </div>
+
+  <script>
+    const urlInput = document.getElementById("url");
+    const goBtn = document.getElementById("goBtn");
+    const iframe = document.getElementById("frame");
+
+    function setTab(page) {
+      iframe.src = page + ".html";
+    }
+
+    function loadURL(value) {
+      let url = value.trim();
+      if (!url) return;
+
+      if (url.toLowerCase().startsWith("galaxia:")) {
+        const page = url.split(":")[1].toLowerCase();
+        setTab(page);
+        return;
+      }
+
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = "https://" + url;
+      }
+
+      iframe.src = url;
+    }
+
+    goBtn.addEventListener("click", () => loadURL(urlInput.value));
+    urlInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") loadURL(urlInput.value);
+    });
+
+    setTab("home");
+  </script>
 </body>
 </html>
