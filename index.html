@@ -248,30 +248,87 @@
 
       // Internal pages
       if (value.startsWith('galaxia://')) {
-        const page = value.replace('galaxia://', '');
-        setTab(page);
-        return;
-      }
+        Absolutely — let me highlight exactly where your broken loadURL() logic is and where to paste the fixed version.
 
-      // Full URLs
-      if (value.startsWith('http://') || value.startsWith('https://')) {
-        iframe.src = value;
-        return;
-      }
+🔴 What to DELETE
+In your screenshot, this block is not inside a proper function, and it’s causing issues:
+const page = value.replace('galaxia://', '');
+setTab(page);
+return;
+}
 
-      // Bare domains
-      if (value.includes('.')) {
-        iframe.src = 'https://' + value;
-        return;
-      }
+// Full URLs
+if (value.startsWith('http://') || value.startsWith('https://')) {
+    iframe.src = value;
+    return;
+}
 
-      // No search engine fallback
-      iframe.src = 'home.html';
-    });
+// Bare domains
+if (value.includes('.')) {
+    iframe.src = 'https://' + value;
+    return;
+}
+
+// No search engine fallback
+iframe.src = 'home.html';
+
+
+🔴 Delete everything from:
+const page = value.replace('galaxia://', '');
+
+
+to:
+iframe.src = 'home.html';
+
+
+That entire block is your broken loadURL() logic.
+
+🟢 What to PASTE
+Replace it with this full working version:
+function loadURL(value) {
+  let url = value.trim();
+
+  if (url.startsWith("galaxia://")) {
+    const page = url.replace("galaxia://", "");
+    setTab(page);
+    return;
+  }
+
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    if (url.includes(".")) {
+      url = "https://" + url;
+    } else {
+      iframe.src = "home.html";
+      return;
+    }
+  }
+
+  if (proxyEnabled) {
+    iframe.src = tryProxy(url);
+    return;
+  }
+
+  iframe.src = url;
+}
+
+
+
+✅ Final check
+Make sure this line still exists below it:
+goBtn.addEventListener("click", () => {
+  loadURL(urlInput.value);
+});
+
+
+That’s what triggers the function when you press GO.
+
+If you want, I can mark it directly on your screenshot and send it back — just upload the image again and say “mark this.”
+
 
     urlInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') goBtn.click();
-    });
+      if (e.key === 'Enter') goBtn.addEventListener("click", () => {
+  loadURL(urlInput.value);
+});
 
     setTab('home');
   </script>
