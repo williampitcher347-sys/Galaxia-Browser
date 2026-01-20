@@ -202,6 +202,51 @@
 
     setTab('home');
   </script>
+let proxyEnabled = false;
+const proxyURL = "https://corsproxy.io/?";
 
+function enableProxy() {
+  proxyEnabled = true;
+  alert("Proxy Mode Enabled");
+}
+
+function disableProxy() {
+  proxyEnabled = false;
+  alert("Proxy Mode Disabled");
+}
+
+function loadURL(value) {
+  let url = value.trim();
+
+  // Internal Galaxia pages
+  if (url.startsWith("galaxia://")) {
+    const page = url.replace("galaxia://", "");
+    setTab(page);
+    return;
+  }
+
+  // Add https:// if missing
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    if (url.includes(".")) {
+      url = "https://" + url;
+    } else {
+      iframe.src = "home.html";
+      return;
+    }
+  }
+
+  // Proxy mode
+  if (proxyEnabled) {
+    iframe.src = proxyURL + encodeURIComponent(url);
+    return;
+  }
+
+  // Normal mode
+  iframe.src = url;
+}
+
+goBtn.addEventListener("click", () => {
+  loadURL(urlInput.value);
+});
 </body>
 </html>
