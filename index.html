@@ -3,7 +3,21 @@
 <head>
   <title>Galaxia Browser</title>
   <style>
-    body {
+    body {<div id="proxyStatus" style="
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 14px;
+  background: #220000;
+  color: #ff4444;
+  border: 1px solid #ff4444;
+  box-shadow: 0 0 10px #ff4444;
+">
+  Proxy: DISCONNECTED
+</div>
       margin: 0;
       background: radial-gradient(circle at top, #0a0a0a 0, #000 70%);
       color: #0ff;
@@ -205,48 +219,32 @@
 let proxyEnabled = false;
 const proxyURL = "https://corsproxy.io/?";
 
+function updateProxyUI() {
+  const box = document.getElementById("proxyStatus");
+
+  if (proxyEnabled) {
+    box.textContent = "Proxy: CONNECTED";
+    box.style.background = "#002200";
+    box.style.color = "#00ff00";
+    box.style.border = "1px solid #00ff00";
+    box.style.boxShadow = "0 0 10px #00ff00";
+  } else {
+    box.textContent = "Proxy: DISCONNECTED";
+    box.style.background = "#220000";
+    box.style.color = "#ff4444";
+    box.style.border = "1px solid #ff4444";
+    box.style.boxShadow = "0 0 10px #ff4444";
+  }
+}
+
 function enableProxy() {
   proxyEnabled = true;
-  alert("Proxy Mode Enabled");
+  updateProxyUI();
 }
 
 function disableProxy() {
   proxyEnabled = false;
-  alert("Proxy Mode Disabled");
+  updateProxyUI();
 }
-
-function loadURL(value) {
-  let url = value.trim();
-
-  // Internal Galaxia pages
-  if (url.startsWith("galaxia://")) {
-    const page = url.replace("galaxia://", "");
-    setTab(page);
-    return;
-  }
-
-  // Add https:// if missing
-  if (!url.startsWith("http://") && !url.startsWith("https://")) {
-    if (url.includes(".")) {
-      url = "https://" + url;
-    } else {
-      iframe.src = "home.html";
-      return;
-    }
-  }
-
-  // Proxy mode
-  if (proxyEnabled) {
-    iframe.src = proxyURL + encodeURIComponent(url);
-    return;
-  }
-
-  // Normal mode
-  iframe.src = url;
-}
-
-goBtn.addEventListener("click", () => {
-  loadURL(urlInput.value);
-});
 </body>
 </html>
