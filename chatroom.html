@@ -111,52 +111,7 @@
     </div>
   </div>
 
-  <script>
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("msgInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const STORAGE_KEY = "galaxia_chat_messages_v1";
-
-    function formatTime() {
-      const d = new Date();
-      return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    }
-
-    function saveMessage(text) {
-      const messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      messages.push({ text, time: formatTime() });
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-    }
-
-    function renderMessages() {
-      const messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      chat.innerHTML = "";
-      messages.forEach(msg => {
-        const bubble = document.createElement("div");
-        bubble.className = "bubble me";
-        bubble.innerHTML = `
-          <div>${msg.text}</div>
-          <div class="meta">${msg.time}</div>
-        `;
-        chat.appendChild(bubble);
-      });
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    function sendMessage() {
-      const text = input.value.trim();
-      if (!text) return;
-      saveMessage(text);
-      renderMessages();
-      input.value = "";
-    }
-
-    sendBtn.addEventListener("click", sendMessage);
-    input.addEventListener("keydown", e => {
-      if (e.key === "Enter") sendMessage();
-    });
-
-    renderMessages();
-  </script>
+  <!-- Link to your external script -->
+  <script src="chatroom.js"></script>
 </body>
 </html>
