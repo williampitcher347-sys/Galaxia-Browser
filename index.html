@@ -622,9 +622,7 @@
   </div>
 
   <script>
-    // Replace this with your actual MockAPI messages endpoint, e.g.:
-    // const CHAT_API = "https://64xxxxxx.mockapi.io/messages";
-    const CHAT_API = "https://YOUR-MOCKAPI-ENDPOINT-HERE/messages";
+    const CHAT_API = "https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
 
     const urlInput = document.getElementById("url");
     const goBtn = document.getElementById("goBtn");
@@ -875,7 +873,7 @@
         data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         renderMessages(data);
       } catch (e) {
-        // silent fail
+        // ignore fetch errors silently
       }
     }
 
@@ -883,9 +881,9 @@
       const lower = str.toLowerCase();
       const banned = [
         "hitler",
-        "badword1",
-        "badword2",
-        "racist"
+        "Kys",
+        "Nigga",
+        "Nigger"
       ];
       return banned.some(w => lower.includes(w));
     }
@@ -907,15 +905,19 @@
       };
 
       try {
-        await fetch(CHAT_API, {
+        const res = await fetch(CHAT_API, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
+        if (!res.ok) {
+          alert("Failed to send message (server error).");
+          return;
+        }
         chatInput.value = "";
         fetchMessages();
       } catch (e) {
-        alert("Failed to send message.");
+        alert("Failed to send message (network error).");
       }
     }
 
