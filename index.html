@@ -13,7 +13,6 @@
       color: #0ff;
     }
 
-    /* INTRO */
     .galaxia-intro {
       position: fixed;
       top: 50%;
@@ -34,7 +33,6 @@
       100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); filter: blur(12px); }
     }
 
-    /* STARFIELD */
     .stars, .stars2, .stars3 {
       position: fixed;
       width: 200%;
@@ -55,7 +53,6 @@
       to   { transform: translate(20%,20%) scale(1.3); }
     }
 
-    /* TOP BAR */
     .top-bar {
       display: flex;
       align-items: center;
@@ -107,7 +104,6 @@
       color: #0ff;
     }
 
-    /* LAYOUT */
     .main-wrap {
       position: absolute;
       top: 48px;
@@ -117,7 +113,6 @@
       display: flex;
     }
 
-    /* SHORTCUT PANEL */
     .gx-shortcuts {
       width: 190px;
       padding: 12px;
@@ -158,7 +153,6 @@
       transform: scale(1.05);
     }
 
-    /* TOGGLE BUTTON */
     .toggle-panel {
       position: fixed;
       top: 56px;
@@ -178,7 +172,6 @@
       box-shadow: 0 0 15px #0ff;
     }
 
-    /* DESKTOP / APP AREA */
     .desktop {
       flex: 1;
       position: relative;
@@ -222,7 +215,6 @@
       box-shadow: 0 0 15px rgba(0,255,255,0.2);
     }
 
-    /* WEB APP */
     #app-web iframe {
       width: 100%;
       height: calc(100% - 10px);
@@ -231,7 +223,6 @@
       transition: opacity 0.25s ease;
     }
 
-    /* NOTES */
     #notes-area {
       width: 100%;
       height: 260px;
@@ -246,14 +237,12 @@
       box-sizing: border-box;
     }
 
-    /* CLOCK */
     #clock-display {
       font-size: 2.2rem;
       text-shadow: 0 0 15px #0ff;
       margin-bottom: 10px;
     }
 
-    /* CALCULATOR */
     .calc-display {
       width: 100%;
       padding: 10px;
@@ -286,7 +275,6 @@
       box-shadow: 0 0 10px #0ff;
     }
 
-    /* TERMINAL */
     #terminal-output {
       width: 100%;
       height: 220px;
@@ -313,7 +301,6 @@
       box-sizing: border-box;
     }
 
-    /* SETTINGS */
     #username-input {
       width: 100%;
       padding: 8px;
@@ -325,7 +312,6 @@
       margin-bottom: 8px;
     }
 
-    /* CONSOLE */
     #console-log {
       width: 100%;
       height: 220px;
@@ -340,7 +326,6 @@
       box-sizing: border-box;
     }
 
-    /* ARCADE */
     #arcade-box {
       width: 260px;
       height: 260px;
@@ -371,7 +356,6 @@
       left: 130px;
     }
 
-    /* CHATROOM (Messenger style) */
     .chat-wrap {
       display: flex;
       flex-direction: column;
@@ -394,6 +378,9 @@
     .chat-row.me {
       justify-content: flex-end;
     }
+    .chat-row.other {
+      justify-content: flex-start;
+    }
     .chat-row.system {
       justify-content: center;
     }
@@ -409,6 +396,11 @@
       background: #007bff;
       color: #fff;
       border-bottom-right-radius: 2px;
+    }
+    .chat-bubble.other {
+      background: #111827;
+      color: #e5e7eb;
+      border-bottom-left-radius: 2px;
     }
     .chat-bubble.system {
       background: rgba(0,0,0,0.9);
@@ -470,7 +462,6 @@
   </div>
 
   <div class="main-wrap">
-    <!-- SHORTCUTS -->
     <div class="gx-shortcuts" id="panel">
       <h3>Galaxia OS</h3>
       <button onclick="openApp('home')">🏠 Home</button>
@@ -488,10 +479,8 @@
       <button onclick="toggleTurbo()">⚡ Turbo Mode</button>
     </div>
 
-    <!-- DESKTOP -->
     <div class="desktop">
 
-      <!-- HOME -->
       <div class="app-screen active" id="app-home">
         <div class="app-title">Galaxia OS</div>
         <div class="app-sub">Custom sci‑fi browser OS • Made by William.</div>
@@ -512,7 +501,6 @@
         </div>
       </div>
 
-      <!-- APPS HUB -->
       <div class="app-screen" id="app-apps">
         <div class="app-title">Apps Hub</div>
         <div class="app-sub">All real Galaxia apps in one place.</div>
@@ -521,14 +509,12 @@
         </div>
       </div>
 
-      <!-- WEB -->
       <div class="app-screen" id="app-web">
         <div class="app-title">Web Browser</div>
         <div class="app-sub">Use the top URL bar to load real sites or Galaxia commands.</div>
         <iframe id="webFrame" src="about:blank"></iframe>
       </div>
 
-      <!-- CHATROOM -->
       <div class="app-screen" id="app-chatroom">
         <div class="app-title">Chatroom</div>
         <div class="app-sub">Messenger‑style chat. Username is set in Settings.</div>
@@ -541,21 +527,18 @@
         </div>
       </div>
 
-      <!-- NOTES -->
       <div class="app-screen" id="app-notes">
         <div class="app-title">Notes</div>
         <div class="app-sub">Write anything. Stored in this session.</div>
         <textarea id="notes-area" placeholder="Type your notes here..."></textarea>
       </div>
 
-      <!-- CLOCK -->
       <div class="app-screen" id="app-clock">
         <div class="app-title">Clock</div>
         <div class="app-sub">Live digital clock.</div>
         <div id="clock-display">--:--:--</div>
       </div>
 
-      <!-- CALCULATOR -->
       <div class="app-screen" id="app-calc">
         <div class="app-title">Calculator</div>
         <div class="app-sub">Clean neon calculator.</div>
@@ -585,7 +568,6 @@
         </div>
       </div>
 
-      <!-- TERMINAL -->
       <div class="app-screen" id="app-terminal">
         <div class="app-title">Terminal</div>
         <div class="app-sub">Simple command terminal.</div>
@@ -593,7 +575,6 @@
         <input id="terminal-input" placeholder="Type a command (help, clear, turbo)...">
       </div>
 
-      <!-- ARCADE -->
       <div class="app-screen" id="app-arcade">
         <div class="app-title">Arcade</div>
         <div class="app-sub">Move the paddle and bounce the ball.</div>
@@ -607,7 +588,6 @@
         </div>
       </div>
 
-      <!-- SETTINGS -->
       <div class="app-screen" id="app-settings">
         <div class="app-title">Settings</div>
         <div class="app-sub">Change username and view turbo status.</div>
@@ -622,7 +602,6 @@
         </div>
       </div>
 
-      <!-- ABOUT -->
       <div class="app-screen" id="app-about">
         <div class="app-title">About Galaxia</div>
         <div class="app-sub">Custom sci‑fi browser OS.</div>
@@ -633,7 +612,6 @@
         </div>
       </div>
 
-      <!-- CONSOLE -->
       <div class="app-screen" id="app-console">
         <div class="app-title">System Console</div>
         <div class="app-sub">Logs actions.</div>
@@ -644,6 +622,10 @@
   </div>
 
   <script>
+    // Replace this with your actual MockAPI messages endpoint, e.g.:
+    // const CHAT_API = "https://64xxxxxx.mockapi.io/messages";
+    const CHAT_API = "https://YOUR-MOCKAPI-ENDPOINT-HERE/messages";
+
     const urlInput = document.getElementById("url");
     const goBtn = document.getElementById("goBtn");
     const panel = document.getElementById("panel");
@@ -654,6 +636,7 @@
     let turbo = false;
     let calcBuffer = "";
     let username = localStorage.getItem("galaxiaUsername") || "Guest";
+    let lastMessagesJson = "";
 
     function logConsole(msg) {
       const time = new Date().toLocaleTimeString();
@@ -691,7 +674,6 @@
       let url = value.trim();
       if (!url) return;
 
-      // Internal commands
       if (url.toLowerCase().startsWith("galaxia:")) {
         const page = url.split(":")[1].toLowerCase();
         openApp(page);
@@ -699,7 +681,6 @@
         return;
       }
 
-      // External URL
       if (url.includes(".")) {
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
           url = "https://" + url;
@@ -721,7 +702,6 @@
       if (e.key === "Enter") loadURL(urlInput.value);
     });
 
-    /* CLOCK */
     function updateClock() {
       const d = new Date();
       const h = String(d.getHours()).padStart(2, "0");
@@ -733,7 +713,6 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    /* CALCULATOR */
     function calcPress(val) {
       if (val === '.' && calcBuffer.endsWith('.')) return;
       calcBuffer += val;
@@ -754,7 +733,6 @@
       document.getElementById("calc-display").value = "";
     }
 
-    /* TERMINAL */
     const termOut = document.getElementById("terminal-output");
     const termIn = document.getElementById("terminal-input");
 
@@ -783,7 +761,6 @@
       }
     });
 
-    /* ARCADE */
     const player = document.getElementById("arcade-player");
     const ball = document.getElementById("arcade-ball");
     let playerX = 110;
@@ -810,7 +787,6 @@
         if (ballX <= 10 || ballX >= 238) ballVX *= -1;
         if (ballY <= 10) ballVY *= -1;
 
-        // Paddle collision
         const paddleTop = 250;
         if (ballY >= paddleTop - 12 && ballY <= paddleTop &&
             ballX >= playerX && ballX <= playerX + 40) {
@@ -818,7 +794,6 @@
           ballY = paddleTop - 12;
         }
 
-        // Missed ball
         if (ballY > 260) {
           ballX = 130;
           ballY = 40;
@@ -833,7 +808,6 @@
     }
     arcadeLoop();
 
-    /* SETTINGS / USERNAME */
     function refreshUsernameUI() {
       document.getElementById("current-username").textContent = username;
       document.getElementById("username-input").value = username;
@@ -851,32 +825,58 @@
       logConsole("Username changed to " + username);
     }
 
-    /* CHATROOM */
     const chatMessages = document.getElementById("chat-messages");
     const chatInput = document.getElementById("chat-input");
     const chatSend = document.getElementById("chat-send");
 
-    function addChatMessage(text, who = "me") {
+    function addChatMessageElement(msgObj) {
+      const isMe = msgObj.username === username;
+      const whoClass = msgObj.system ? "system" : (isMe ? "me" : "other");
+
       const row = document.createElement("div");
-      row.className = "chat-row " + who;
+      row.className = "chat-row " + whoClass;
 
       const bubble = document.createElement("div");
-      bubble.className = "chat-bubble " + (who === "me" ? "me" : "system");
+      bubble.className = "chat-bubble " + (msgObj.system ? "system" : (isMe ? "me" : "other"));
       const meta = document.createElement("div");
       meta.className = "chat-meta";
 
-      const time = new Date().toLocaleTimeString();
-      if (who === "me") {
-        bubble.innerHTML = "<b>" + username + ":</b> " + text;
-        meta.textContent = time;
+      const time = msgObj.createdAt
+        ? new Date(msgObj.createdAt).toLocaleTimeString()
+        : new Date().toLocaleTimeString();
+
+      if (msgObj.system) {
+        bubble.textContent = msgObj.text;
       } else {
-        bubble.textContent = text;
+        bubble.innerHTML = "<b>" + msgObj.username + ":</b> " + msgObj.text;
       }
+      meta.textContent = time;
 
       bubble.appendChild(meta);
       row.appendChild(bubble);
       chatMessages.appendChild(row);
+    }
+
+    function renderMessages(list) {
+      const json = JSON.stringify(list);
+      if (json === lastMessagesJson) return;
+      lastMessagesJson = json;
+
+      chatMessages.innerHTML = "";
+      list.forEach(m => addChatMessageElement(m));
       chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function fetchMessages() {
+      try {
+        const res = await fetch(CHAT_API);
+        if (!res.ok) return;
+        const data = await res.json();
+        data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        renderMessages(data);
+      } catch (e) {
+        // silent fail
+      }
     }
 
     function containsBadLanguage(str) {
@@ -890,7 +890,7 @@
       return banned.some(w => lower.includes(w));
     }
 
-    function sendChat() {
+    async function sendChat() {
       const text = chatInput.value.trim();
       if (!text) return;
 
@@ -900,8 +900,23 @@
         return;
       }
 
-      addChatMessage(text, "me");
-      chatInput.value = "";
+      const payload = {
+        username: username,
+        text: text,
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        await fetch(CHAT_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        chatInput.value = "";
+        fetchMessages();
+      } catch (e) {
+        alert("Failed to send message.");
+      }
     }
 
     chatSend.addEventListener("click", sendChat);
@@ -909,9 +924,17 @@
       if (e.key === "Enter") sendChat();
     });
 
-    addChatMessage("Welcome to the Galaxia chatroom. Username is set in Settings.", "system");
+    function addSystemMessage(text) {
+      const msg = { system: true, text, createdAt: new Date().toISOString() };
+      addChatMessageElement(msg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
-    /* INITIAL */
+    addSystemMessage("Welcome to the Galaxia chatroom. Username is set in Settings.");
+
+    setInterval(fetchMessages, 1500);
+    fetchMessages();
+
     refreshUsernameUI();
     document.getElementById("settings-turbo").textContent = turbo ? "ON" : "OFF";
     openApp("home");
@@ -920,4 +943,3 @@
 
 </body>
 </html>
-```
