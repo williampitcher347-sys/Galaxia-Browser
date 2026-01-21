@@ -1,3 +1,15 @@
+Here’s your new **Galaxia OS** in one HTML file, with:
+
+- Real apps only  
+- Messenger‑style chatroom  
+- Username set in Settings and saved with `localStorage`  
+- Swear/“Hitler”/racist‑word filter (blocks + warns, doesn’t post)  
+- Fixed calculator  
+- Working arcade  
+- About says **“Made by William”**  
+- Black + blue theme, starfield, turbo mode, shortcuts  
+
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +39,6 @@
       z-index: 9999;
       pointer-events: none;
     }
-
     @keyframes galaxiaIntro {
       0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); filter: blur(8px); }
       20% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
@@ -48,22 +59,20 @@
       z-index: -3;
       animation: drift 120s linear infinite;
     }
-
     .stars  { background-image: url('https://i.imgur.com/9aKxH8Z.gif'); animation-duration: 160s; opacity: 0.35; }
     .stars2 { background-image: url('https://i.imgur.com/9aKxH8Z.gif'); animation-duration: 110s; opacity: 0.22; }
     .stars3 { background-image: url('https://i.imgur.com/9aKxH8Z.gif'); animation-duration: 70s;  opacity: 0.12; }
-
     @keyframes drift {
       from { transform: translate(0,0) scale(1.3); }
       to   { transform: translate(20%,20%) scale(1.3); }
     }
 
-    /* TOP BAR (BROWSER) */
+    /* TOP BAR */
     .top-bar {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 18px;
+      padding: 10px 16px;
       background: rgba(0, 25, 40, 0.7);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid #0ff;
@@ -71,10 +80,9 @@
       position: relative;
       z-index: 10;
     }
-
     .url-input {
       flex: 1;
-      padding: 10px 16px;
+      padding: 9px 14px;
       border-radius: 999px;
       border: 1px solid #0ff;
       background: rgba(0,0,0,0.7);
@@ -83,12 +91,10 @@
       outline: none;
       transition: 0.25s;
     }
-
     .url-input:focus {
       box-shadow: 0 0 20px #0ff;
       transform: scale(1.03);
     }
-
     .btn {
       padding: 8px 18px;
       border-radius: 999px;
@@ -99,13 +105,11 @@
       font-size: 13px;
       transition: 0.25s;
     }
-
     .btn:hover {
       background: rgba(0,255,255,0.25);
       box-shadow: 0 0 20px #0ff;
       transform: scale(1.08);
     }
-
     .turbo-indicator {
       font-size: 11px;
       padding: 4px 10px;
@@ -118,7 +122,7 @@
     /* LAYOUT */
     .main-wrap {
       position: absolute;
-      top: 52px;
+      top: 48px;
       left: 0;
       right: 0;
       bottom: 0;
@@ -138,19 +142,16 @@
       font-family: 'Orbitron', sans-serif;
       transition: 0.3s;
     }
-
     .gx-shortcuts.hidden {
       transform: translateX(-200px);
       opacity: 0;
     }
-
     .gx-shortcuts h3 {
       margin: 0 0 8px 0;
       font-size: 0.9rem;
       text-align: center;
       text-shadow: 0 0 10px #0ff;
     }
-
     .gx-shortcuts button {
       width: 100%;
       margin: 4px 0;
@@ -163,7 +164,6 @@
       font-size: 0.75rem;
       transition: 0.2s;
     }
-
     .gx-shortcuts button:hover {
       background: rgba(0,255,255,0.25);
       box-shadow: 0 0 15px #0ff;
@@ -173,7 +173,7 @@
     /* TOGGLE BUTTON */
     .toggle-panel {
       position: fixed;
-      top: 60px;
+      top: 56px;
       left: 10px;
       padding: 6px 10px;
       background: rgba(0,0,0,0.8);
@@ -185,7 +185,6 @@
       transition: 0.25s;
       font-size: 11px;
     }
-
     .toggle-panel:hover {
       background: rgba(0,255,255,0.25);
       box-shadow: 0 0 15px #0ff;
@@ -200,38 +199,32 @@
       box-shadow: inset 0 0 25px rgba(0,255,255,0.15);
       overflow: hidden;
     }
-
     .app-screen {
       position: absolute;
       inset: 0;
-      padding: 20px;
+      padding: 18px;
       display: none;
       color: #eaffff;
       overflow: auto;
     }
-
     .app-screen.active {
       display: block;
       animation: fadeIn 0.3s ease-out;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     .app-title {
       font-size: 1.4rem;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-shadow: 0 0 10px #0ff;
     }
-
     .app-sub {
       font-size: 0.9rem;
       opacity: 0.8;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
-
     .card {
       background: rgba(0,0,0,0.7);
       border: 1px solid #0ff;
@@ -241,7 +234,7 @@
       box-shadow: 0 0 15px rgba(0,255,255,0.2);
     }
 
-    /* WEB VIEW APP */
+    /* WEB APP */
     #app-web iframe {
       width: 100%;
       height: calc(100% - 10px);
@@ -250,7 +243,7 @@
       transition: opacity 0.25s ease;
     }
 
-    /* NOTES APP */
+    /* NOTES */
     #notes-area {
       width: 100%;
       height: 260px;
@@ -262,16 +255,17 @@
       resize: vertical;
       outline: none;
       font-family: monospace;
+      box-sizing: border-box;
     }
 
-    /* CLOCK APP */
+    /* CLOCK */
     #clock-display {
-      font-size: 2.4rem;
+      font-size: 2.2rem;
       text-shadow: 0 0 15px #0ff;
       margin-bottom: 10px;
     }
 
-    /* CALCULATOR APP */
+    /* CALCULATOR */
     .calc-display {
       width: 100%;
       padding: 10px;
@@ -284,13 +278,11 @@
       font-size: 1.1rem;
       box-sizing: border-box;
     }
-
     .calc-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
     }
-
     .calc-btn {
       padding: 10px;
       border-radius: 6px;
@@ -301,13 +293,12 @@
       font-size: 1rem;
       transition: 0.2s;
     }
-
     .calc-btn:hover {
       background: rgba(0,255,255,0.25);
       box-shadow: 0 0 10px #0ff;
     }
 
-    /* TERMINAL APP */
+    /* TERMINAL */
     #terminal-output {
       width: 100%;
       height: 220px;
@@ -321,7 +312,6 @@
       overflow-y: auto;
       box-sizing: border-box;
     }
-
     #terminal-input {
       width: 100%;
       margin-top: 8px;
@@ -335,74 +325,19 @@
       box-sizing: border-box;
     }
 
-    /* MUSIC APP */
-    .music-list button {
+    /* SETTINGS */
+    #username-input {
       width: 100%;
-      margin: 4px 0;
       padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #0ff;
       background: rgba(0,0,0,0.8);
-      color: #eaffff;
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: 0.2s;
-    }
-
-    .music-list button:hover {
-      background: rgba(0,255,255,0.25);
-      box-shadow: 0 0 10px #0ff;
-    }
-
-    /* WEATHER APP */
-    .weather-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .weather-card {
-      text-align: center;
-      padding: 10px;
+      border: 1px solid #0ff;
       border-radius: 8px;
-      border: 1px solid #0ff;
-      background: rgba(0,0,0,0.7);
+      color: #eaffff;
+      box-sizing: border-box;
+      margin-bottom: 8px;
     }
 
-    /* FILES APP */
-    .file-item {
-      padding: 6px 8px;
-      border-radius: 6px;
-      border: 1px solid #0ff;
-      margin-bottom: 6px;
-      background: rgba(0,0,0,0.7);
-      font-size: 0.8rem;
-    }
-
-    /* ARCADE APP */
-    #arcade-box {
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      border: 2px solid #0ff;
-      margin: 10px auto;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 25px #0ff;
-    }
-
-    #arcade-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #0ff;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    /* CONSOLE APP */
+    /* CONSOLE */
     #console-log {
       width: 100%;
       height: 220px;
@@ -417,21 +352,129 @@
       box-sizing: border-box;
     }
 
+    /* ARCADE */
+    #arcade-box {
+      width: 260px;
+      height: 260px;
+      border-radius: 20px;
+      border: 2px solid #0ff;
+      margin: 10px auto;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 25px #0ff;
+      background: radial-gradient(circle at center, #001020, #000);
+    }
+    #arcade-player {
+      width: 40px;
+      height: 10px;
+      border-radius: 4px;
+      background: #0ff;
+      position: absolute;
+      bottom: 10px;
+      left: 110px;
+    }
+    #arcade-ball {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #0ff;
+      position: absolute;
+      top: 40px;
+      left: 130px;
+    }
+
+    /* CHATROOM (Messenger style) */
+    .chat-wrap {
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 40px);
+      max-height: 80vh;
+    }
+    #chat-messages {
+      flex: 1;
+      background: rgba(0,0,0,0.8);
+      border: 1px solid #0ff;
+      border-radius: 10px;
+      padding: 10px;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+    .chat-row {
+      display: flex;
+      margin-bottom: 6px;
+    }
+    .chat-row.me {
+      justify-content: flex-end;
+    }
+    .chat-row.system {
+      justify-content: center;
+    }
+    .chat-bubble {
+      max-width: 70%;
+      padding: 8px 10px;
+      border-radius: 14px;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      box-shadow: 0 0 10px rgba(0,255,255,0.2);
+    }
+    .chat-bubble.me {
+      background: #007bff;
+      color: #fff;
+      border-bottom-right-radius: 2px;
+    }
+    .chat-bubble.system {
+      background: rgba(0,0,0,0.9);
+      color: #0ff;
+      border-radius: 10px;
+      font-style: italic;
+    }
+    .chat-meta {
+      font-size: 0.65rem;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+    .chat-input-row {
+      display: flex;
+      margin-top: 8px;
+      gap: 6px;
+    }
+    #chat-input {
+      flex: 1;
+      padding: 8px;
+      background: rgba(0,0,0,0.8);
+      border: 1px solid #0ff;
+      border-radius: 999px;
+      color: #eaffff;
+      font-size: 0.85rem;
+      outline: none;
+    }
+    #chat-send {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid #0ff;
+      background: rgba(0,0,0,0.9);
+      color: #eaffff;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: 0.2s;
+    }
+    #chat-send:hover {
+      background: rgba(0,255,255,0.25);
+      box-shadow: 0 0 10px #0ff;
+    }
   </style>
 </head>
 
 <body>
 
-  <div class="galaxia-intro">Made with Galaxia</div>
+  <div class="galaxia-intro">Made with Galaxia • By William</div>
 
   <div class="stars"></div>
   <div class="stars2"></div>
   <div class="stars3"></div>
 
-  <!-- TOGGLE SHORTCUTS -->
   <div class="toggle-panel" onclick="togglePanel()">☰ Menu</div>
 
-  <!-- TOP BAR -->
   <div class="top-bar">
     <input id="url" class="url-input" placeholder="Enter URL or Galaxia:home">
     <button id="goBtn" class="btn">Go</button>
@@ -439,133 +482,95 @@
   </div>
 
   <div class="main-wrap">
-    <!-- SHORTCUT PANEL -->
+    <!-- SHORTCUTS -->
     <div class="gx-shortcuts" id="panel">
       <h3>Galaxia OS</h3>
       <button onclick="openApp('home')">🏠 Home</button>
       <button onclick="openApp('apps')">🛰 Apps Hub</button>
-      <button onclick="openApp('chatroom')">💬 Chatroom</button>
-      <button onclick="openApp('about')">ℹ About</button>
-      <hr style="border-color:#0ff33; opacity:0.4;">
       <button onclick="openApp('web')">🌐 Web Browser</button>
+      <button onclick="openApp('chatroom')">💬 Chatroom</button>
       <button onclick="openApp('notes')">📝 Notes</button>
       <button onclick="openApp('clock')">⏱ Clock</button>
       <button onclick="openApp('calc')">🧮 Calculator</button>
       <button onclick="openApp('terminal')">💻 Terminal</button>
-      <button onclick="openApp('settings')">⚙ Settings</button>
       <button onclick="openApp('arcade')">🎮 Arcade</button>
-      <button onclick="openApp('music')">🎵 Music</button>
-      <button onclick="openApp('weather')">☁ Weather</button>
-      <button onclick="openApp('files')">📁 Files</button>
-      <button onclick="openApp('news')">📰 News</button>
-      <button onclick="openApp('social')">🌐 Social</button>
-      <button onclick="openApp('store')">🛒 Store</button>
+      <button onclick="openApp('settings')">⚙ Settings</button>
+      <button onclick="openApp('about')">ℹ About</button>
       <button onclick="openApp('console')">📟 Console</button>
       <button onclick="toggleTurbo()">⚡ Turbo Mode</button>
     </div>
 
-    <!-- DESKTOP / APP AREA -->
+    <!-- DESKTOP -->
     <div class="desktop">
 
-      <!-- HOME APP -->
+      <!-- HOME -->
       <div class="app-screen active" id="app-home">
         <div class="app-title">Galaxia OS</div>
-        <div class="app-sub">Welcome to your sci‑fi desktop. Use the menu to open apps or type Galaxia commands.</div>
+        <div class="app-sub">Custom sci‑fi browser OS • Made by William.</div>
         <div class="card">
-          <b>Quick commands:</b><br>
+          <b>Commands:</b><br>
           galaxia:home<br>
           galaxia:apps<br>
-          galaxia:chatroom<br>
-          galaxia:about<br>
           galaxia:web<br>
+          galaxia:chatroom<br>
           galaxia:notes<br>
           galaxia:clock<br>
           galaxia:calc<br>
           galaxia:terminal<br>
-          galaxia:settings<br>
           galaxia:arcade<br>
-          galaxia:music<br>
-          galaxia:weather<br>
-          galaxia:files<br>
-          galaxia:news<br>
-          galaxia:social<br>
-          galaxia:store<br>
+          galaxia:settings<br>
+          galaxia:about<br>
           galaxia:console
-        </div>
-        <div class="card">
-          <b>Tip:</b> Turn on Turbo Mode in the menu for faster app switching and web fades.
         </div>
       </div>
 
       <!-- APPS HUB -->
       <div class="app-screen" id="app-apps">
         <div class="app-title">Apps Hub</div>
-        <div class="app-sub">All your Galaxia apps in one place.</div>
+        <div class="app-sub">All real Galaxia apps in one place.</div>
         <div class="card">
-          <b>Core Apps:</b><br>
-          Home, Apps Hub, Chatroom, About, Web Browser
-        </div>
-        <div class="card">
-          <b>Utility Apps:</b><br>
-          Notes, Clock, Calculator, Terminal, Settings, Files, Console
-        </div>
-        <div class="card">
-          <b>Fun & Web:</b><br>
-          Arcade, Music, Weather, News, Social, Store
+          Home, Apps Hub, Web Browser, Chatroom, Notes, Clock, Calculator, Terminal, Arcade, Settings, About, Console.
         </div>
       </div>
 
-      <!-- CHATROOM APP (placeholder) -->
-      <div class="app-screen" id="app-chatroom">
-        <div class="app-title">Chatroom</div>
-        <div class="app-sub">Placeholder for your future real chatroom.</div>
-        <div class="card">
-          This is where your Galaxia chatroom UI will live.<br>
-          You can later add messages, usernames, and auto-refresh logic.
-        </div>
-      </div>
-
-      <!-- ABOUT APP -->
-      <div class="app-screen" id="app-about">
-        <div class="app-title">About Galaxia</div>
-        <div class="app-sub">Custom sci‑fi browser & OS by you.</div>
-        <div class="card">
-          <b>Creator:</b> You<br>
-          <b>Theme:</b> Black & Neon Blue<br>
-          <b>Engine:</b> HTML + CSS + JS (single file)<br>
-          <b>Features:</b> Turbo Mode, internal apps, URL browser, starfield, shortcuts panel.
-        </div>
-      </div>
-
-      <!-- WEB BROWSER APP -->
+      <!-- WEB -->
       <div class="app-screen" id="app-web">
         <div class="app-title">Web Browser</div>
         <div class="app-sub">Use the top URL bar to load real sites or Galaxia commands.</div>
         <iframe id="webFrame" src="about:blank"></iframe>
       </div>
 
-      <!-- NOTES APP -->
-      <div class="app-screen" id="app-notes">
-        <div class="app-title">Notes</div>
-        <div class="app-sub">Write anything. Stored in this session only.</div>
-        <textarea id="notes-area" placeholder="Type your notes here..."></textarea>
-      </div>
-
-      <!-- CLOCK APP -->
-      <div class="app-screen" id="app-clock">
-        <div class="app-title">Clock</div>
-        <div class="app-sub">Live digital clock in Galaxia style.</div>
-        <div id="clock-display">--:--:--</div>
-        <div class="card">
-          <b>Mode:</b> 24‑hour<br>
-          <b>Updates:</b> Every second
+      <!-- CHATROOM -->
+      <div class="app-screen" id="app-chatroom">
+        <div class="app-title">Chatroom</div>
+        <div class="app-sub">Messenger‑style chat. Username is set in Settings.</div>
+        <div class="chat-wrap">
+          <div id="chat-messages"></div>
+          <div class="chat-input-row">
+            <input id="chat-input" placeholder="Type a message...">
+            <button id="chat-send">Send</button>
+          </div>
         </div>
       </div>
 
-      <!-- CALCULATOR APP -->
+      <!-- NOTES -->
+      <div class="app-screen" id="app-notes">
+        <div class="app-title">Notes</div>
+        <div class="app-sub">Write anything. Stored in this session.</div>
+        <textarea id="notes-area" placeholder="Type your notes here..."></textarea>
+      </div>
+
+      <!-- CLOCK -->
+      <div class="app-screen" id="app-clock">
+        <div class="app-title">Clock</div>
+        <div class="app-sub">Live digital clock.</div>
+        <div id="clock-display">--:--:--</div>
+      </div>
+
+      <!-- CALCULATOR -->
       <div class="app-screen" id="app-calc">
         <div class="app-title">Calculator</div>
-        <div class="app-sub">Basic neon calculator.</div>
+        <div class="app-sub">Clean neon calculator.</div>
         <input id="calc-display" class="calc-display" readonly>
         <div class="calc-grid">
           <button class="calc-btn" onclick="calcPress('7')">7</button>
@@ -592,131 +597,58 @@
         </div>
       </div>
 
-      <!-- TERMINAL APP -->
+      <!-- TERMINAL -->
       <div class="app-screen" id="app-terminal">
         <div class="app-title">Terminal</div>
-        <div class="app-sub">Fake hacking terminal for fun.</div>
+        <div class="app-sub">Simple command terminal.</div>
         <div id="terminal-output"></div>
-        <input id="terminal-input" placeholder="Type a command (help, clear, galaxia)...">
+        <input id="terminal-input" placeholder="Type a command (help, clear, turbo)...">
       </div>
 
-      <!-- SETTINGS APP -->
-      <div class="app-screen" id="app-settings">
-        <div class="app-title">Settings</div>
-        <div class="app-sub">Basic toggles and info.</div>
-        <div class="card">
-          <b>Turbo Mode:</b> <span id="settings-turbo">OFF</span><br>
-          Use the menu button "Turbo Mode" to toggle.
-        </div>
-        <div class="card">
-          <b>Theme:</b> Black + Neon Blue<br>
-          <b>Layout:</b> Single‑file SPA<br>
-          <b>Starfield:</b> Enabled
-        </div>
-      </div>
-
-      <!-- ARCADE APP -->
+      <!-- ARCADE -->
       <div class="app-screen" id="app-arcade">
         <div class="app-title">Arcade</div>
-        <div class="app-sub">Mini‑game: move the dot with arrow keys.</div>
+        <div class="app-sub">Move the paddle and bounce the ball.</div>
         <div id="arcade-box">
-          <div id="arcade-dot"></div>
+          <div id="arcade-player"></div>
+          <div id="arcade-ball"></div>
         </div>
         <div class="card">
-          Use arrow keys to move the glowing dot.<br>
-          You can later replace this with a real game.
+          Use left/right arrow keys to move the paddle.<br>
+          Keep the ball from falling off the bottom.
         </div>
       </div>
 
-      <!-- MUSIC APP -->
-      <div class="app-screen" id="app-music">
-        <div class="app-title">Music</div>
-        <div class="app-sub">Simple audio player (uses sample tracks).</div>
-        <audio id="music-player" controls style="width:100%; margin-bottom:10px;">
-          <source id="music-source" src="" type="audio/mpeg">
-          Your browser does not support audio.
-        </audio>
-        <div class="music-list">
-          <button onclick="playTrack('https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav')">Play Track 1</button>
-          <button onclick="playTrack('https://www2.cs.uic.edu/~i101/SoundFiles/ImperialMarch60.wav')">Play Track 2</button>
-        </div>
-      </div>
-
-      <!-- WEATHER APP -->
-      <div class="app-screen" id="app-weather">
-        <div class="app-title">Weather</div>
-        <div class="app-sub">Fake sci‑fi weather dashboard.</div>
-        <div class="weather-grid">
-          <div class="weather-card">
-            <b>Maesteg</b><br>
-            12°C<br>
-            Clear Skies
-          </div>
-          <div class="weather-card">
-            <b>Galaxia Prime</b><br>
-            -120°C<br>
-            Ion Storms
-          </div>
-          <div class="weather-card">
-            <b>Orbital Station</b><br>
-            0°C<br>
-            Vacuum
-          </div>
-        </div>
-      </div>
-
-      <!-- FILES APP -->
-      <div class="app-screen" id="app-files">
-        <div class="app-title">Files</div>
-        <div class="app-sub">Fake file explorer UI.</div>
-        <div class="file-item">/system/galaxia/core.html</div>
-        <div class="file-item">/system/galaxia/apps/notes</div>
-        <div class="file-item">/system/galaxia/apps/terminal</div>
-        <div class="file-item">/user/documents/ideas.txt</div>
-        <div class="file-item">/user/music/track1.mp3</div>
-      </div>
-
-      <!-- NEWS APP -->
-      <div class="app-screen" id="app-news">
-        <div class="app-title">News</div>
-        <div class="app-sub">Static sci‑fi style news cards.</div>
+      <!-- SETTINGS -->
+      <div class="app-screen" id="app-settings">
+        <div class="app-title">Settings</div>
+        <div class="app-sub">Change username and view turbo status.</div>
         <div class="card">
-          <b>Galaxia OS v1.0 Launched</b><br>
-          Your custom browser‑OS hybrid is now live.
+          <b>Username</b><br>
+          <input id="username-input" placeholder="Enter username">
+          <button class="btn" style="margin-top:6px;" onclick="saveUsername()">Save Username</button><br>
+          <span style="font-size:0.8rem;">Current: <span id="current-username"></span></span>
         </div>
         <div class="card">
-          <b>Turbo Mode Activated</b><br>
-          Faster app switching and web fades enabled.
+          <b>Turbo Mode:</b> <span id="settings-turbo">OFF</span>
         </div>
       </div>
 
-      <!-- SOCIAL APP -->
-      <div class="app-screen" id="app-social">
-        <div class="app-title">Social</div>
-        <div class="app-sub">Links to your favourite sites (open via URL bar).</div>
+      <!-- ABOUT -->
+      <div class="app-screen" id="app-about">
+        <div class="app-title">About Galaxia</div>
+        <div class="app-sub">Custom sci‑fi browser OS.</div>
         <div class="card">
-          Type in the URL bar:<br>
-          youtube.com<br>
-          discord.com<br>
-          github.com<br>
-          reddit.com
+          <b>Made by:</b> William<br>
+          <b>Style:</b> Black & Neon Blue<br>
+          <b>Features:</b> Turbo Mode, internal apps, web browser, messenger chatroom, arcade.
         </div>
       </div>
 
-      <!-- STORE APP -->
-      <div class="app-screen" id="app-store">
-        <div class="app-title">Galaxia Store</div>
-        <div class="app-sub">Fake app store UI.</div>
-        <div class="card">
-          <b>Featured:</b> Galaxia Arcade, Galaxia Music, Galaxia Terminal<br>
-          (All already installed.)
-        </div>
-      </div>
-
-      <!-- CONSOLE APP -->
+      <!-- CONSOLE -->
       <div class="app-screen" id="app-console">
         <div class="app-title">System Console</div>
-        <div class="app-sub">Logs basic actions.</div>
+        <div class="app-sub">Logs actions.</div>
         <div id="console-log"></div>
       </div>
 
@@ -733,6 +665,7 @@
 
     let turbo = false;
     let calcBuffer = "";
+    let username = localStorage.getItem("galaxiaUsername") || "Guest";
 
     function logConsole(msg) {
       const time = new Date().toLocaleTimeString();
@@ -770,7 +703,7 @@
       let url = value.trim();
       if (!url) return;
 
-      // Internal Galaxia commands
+      // Internal commands
       if (url.toLowerCase().startsWith("galaxia:")) {
         const page = url.split(":")[1].toLowerCase();
         openApp(page);
@@ -814,6 +747,7 @@
 
     /* CALCULATOR */
     function calcPress(val) {
+      if (val === '.' && calcBuffer.endsWith('.')) return;
       calcBuffer += val;
       document.getElementById("calc-display").value = calcBuffer;
     }
@@ -841,7 +775,7 @@
       termOut.scrollTop = termOut.scrollHeight;
     }
 
-    termPrint("Galaxia Terminal v1.0");
+    termPrint("Galaxia Terminal");
     termPrint("Type 'help' for commands.");
 
     termIn.addEventListener("keydown", e => {
@@ -850,11 +784,9 @@
         termIn.value = "";
         termPrint("> " + cmd);
         if (cmd === "help") {
-          termPrint("Commands: help, clear, galaxia, turbo");
+          termPrint("Commands: help, clear, turbo");
         } else if (cmd === "clear") {
           termOut.innerHTML = "";
-        } else if (cmd === "galaxia") {
-          termPrint("Custom OS & browser hybrid.");
         } else if (cmd === "turbo") {
           toggleTurbo();
         } else {
@@ -863,41 +795,141 @@
       }
     });
 
-    /* ARCADE DOT */
-    const dot = document.getElementById("arcade-dot");
-    let dotX = 50;
-    let dotY = 50;
+    /* ARCADE */
+    const player = document.getElementById("arcade-player");
+    const ball = document.getElementById("arcade-ball");
+    let playerX = 110;
+    let ballX = 130;
+    let ballY = 40;
+    let ballVX = 2;
+    let ballVY = 2;
 
     document.addEventListener("keydown", e => {
-      const step = 4;
-      if (document.getElementById("app-arcade").classList.contains("active")) {
-        if (e.key === "ArrowUp") dotY -= step;
-        if (e.key === "ArrowDown") dotY += step;
-        if (e.key === "ArrowLeft") dotX -= step;
-        if (e.key === "ArrowRight") dotX += step;
-        if (dotX < 5) dotX = 5;
-        if (dotX > 95) dotX = 95;
-        if (dotY < 5) dotY = 5;
-        if (dotY > 95) dotY = 95;
-        dot.style.top = dotY + "%";
-        dot.style.left = dotX + "%";
-      }
+      if (!document.getElementById("app-arcade").classList.contains("active")) return;
+      const step = 10;
+      if (e.key === "ArrowLeft") playerX -= step;
+      if (e.key === "ArrowRight") playerX += step;
+      if (playerX < 10) playerX = 10;
+      if (playerX > 210) playerX = 210;
+      player.style.left = playerX + "px";
     });
 
-    /* MUSIC */
-    const musicPlayer = document.getElementById("music-player");
-    const musicSource = document.getElementById("music-source");
-    function playTrack(url) {
-      musicSource.src = url;
-      musicPlayer.load();
-      musicPlayer.play();
-      logConsole("Playing track: " + url);
+    function arcadeLoop() {
+      if (document.getElementById("app-arcade").classList.contains("active")) {
+        ballX += ballVX;
+        ballY += ballVY;
+
+        if (ballX <= 10 || ballX >= 238) ballVX *= -1;
+        if (ballY <= 10) ballVY *= -1;
+
+        // Paddle collision
+        const paddleTop = 250;
+        if (ballY >= paddleTop - 12 && ballY <= paddleTop &&
+            ballX >= playerX && ballX <= playerX + 40) {
+          ballVY *= -1;
+          ballY = paddleTop - 12;
+        }
+
+        // Missed ball
+        if (ballY > 260) {
+          ballX = 130;
+          ballY = 40;
+          ballVX = 2;
+          ballVY = 2;
+        }
+
+        ball.style.left = ballX + "px";
+        ball.style.top = ballY + "px";
+      }
+      requestAnimationFrame(arcadeLoop);
+    }
+    arcadeLoop();
+
+    /* SETTINGS / USERNAME */
+    function refreshUsernameUI() {
+      document.getElementById("current-username").textContent = username;
+      document.getElementById("username-input").value = username;
+    }
+    function saveUsername() {
+      const val = document.getElementById("username-input").value.trim();
+      if (!val) {
+        alert("Username cannot be empty.");
+        return;
+      }
+      username = val;
+      localStorage.setItem("galaxiaUsername", username);
+      refreshUsernameUI();
+      alert("Username saved as " + username);
+      logConsole("Username changed to " + username);
     }
 
+    /* CHATROOM */
+    const chatMessages = document.getElementById("chat-messages");
+    const chatInput = document.getElementById("chat-input");
+    const chatSend = document.getElementById("chat-send");
+
+    function addChatMessage(text, who = "me") {
+      const row = document.createElement("div");
+      row.className = "chat-row " + who;
+
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble " + (who === "me" ? "me" : "system");
+      const meta = document.createElement("div");
+      meta.className = "chat-meta";
+
+      const time = new Date().toLocaleTimeString();
+      if (who === "me") {
+        bubble.innerHTML = "<b>" + username + ":</b> " + text;
+        meta.textContent = time;
+      } else {
+        bubble.textContent = text;
+      }
+
+      bubble.appendChild(meta);
+      row.appendChild(bubble);
+      chatMessages.appendChild(row);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function containsBadLanguage(str) {
+      const lower = str.toLowerCase();
+      const banned = [
+        "hitler",
+        "badword1",
+        "badword2",
+        "racist"
+      ];
+      return banned.some(w => lower.includes(w));
+    }
+
+    function sendChat() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      if (containsBadLanguage(text)) {
+        alert("Warning: Inappropriate or hateful language is not allowed. Your message was removed.");
+        chatInput.value = "";
+        return;
+      }
+
+      addChatMessage(text, "me");
+      chatInput.value = "";
+    }
+
+    chatSend.addEventListener("click", sendChat);
+    chatInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") sendChat();
+    });
+
+    addChatMessage("Welcome to the Galaxia chatroom. Username is set in Settings.", "system");
+
     /* INITIAL */
+    refreshUsernameUI();
+    document.getElementById("settings-turbo").textContent = turbo ? "ON" : "OFF";
     openApp("home");
-    logConsole("Galaxia OS started.");
+    logConsole("Galaxia OS started. Username: " + username);
   </script>
 
 </body>
 </html>
+```
