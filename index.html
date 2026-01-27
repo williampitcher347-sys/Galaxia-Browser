@@ -5,176 +5,83 @@
 <title>Galaxia Browser</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
-
 <style>
-:root{
-  --glass:rgba(10,25,45,.75);
-  --accent:#00aaff;
-  --glow:0 0 25px rgba(0,170,255,.45);
-}
+:root{--glass:rgba(10,25,45,.75);--accent:#00aaff;--glow:0 0 25px rgba(0,170,255,.45)}
 *{box-sizing:border-box;font-family:Orbitron}
-body{
-  margin:0;
-  background:radial-gradient(circle at top,#0a1f3d,#02040a);
-  color:white;
-  overflow:hidden;
-}
+body{margin:0;background:radial-gradient(circle at top,#0a1f3d,#02040a);color:white;overflow:hidden}
 
 /* LOCK */
-#lock{
-  position:fixed;inset:0;
-  background:black;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:999;
+#lock,#updatePanel{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:999
 }
-#lockBox{
-  background:var(--glass);
-  padding:35px;
-  border-radius:22px;
-  box-shadow:var(--glow);
-  text-align:center;
+#lock{background:black}
+#lockBox,#updateBox{
+  background:var(--glass);padding:35px;border-radius:22px;
+  box-shadow:0 0 35px rgba(0,170,255,.8);text-align:center;animation:pop .5s
 }
-#lockBox input{
-  width:100%;
-  margin-top:12px;
-  padding:10px;
-  background:black;
-  border:1px solid var(--accent);
-  color:white;
-  border-radius:14px;
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+input,button{
+  background:black;border:1px solid var(--accent);color:white;
+  padding:10px;border-radius:14px
 }
+button{cursor:pointer}
+button:hover{box-shadow:var(--glow)}
 
 /* TOP */
-#top{
-  height:56px;
-  display:flex;
-  gap:10px;
-  align-items:center;
-  padding:0 14px;
-  background:var(--glass);
-}
-#url{
-  flex:1;
-  background:black;
-  border:1px solid var(--accent);
-  color:white;
-  padding:9px;
-  border-radius:14px;
-}
-button{
-  background:black;
-  border:1px solid var(--accent);
-  color:white;
-  padding:9px 16px;
-  border-radius:14px;
-  cursor:pointer;
-}
-button:hover{box-shadow:var(--glow)}
+#top{height:56px;display:flex;gap:10px;align-items:center;padding:0 14px;background:var(--glass)}
+#url{flex:1}
 
 /* LAYOUT */
 #main{display:flex;height:calc(100vh - 56px)}
-#sidebar{
-  width:230px;
-  background:rgba(0,0,0,.55);
-  display:flex;
-  flex-direction:column;
-  padding:10px;
-  gap:8px;
-}
-.sidebtn{
-  padding:14px;
-  border-radius:18px;
-  cursor:pointer;
-  background:rgba(0,0,0,.6);
-}
-.sidebtn.active{
-  background:var(--glass);
-  border:1px solid var(--accent);
-  box-shadow:var(--glow);
-}
-#content{flex:1}
+#sidebar{width:230px;background:rgba(0,0,0,.55);padding:12px;display:flex;flex-direction:column;gap:10px}
+.sidebtn{padding:14px;border-radius:18px;cursor:pointer}
+.sidebtn.active{background:var(--glass);border:1px solid var(--accent);box-shadow:var(--glow)}
+#content{flex:1;padding:10px}
 .page{display:none;height:100%}
 .page.active{display:block}
-iframe{width:100%;height:100%;border:none}
+iframe{width:100%;height:100%;border:none;border-radius:16px}
 
 /* CHAT */
-.chatBox{display:flex;flex-direction:column;height:100%}
-.chatHeader{padding:12px}
-.chatHeader input{
-  background:black;
-  border:1px solid var(--accent);
-  color:white;
-  padding:8px;
-  border-radius:12px;
-}
-.messages{flex:1;overflow-y:auto;padding:15px}
-.msg{
-  margin-bottom:10px;
-  padding:10px 14px;
-  background:rgba(0,0,0,.55);
-  border-radius:16px;
-}
-.sendBar{display:flex;gap:10px;padding:12px}
-.sendBar input{
-  flex:1;
-  background:black;
-  border:1px solid var(--accent);
-  color:white;
-  padding:10px;
-  border-radius:14px;
-}
+.chatBox{display:flex;flex-direction:column;height:100%;gap:10px}
+.messages{flex:1;overflow-y:auto;padding:10px}
+.msg{margin-bottom:8px;padding:10px;background:rgba(0,0,0,.6);border-radius:14px}
+.sendBar{display:flex;gap:8px}
 
-/* CALCULATOR */
-#calcBox{
-  margin:auto;
-  background:var(--glass);
-  padding:20px;
-  border-radius:22px;
-  box-shadow:var(--glow);
-  width:280px;
+/* CALC */
+#calcBox,#clockBox{
+  margin:auto;background:var(--glass);padding:25px;border-radius:22px;
+  box-shadow:var(--glow);width:280px;text-align:center
 }
-#calcDisplay{
-  width:100%;
-  padding:10px;
-  background:black;
-  color:white;
-  border:1px solid var(--accent);
-  border-radius:12px;
-  margin-bottom:10px;
-}
-.calcGrid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-}
-
-/* CLOCK */
-#clockBox{
-  margin:auto;
-  background:var(--glass);
-  padding:40px;
-  border-radius:26px;
-  box-shadow:var(--glow);
-  text-align:center;
-}
-#time{font-size:36px}
-#date{opacity:.8;margin-top:10px}
+.calcGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+#calcDisplay{width:100%;margin-bottom:10px}
 
 /* ABOUT */
 #about{padding:30px;opacity:.85}
 </style>
 </head>
-
 <body>
 
-<!-- SITE LOCK -->
+<!-- LOCK -->
 <div id="lock">
   <div id="lockBox">
     <h2>Access Locked</h2>
     <input id="lockInput" placeholder="Enter Code">
+    <br><br>
     <button onclick="unlockSite()">Unlock</button>
+  </div>
+</div>
+
+<!-- UPDATE LOG -->
+<div id="updatePanel" style="display:none">
+  <div id="updateBox">
+    <h2>Update Logs</h2>
+    <p>
+      ✔ Public API Chat<br>
+      ✔ Locked Premium Firebase Chat<br>
+      ✔ Fixed UI & Search<br>
+      ✔ Calculator & Clock Working
+    </p>
+    <button onclick="updatePanel.style.display='none'">OK</button>
   </div>
 </div>
 
@@ -186,8 +93,8 @@ iframe{width:100%;height:100%;border:none}
 <div id="main">
 <div id="sidebar">
   <div class="sidebtn active" onclick="openTab('web',this)">🌐 Web</div>
-  <div class="sidebtn" onclick="openTab('fbchat',this)">💬 Firebase Chat</div>
-  <div class="sidebtn" onclick="openAPIChat(this)">🔐 API Chat</div>
+  <div class="sidebtn" onclick="openTab('apichat',this)">💬 Public Chat</div>
+  <div class="sidebtn" onclick="openFirebaseChat(this)">🔐 Premium Chat</div>
   <div class="sidebtn" onclick="openTab('calc',this)">🧮 Calculator</div>
   <div class="sidebtn" onclick="openTab('clock',this)">🕒 Clock</div>
   <div class="sidebtn" onclick="openTab('about',this)">ℹ About</div>
@@ -199,30 +106,24 @@ iframe{width:100%;height:100%;border:none}
   <iframe id="browser" src="https://duckduckgo.com"></iframe>
 </div>
 
-<div id="fbchat" class="page">
+<div id="apichat" class="page">
   <div class="chatBox">
-    <div class="chatHeader">
-      Username <input id="fbName">
-      <button onclick="localStorage.fbName=fbName.value">Save</button>
-    </div>
-    <div id="fbMessages" class="messages"></div>
+    <input id="apiName" placeholder="Username">
+    <div id="apiMessages" class="messages"></div>
     <div class="sendBar">
-      <input id="fbInput">
-      <button onclick="sendFB()">Send</button>
+      <input id="apiInput" placeholder="Message">
+      <button onclick="sendAPI()">Send</button>
     </div>
   </div>
 </div>
 
-<div id="apichat" class="page">
+<div id="fbchat" class="page">
   <div class="chatBox">
-    <div class="chatHeader">
-      Username <input id="apiName">
-      <button onclick="localStorage.apiName=apiName.value">Save</button>
-    </div>
-    <div id="apiMessages" class="messages"></div>
+    <input id="fbName" placeholder="Username">
+    <div id="fbMessages" class="messages"></div>
     <div class="sendBar">
-      <input id="apiInput">
-      <button onclick="sendAPI()">Send</button>
+      <input id="fbInput" placeholder="Message">
+      <button onclick="sendFB()">Send</button>
     </div>
   </div>
 </div>
@@ -234,7 +135,7 @@ iframe{width:100%;height:100%;border:none}
       <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('/')">÷</button>
       <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="press('*')">×</button>
       <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button onclick="press('-')">−</button>
-      <button onclick="press('0')">0</button><button onclick="press('.')">.</button><button onclick="calculate()">=</button><button onclick="press('+')">+</button>
+      <button onclick="press('0')">0</button><button onclick="press('.')">.</button><button onclick="calc()">=</button><button onclick="press('+')">+</button>
       <button onclick="clearCalc()" style="grid-column:span 4">Clear</button>
     </div>
   </div>
@@ -242,7 +143,7 @@ iframe{width:100%;height:100%;border:none}
 
 <div id="clock" class="page">
   <div id="clockBox">
-    <div id="time"></div>
+    <h2 id="time"></h2>
     <div id="date"></div>
   </div>
 </div>
@@ -259,38 +160,25 @@ iframe{width:100%;height:100%;border:none}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-const firebaseConfig={
+const app=initializeApp({
   apiKey:"AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
-  authDomain:"galaxia-chat-servers-2.firebaseapp.com",
-  databaseURL:"https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
-  projectId:"galaxia-chat-servers-2",
-  messagingSenderId:"873031202387",
-  appId:"1:873031202387:web:d860385de907946ff378a6"
-};
-
-const app=initializeApp(firebaseConfig);
+  databaseURL:"https://galaxia-chat-servers-2-default-rtdb.firebaseio.com"
+});
 const db=getDatabase(app);
 const chatRef=ref(db,"messages");
 
-onValue(chatRef,snap=>{
+onValue(chatRef,s=>{
   fbMessages.innerHTML="";
-  snap.forEach(c=>{
+  s.forEach(c=>{
     const m=c.val();
-    const d=document.createElement("div");
-    d.className="msg";
-    d.textContent=m.user+": "+m.text;
-    fbMessages.appendChild(d);
+    fbMessages.innerHTML+=`<div class="msg">${m.user}: ${m.text}</div>`;
   });
   fbMessages.scrollTop=fbMessages.scrollHeight;
 });
 
 window.sendFB=()=>{
-  if(!fbInput.value.trim())return;
-  push(chatRef,{
-    user:localStorage.fbName||"User",
-    text:fbInput.value,
-    time:Date.now()
-  });
+  if(!fbInput.value)return;
+  push(chatRef,{user:fbName.value||"User",text:fbInput.value});
   fbInput.value="";
 };
 </script>
@@ -299,62 +187,52 @@ window.sendFB=()=>{
 /* API CHAT */
 const API="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
 async function loadAPI(){
-  const r=await fetch(API);
-  const d=await r.json();
-  apiMessages.innerHTML="";
-  d.forEach(m=>{
-    const div=document.createElement("div");
-    div.className="msg";
-    div.textContent=m.user+": "+m.text;
-    apiMessages.appendChild(div);
-  });
+  const r=await fetch(API);const d=await r.json();
+  apiMessages.innerHTML=d.map(m=>`<div class="msg">${m.user}: ${m.text}</div>`).join("");
 }
-setInterval(loadAPI,4000);
+setInterval(loadAPI,3000);
 async function sendAPI(){
-  if(!apiInput.value.trim())return;
-  await fetch(API,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({user:localStorage.apiName||"User",text:apiInput.value})
-  });
-  apiInput.value="";
-  loadAPI();
+  if(!apiInput.value)return;
+  await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
+  body:JSON.stringify({user:apiName.value||"User",text:apiInput.value})});
+  apiInput.value="";loadAPI();
 }
 
-/* NAV + LOCKS */
+/* NAV */
 function openTab(id,el){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.querySelectorAll(".sidebtn").forEach(b=>b.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  el.classList.add("active");
+  document.getElementById(id).classList.add("active");el.classList.add("active");
 }
-function openAPIChat(el){
-  if(localStorage.apiUnlocked!=="yes"){
-    const code=prompt("Enter API Chat Code");
-    if(code!=="Williamp1") return alert("Wrong code");
-    localStorage.apiUnlocked="yes";
+function openFirebaseChat(el){
+  if(localStorage.fbUnlocked!=="yes"){
+    const c=prompt("Premium Chat Code");
+    if(c!=="2013")return alert("Wrong code");
+    localStorage.fbUnlocked="yes";
   }
-  openTab("apichat",el);
-  loadAPI();
+  openTab("fbchat",el);
 }
+
+/* LOCK */
 function unlockSite(){
-  if(lockInput.value==="2013")lock.style.display="none";
-  else alert("Wrong code");
+  if(lockInput.value==="2013"){
+    lock.style.display="none";
+    updatePanel.style.display="flex";
+  } else alert("Wrong code");
 }
+
+/* BROWSER */
 function go(){
   let v=url.value.trim();
-  if(!v.startsWith("http"))v="https://"+v;
+  if(!v.startsWith("http"))v="https://duckduckgo.com/?q="+encodeURIComponent(v);
   browser.src=v;
 }
 
 /* CALC */
-let calcVal="";
-function press(v){calcVal+=v;calcDisplay.value=calcVal}
-function clearCalc(){calcVal="";calcDisplay.value=""}
-function calculate(){
-  try{calcVal=eval(calcVal).toString();calcDisplay.value=calcVal}
-  catch{calcDisplay.value="Error"}
-}
+let cv="";
+function press(v){cv+=v;calcDisplay.value=cv}
+function clearCalc(){cv="";calcDisplay.value=""}
+function calc(){try{cv=eval(cv).toString();calcDisplay.value=cv}catch{calcDisplay.value="Error"}}
 
 /* CLOCK */
 setInterval(()=>{
@@ -363,6 +241,5 @@ setInterval(()=>{
   date.textContent=d.toDateString();
 },1000);
 </script>
-
 </body>
 </html>
