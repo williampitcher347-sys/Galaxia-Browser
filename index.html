@@ -1,221 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Galaxia Browser</title>
+<meta charset="UTF-8">
+<title>Galaxia v3</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Futuristic Font -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-/* =====================
-   GLOBAL THEME
-===================== */
-:root {
-  --bg: #020712;
-  --panel: rgba(10, 20, 40, 0.85);
-  --blue: #00bfff;
-  --blue-soft: #4fd3ff;
-  --border: rgba(0, 191, 255, 0.25);
+:root{
+  --bg:#020712;
+  --panel:rgba(8,16,32,.85);
+  --blue:#00bfff;
+  --border:rgba(0,191,255,.25);
 }
 
-* {
-  box-sizing: border-box;
-  font-family: "Orbitron", sans-serif;
+*{box-sizing:border-box;font-family:Orbitron}
+
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#041026,#01040a);
+  color:white;
+  overflow:hidden;
 }
 
-body {
-  margin: 0;
-  background: radial-gradient(circle at top, #041026, #01040a);
-  color: white;
-  overflow: hidden;
+/* LOCK SCREEN */
+#lock{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+#lockBox{
+  background:var(--panel);
+  padding:40px;
+  border-radius:30px;
+  border:1px solid var(--border);
+  text-align:center;
+  box-shadow:0 0 40px var(--blue);
+}
+#lockBox input{
+  width:200px;
+  padding:12px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:black;
+  color:var(--blue);
+  text-align:center;
 }
 
-/* =====================
-   TOP BAR
-===================== */
-#topbar {
-  height: 60px;
-  background: var(--panel);
-  backdrop-filter: blur(14px);
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  border-bottom: 1px solid var(--border);
+/* TOP BAR */
+#topbar{
+  height:60px;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+}
+#logo{color:var(--blue);font-size:20px;text-shadow:0 0 10px var(--blue)}
+#url{
+  flex:1;
+  margin-left:20px;
+  display:flex;
+  gap:10px;
+}
+#url input{
+  flex:1;
+  border-radius:999px;
+  padding:10px;
+  background:black;
+  border:1px solid var(--border);
+  color:white;
 }
 
-#logo {
-  font-size: 20px;
-  color: var(--blue);
-  text-shadow: 0 0 10px var(--blue);
+/* BUTTON */
+button{
+  border:none;
+  border-radius:999px;
+  padding:10px 18px;
+  background:linear-gradient(135deg,#003d66,#00bfff);
+  color:black;
+  cursor:pointer;
+  box-shadow:0 0 12px rgba(0,191,255,.6);
+}
+button:hover{transform:scale(1.05)}
+
+/* LAYOUT */
+#app{display:flex;height:calc(100vh - 60px)}
+#tabs{
+  width:220px;
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  padding:15px;
+}
+.tab{
+  padding:14px;
+  margin-bottom:10px;
+  border-radius:20px;
+  cursor:pointer;
+}
+.tab.active{
+  background:rgba(0,191,255,.15);
+  box-shadow:0 0 10px var(--blue);
 }
 
-#urlBox {
-  margin-left: 20px;
-  flex: 1;
-  display: flex;
-  gap: 10px;
+/* CONTENT */
+#content{flex:1;position:relative}
+.panel{display:none;height:100%}
+.panel.active{display:block}
+
+/* BROWSER */
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+  border-radius:20px;
 }
 
-#urlInput {
-  flex: 1;
-  background: black;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  color: var(--blue);
-  padding: 10px 15px;
-  outline: none;
+/* CHAT */
+.chatBox{
+  height:calc(100% - 70px);
+  overflow-y:auto;
+  padding:20px;
+}
+.msg{
+  margin-bottom:10px;
+  padding:12px;
+  border-radius:18px;
+  background:rgba(0,0,0,.6);
+  border:1px solid var(--border);
+}
+.chatInput{
+  display:flex;
+  gap:10px;
+  padding:10px;
+}
+.chatInput input{
+  flex:1;
+  padding:12px;
+  border-radius:999px;
+  background:black;
+  border:1px solid var(--border);
+  color:white;
 }
 
-button {
-  border-radius: 999px;
-  background: linear-gradient(135deg, #003d66, #00bfff);
-  border: none;
-  color: black;
-  padding: 10px 18px;
-  cursor: pointer;
-  box-shadow: 0 0 12px rgba(0,191,255,0.6);
+/* SETTINGS */
+.card{
+  background:var(--panel);
+  padding:30px;
+  border-radius:24px;
+  border:1px solid var(--border);
+  width:360px;
 }
-
-button:hover {
-  transform: scale(1.05);
+.card input{
+  width:100%;
+  margin-bottom:10px;
+  padding:12px;
+  border-radius:999px;
+  background:black;
+  border:1px solid var(--border);
+  color:white;
 }
-
-/* =====================
-   LAYOUT
-===================== */
-#app {
-  display: flex;
-  height: calc(100vh - 60px);
-}
-
-#tabs {
-  width: 220px;
-  background: var(--panel);
-  border-right: 1px solid var(--border);
-  padding: 15px;
-}
-
-.tab {
-  padding: 14px;
-  margin-bottom: 10px;
-  border-radius: 18px;
-  cursor: pointer;
-  border: 1px solid transparent;
-}
-
-.tab.active {
-  background: rgba(0,191,255,0.15);
-  border-color: var(--border);
-  box-shadow: 0 0 10px var(--blue);
-}
-
-/* =====================
-   MAIN CONTENT
-===================== */
-#content {
-  flex: 1;
-  position: relative;
-}
-
-.panel {
-  display: none;
-  height: 100%;
-}
-
-.panel.active {
-  display: block;
-}
-
-/* =====================
-   BROWSER
-===================== */
-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: black;
-}
-
-/* =====================
-   CHAT
-===================== */
-#chatBox {
-  height: calc(100% - 60px);
-  overflow-y: auto;
-  padding: 20px;
-}
-
-.message {
-  margin-bottom: 12px;
-  padding: 12px;
-  background: rgba(0,0,0,0.6);
-  border-radius: 16px;
-  border: 1px solid var(--border);
-}
-
-#chatInput {
-  display: flex;
-  padding: 10px;
-  gap: 10px;
-}
-
-#chatInput input {
-  flex: 1;
-  border-radius: 999px;
-  padding: 12px;
-  background: black;
-  border: 1px solid var(--border);
-  color: white;
-}
-
-/* =====================
-   LOGIN
-===================== */
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-.card {
-  background: var(--panel);
-  padding: 30px;
-  border-radius: 24px;
-  border: 1px solid var(--border);
-  width: 320px;
-}
-
-.card input {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 12px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: black;
-  color: white;
-}
+.center{display:flex;align-items:center;justify-content:center;height:100%}
 </style>
 </head>
 
 <body>
 
+<div id="lock">
+  <div id="lockBox">
+    <h2>GALAXIA LOCK</h2>
+    <input id="lockCode" placeholder="Enter Code">
+    <br><br>
+    <button onclick="unlock()">UNLOCK</button>
+  </div>
+</div>
+
 <div id="topbar">
   <div id="logo">GALAXIA</div>
-  <div id="urlBox">
-    <input id="urlInput" placeholder="Search or enter URL"/>
+  <div id="url">
+    <input id="urlInput" placeholder="Search or URL">
     <button onclick="go()">GO</button>
   </div>
 </div>
 
 <div id="app">
   <div id="tabs">
-    <div class="tab active" onclick="openTab('web')">🌐 Web</div>
-    <div class="tab" onclick="openTab('chat')">💬 Chat</div>
-    <div class="tab" onclick="openTab('account')">👤 Account</div>
-    <div class="tab" onclick="openTab('admin')">🔒 Admin</div>
+    <div class="tab active" onclick="openTab('web',this)">🌐 Web</div>
+    <div class="tab" onclick="openTab('chat1',this)">💬 Firebase Chat</div>
+    <div class="tab" onclick="openTab('chat2',this)">🧩 API Chat</div>
+    <div class="tab" onclick="openTab('settings',this)">⚙ Settings</div>
   </div>
 
   <div id="content">
@@ -223,100 +201,134 @@ iframe {
       <iframe id="browser" src="https://duckduckgo.com"></iframe>
     </div>
 
-    <div id="chat" class="panel">
-      <div id="chatBox"></div>
-      <div id="chatInput">
-        <input id="msg" placeholder="Message..." />
-        <button onclick="sendMessage()">Send</button>
+    <div id="chat1" class="panel">
+      <div id="fbChat" class="chatBox"></div>
+      <div class="chatInput">
+        <input id="fbMsg" placeholder="Message">
+        <button onclick="sendFirebase()">Send</button>
       </div>
     </div>
 
-    <div id="account" class="panel center">
-      <div class="card">
-        <h3>Sign In</h3>
-        <input id="username" placeholder="Username"/>
-        <button onclick="login()">Sign In</button>
+    <div id="chat2" class="panel">
+      <div id="apiChat" class="chatBox"></div>
+      <div class="chatInput">
+        <input id="apiMsg" placeholder="Message">
+        <button onclick="sendAPI()">Send</button>
       </div>
     </div>
 
-    <div id="admin" class="panel center">
+    <div id="settings" class="panel center">
       <div class="card">
-        <h3>Admin Unlock</h3>
-        <input id="adminCode" placeholder="Code"/>
-        <button onclick="unlockAdmin()">Unlock</button>
+        <h3>Settings</h3>
+        <input id="fbUser" placeholder="Firebase Chat Username">
+        <input id="apiUser" placeholder="API Chat Username">
+        <button onclick="saveSettings()">Save</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- FIREBASE -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<script>
+/* LOCK */
+function unlock(){
+  if(lockCode.value==="2013"){
+    lock.style.display="none";
+    sessionStorage.setItem("unlocked","1");
+  }
+}
+if(sessionStorage.getItem("unlocked")==="1")lock.style.display="none";
 
-/* 🔴 REPLACE THIS WITH YOUR OWN FIREBASE CONFIG */
-const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "ID",
-  appId: "APP_ID"
-};
+/* TABS */
+function openTab(id,el){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
+}
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+/* BROWSER */
+function go(){
+  let u=urlInput.value;
+  if(!u.startsWith("http"))u="https://"+u;
+  browser.src=u;
+}
 
-let user = null;
+/* SETTINGS */
+let fbName=localStorage.getItem("fbName")||"User";
+let apiName=localStorage.getItem("apiName")||"User";
+fbUser.value=fbName;
+apiUser.value=apiName;
 
-window.sendMessage = async () => {
-  if (!user) return alert("Sign in first");
-  const text = msg.value.trim();
-  if (!text) return;
-  await addDoc(collection(db, "messages"), {
-    user,
-    text,
-    time: Date.now()
+function saveSettings(){
+  fbName=fbUser.value||"User";
+  apiName=apiUser.value||"User";
+  localStorage.setItem("fbName",fbName);
+  localStorage.setItem("apiName",apiName);
+  alert("Saved");
+}
+
+/* API CHAT */
+async function loadAPI(){
+  const r=await fetch("https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages");
+  const d=await r.json();
+  apiChat.innerHTML="";
+  d.forEach(m=>{
+    const div=document.createElement("div");
+    div.className="msg";
+    div.textContent=m.user+": "+m.text;
+    apiChat.appendChild(div);
   });
-  msg.value = "";
-};
+}
+loadAPI();
+setInterval(loadAPI,5000);
 
-onSnapshot(collection(db, "messages"), snap => {
-  chatBox.innerHTML = "";
-  snap.forEach(doc => {
-    const m = doc.data();
-    const div = document.createElement("div");
-    div.className = "message";
-    div.textContent = m.user + ": " + m.text;
-    chatBox.appendChild(div);
+async function sendAPI(){
+  if(!apiMsg.value)return;
+  await fetch("https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({user:apiName,text:apiMsg.value})
   });
-});
+  apiMsg.value="";
+  loadAPI();
+}
 </script>
 
-<script>
-function openTab(id) {
-  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  event.target.classList.add("active");
-}
+<!-- FIREBASE (ADD YOUR CONFIG) -->
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getFirestore,collection,addDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-function go() {
-  let url = urlInput.value;
-  if (!url.startsWith("http")) url = "https://" + url;
-  browser.src = url;
-}
+const firebaseConfig={
+  apiKey:"YOUR_KEY",
+  authDomain:"YOUR_PROJECT.firebaseapp.com",
+  projectId:"YOUR_PROJECT",
+  appId:"APP_ID"
+};
 
-function login() {
-  user = username.value;
-  alert("Signed in as " + user);
-}
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
 
-function unlockAdmin() {
-  if (adminCode.value === "2013WP") {
-    alert("Admin unlocked (panel expansion ready)");
-  } else alert("Wrong code");
-}
+onSnapshot(collection(db,"messages"),snap=>{
+  fbChat.innerHTML="";
+  snap.forEach(doc=>{
+    const m=doc.data();
+    const div=document.createElement("div");
+    div.className="msg";
+    div.textContent=m.user+": "+m.text;
+    fbChat.appendChild(div);
+  });
+});
+
+window.sendFirebase=async()=>{
+  if(!fbMsg.value)return;
+  await addDoc(collection(db,"messages"),{
+    user:localStorage.getItem("fbName")||"User",
+    text:fbMsg.value,
+    time:Date.now()
+  });
+  fbMsg.value="";
+};
 </script>
 
 </body>
