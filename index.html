@@ -1,190 +1,559 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Galaxia</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<title>Galaxia Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
 :root{
-  --blue:#00aaff;
-  --dark:#050b14;
-  --glass:rgba(0,170,255,.08);
+  --bg:#05080f;
+  --panel:#0b1220cc;
+  --blue:#3aa6ff;
+  --blue2:#1b6cff;
+  --glass:blur(14px);
 }
-*{box-sizing:border-box;font-family:Inter,Segoe UI,Arial}
+
+*{box-sizing:border-box;font-family:Inter,system-ui}
 body{
   margin:0;
-  background:radial-gradient(circle at top,#061a2d,#02070e);
+  background:radial-gradient(circle at top,#0a1b33,#05080f 70%);
   color:white;
-  display:flex;
   height:100vh;
+  overflow:hidden;
 }
-.sidebar{
-  width:90px;
-  background:rgba(0,0,0,.6);
-  backdrop-filter:blur(10px);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:10px;
-  gap:12px;
-}
-.sidebar button{
-  width:60px;height:60px;
-  border-radius:16px;
-  border:none;
-  background:var(--glass);
-  color:var(--blue);
-  font-size:12px;
-  cursor:pointer;
-}
-.sidebar button:hover{background:rgba(0,170,255,.2)}
 
-.main{
-  flex:1;
-  padding:20px;
-  display:none;
+/* LOCK */
+#lock{
+  position:fixed;inset:0;
+  background:#05080f;
+  display:flex;align-items:center;justify-content:center;
+  z-index:1000;
 }
-.panel{
-  background:rgba(0,0,0,.55);
-  backdrop-filter:blur(12px);
+#lockBox{
+  background:#0b1220;
+  padding:30px;
   border-radius:20px;
-  padding:20px;
-  height:100%;
-}
-input,button{
-  background:rgba(0,0,0,.6);
-  border:1px solid rgba(0,170,255,.3);
-  border-radius:12px;
-  padding:10px;
-  color:white;
-}
-.chat{
-  height:70%;
-  overflow:auto;
-  border-radius:16px;
-  padding:10px;
-  background:rgba(0,0,0,.4);
-}
-.msg{margin-bottom:6px}
-.clock{
-  font-size:40px;
+  box-shadow:0 0 40px #3aa6ff33;
   text-align:center;
 }
-.calc input{width:100%;margin-bottom:10px}
+
+/* SIDEBAR */
+#sidebar{
+  position:fixed;left:0;top:0;bottom:0;
+  width:70px;
+  background:#0a1222;
+  transition:.3s;
+  overflow:hidden;
+}
+#sidebar:hover{width:210px}
+.sidebtn{
+  padding:16px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  cursor:pointer;
+  border-radius:16px;
+  margin:10px;
+  transition:.25s;
+}
+.sidebtn:hover{background:#3aa6ff22}
+.sidebtn span{white-space:nowrap}
+
+/* MAIN */
+#main{
+  margin-left:70px;
+  height:100vh;
+  padding:20px;
+}
+
+/* PANELS */
+.panel{
+  display:none;
+  background:var(--panel);
+  backdrop-filter:var(--glass);
+  border-radius:22px;
+  padding:20px;
+  height:calc(100vh - 40px);
+}
+.panel.active{display:block}
+
+/* BROWSER */
+#browserTop{
+  display:flex;gap:10px;margin-bottom:12px;
+}
+input,button{
+  background:#0a1528;
+  color:white;
+  border:none;
+  border-radius:14px;
+  padding:12px 16px;
+}
+button{
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+}
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+  border-radius:18px;
+  background:black;
+}
+
+/* CHAT */
+.chatBox{
+  height:85%;
+  overflow-y:auto;
+  padding:10px;
+}
+.msg{
+  background:#0a1528;
+  margin:8px;
+  padding:12px;
+  border-radius:16px;
+  max-width:70%;
+}
+.me{margin-left:auto;background:#1b6cff}
+.chatInput{
+  display:flex;gap:10px;margin-top:10px;
+}
+
+/* ADMIN */
+.adminRow{
+  background:#0a1528;
+  margin:8px;
+  padding:10px;
+  border-radius:14px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-  <button onclick="openPanel('chat')">CHAT</button>
-  <button onclick="openPanel('premium')">PREM</button>
-  <button onclick="openPanel('calc')">CALC</button>
-  <button onclick="openPanel('clock')">TIME</button>
-  <button onclick="openPanel('admin')">ADMIN</button>
-</div>
-
-<div id="chat" class="main panel">
-  <h2>API Chat (Public)</h2>
-  <div id="chatBox" class="chat"></div>
-  <input id="chatMsg" placeholder="Message">
-  <button onclick="sendMsg('public')">Send</button>
-</div>
-
-<div id="premium" class="main panel">
-  <h2>Premium Chat</h2>
-  <input id="premiumCode" placeholder="Enter code">
-  <button onclick="unlockPremium()">Unlock</button>
-  <div id="premiumArea" style="display:none">
-    <div id="premiumBox" class="chat"></div>
-    <input id="premiumMsg" placeholder="Message">
-    <button onclick="sendMsg('premium')">Send</button>
+<!-- LOCK -->
+<div id="lock">
+  <div id="lockBox">
+    <h2>🔒 Galaxia Locked</h2>
+    <input id="lockCode" placeholder="Enter access code"/>
+    <br><br>
+    <button onclick="unlockSite()">Unlock</button>
   </div>
 </div>
 
-<div id="calc" class="main panel calc">
-  <h2>Calculator</h2>
-  <input id="calcInput" placeholder="2+2">
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sidebtn" onclick="openPanel('browser')">🌐 <span>Browser</span></div>
+  <div class="sidebtn" onclick="openPanel('publicChat')">💬 <span>API Chat</span></div>
+  <div class="sidebtn" onclick="unlockPremium()">💎 <span>Premium Chat</span></div>
+  <div class="sidebtn" onclick="openPanel('calc')">🧮 <span>Calculator</span></div>
+  <div class="sidebtn" onclick="openPanel('clock')">🕒 <span>Clock</span></div>
+  <div class="sidebtn" onclick="unlockAdmin()">🛠 <span>Admin</span></div>
+  <div class="sidebtn" onclick="openPanel('about')">ℹ️ <span>About</span></div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- BROWSER -->
+<div id="browser" class="panel active">
+  <div id="browserTop">
+    <input id="url" placeholder="Search or enter URL" style="flex:1"/>
+    <button onclick="go()">Go</button>
+  </div>
+  <iframe id="view" src="https://duckduckgo.com"></iframe>
+</div>
+
+<!-- API CHAT -->
+<div id="publicChat" class="panel">
+  <div class="chatBox" id="apiMsgs"></div>
+  <div class="chatInput">
+    <input id="apiInput" placeholder="Message"/>
+    <button onclick="sendAPI()">Send</button>
+  </div>
+</div>
+
+<!-- PREMIUM CHAT -->
+<div id="premiumChat" class="panel">
+  <div class="chatBox" id="fbMsgs"></div>
+  <div class="chatInput">
+    <input id="fbInput" placeholder="Premium message"/>
+    <button onclick="sendFB()">Send</button>
+  </div>
+</div>
+
+<!-- CALC -->
+<div id="calc" class="panel">
+  <input id="calcIn" placeholder="2+2"/>
   <button onclick="calc()">Calculate</button>
-  <p id="calcOut"></p>
+  <h2 id="calcOut"></h2>
 </div>
 
-<div id="clock" class="main panel">
-  <h2>Clock</h2>
-  <div id="clockTime" class="clock"></div>
+<!-- CLOCK -->
+<div id="clock" class="panel">
+  <h1 id="time"></h1>
 </div>
 
-<div id="admin" class="main panel">
+<!-- ADMIN -->
+<div id="admin" class="panel">
   <h2>Admin Panel</h2>
-  <input id="adminCode" placeholder="Admin code">
-  <button onclick="unlockAdmin()">Unlock</button>
-  <div id="adminArea" style="display:none">
-    <input id="targetUid" placeholder="User UID">
-    <button onclick="ban()">Ban</button>
-    <button onclick="unban()">Unban</button>
-    <button onclick="mute()">Mute</button>
-    <button onclick="unmute()">Unmute</button>
-  </div>
+  <div id="adminLog"></div>
 </div>
 
+<!-- ABOUT -->
+<div id="about" class="panel">
+  <h2>About</h2>
+  <p>Made 2026 By Williampitcher347@gmail.com</p>
+</div>
+
+</div>
+
+<!-- SCRIPTS -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-const firebaseConfig={
- apiKey:"AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
- authDomain:"galaxia-chat-servers-2.firebaseapp.com",
- databaseURL:"https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
- projectId:"galaxia-chat-servers-2"
+const firebaseConfig = {
+  apiKey: "AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
+  authDomain: "galaxia-chat-servers-2.firebaseapp.com",
+  databaseURL: "https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
+  projectId: "galaxia-chat-servers-2"
 };
-const app=initializeApp(firebaseConfig);
-const db=getDatabase(app);
-const auth=getAuth(app);
-let uid=null;
 
-signInAnonymously(auth).then(r=>uid=r.user.uid);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-window.openPanel=id=>{
- document.querySelectorAll('.main').forEach(d=>d.style.display="none");
- document.getElementById(id).style.display="block";
-}
+window.openPanel = id=>{
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+};
 
-window.sendMsg=(type)=>{
- let msg=type=="public"?chatMsg.value:premiumMsg.value;
- push(ref(db,"chats/"+type),{uid,msg});
-}
+window.unlockSite=()=>{
+  if(lockCode.value==="2013") lock.style.display="none";
+  else alert("Wrong code");
+};
 
-onChildAdded(ref(db,"chats/public"),s=>{
- chatBox.innerHTML+=`<div class="msg">${s.val().msg}</div>`;
-});
-onChildAdded(ref(db,"chats/premium"),s=>{
- premiumBox.innerHTML+=`<div class="msg">${s.val().msg}</div>`;
-});
-
-window.unlockPremium=()=>{
- if(premiumCode.value==="William2013")
-   premiumArea.style.display="block";
-}
-
-window.unlockAdmin=()=>{
- if(adminCode.value==="WP2013")
-   adminArea.style.display="block";
-}
-
-window.ban=()=>set(ref(db,"admin/banned/"+targetUid.value),true);
-window.unban=()=>set(ref(db,"admin/banned/"+targetUid.value),false);
-window.mute=()=>set(ref(db,"admin/muted/"+targetUid.value),true);
-window.unmute=()=>set(ref(db,"admin/muted/"+targetUid.value),false);
+window.go=()=>{
+  const q=url.value.trim();
+  view.src = q.startsWith("http") ? q : "https://duckduckgo.com/?q="+encodeURIComponent(q);
+};
 
 window.calc=()=>{
- calcOut.textContent=eval(calcInput.value);
+  try{calcOut.textContent=eval(calcIn.value)}
+  catch{calcOut.textContent="Error"}
+};
+
+setInterval(()=>time.textContent=new Date().toLocaleTimeString(),1000);
+
+const apiURL="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
+fetch(apiURL).then(r=>r.json()).then(d=>{
+  d.forEach(m=>apiMsgs.innerHTML+=`<div class="msg">${m.text}</div>`);
+});
+window.sendAPI=()=>{
+  fetch(apiURL,{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({text:apiInput.value})});
+  apiInput.value="";
+};
+
+onValue(ref(db,"messages"),snap=>{
+  fbMsgs.innerHTML="";
+  snap.forEach(c=>{
+    fbMsgs.innerHTML+=`<div class="msg">${c.val().text}</div>`;
+  });
+});
+window.sendFB=()=>{
+  push(ref(db,"messages"),{text:fbInput.value});
+  fbInput.value="";
+};
+
+window.unlockPremium=()=>{
+  const c=prompt("Premium Code");
+  if(c==="William2013") openPanel("premiumChat");
+};
+
+window.unlockAdmin=()=>{
+  const c=prompt("Admin Code");
+  if(c==="WP2013") openPanel("admin");
+};
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Galaxia Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+:root{
+  --bg:#05080f;
+  --panel:#0b1220cc;
+  --blue:#3aa6ff;
+  --blue2:#1b6cff;
+  --glass:blur(14px);
 }
 
-setInterval(()=>{
- clockTime.textContent=new Date().toLocaleTimeString();
-},1000);
+*{box-sizing:border-box;font-family:Inter,system-ui}
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#0a1b33,#05080f 70%);
+  color:white;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* LOCK */
+#lock{
+  position:fixed;inset:0;
+  background:#05080f;
+  display:flex;align-items:center;justify-content:center;
+  z-index:1000;
+}
+#lockBox{
+  background:#0b1220;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 0 40px #3aa6ff33;
+  text-align:center;
+}
+
+/* SIDEBAR */
+#sidebar{
+  position:fixed;left:0;top:0;bottom:0;
+  width:70px;
+  background:#0a1222;
+  transition:.3s;
+  overflow:hidden;
+}
+#sidebar:hover{width:210px}
+.sidebtn{
+  padding:16px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  cursor:pointer;
+  border-radius:16px;
+  margin:10px;
+  transition:.25s;
+}
+.sidebtn:hover{background:#3aa6ff22}
+.sidebtn span{white-space:nowrap}
+
+/* MAIN */
+#main{
+  margin-left:70px;
+  height:100vh;
+  padding:20px;
+}
+
+/* PANELS */
+.panel{
+  display:none;
+  background:var(--panel);
+  backdrop-filter:var(--glass);
+  border-radius:22px;
+  padding:20px;
+  height:calc(100vh - 40px);
+}
+.panel.active{display:block}
+
+/* BROWSER */
+#browserTop{
+  display:flex;gap:10px;margin-bottom:12px;
+}
+input,button{
+  background:#0a1528;
+  color:white;
+  border:none;
+  border-radius:14px;
+  padding:12px 16px;
+}
+button{
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+}
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+  border-radius:18px;
+  background:black;
+}
+
+/* CHAT */
+.chatBox{
+  height:85%;
+  overflow-y:auto;
+  padding:10px;
+}
+.msg{
+  background:#0a1528;
+  margin:8px;
+  padding:12px;
+  border-radius:16px;
+  max-width:70%;
+}
+.me{margin-left:auto;background:#1b6cff}
+.chatInput{
+  display:flex;gap:10px;margin-top:10px;
+}
+
+/* ADMIN */
+.adminRow{
+  background:#0a1528;
+  margin:8px;
+  padding:10px;
+  border-radius:14px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOCK -->
+<div id="lock">
+  <div id="lockBox">
+    <h2>🔒 Galaxia Locked</h2>
+    <input id="lockCode" placeholder="Enter access code"/>
+    <br><br>
+    <button onclick="unlockSite()">Unlock</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sidebtn" onclick="openPanel('browser')">🌐 <span>Browser</span></div>
+  <div class="sidebtn" onclick="openPanel('publicChat')">💬 <span>API Chat</span></div>
+  <div class="sidebtn" onclick="unlockPremium()">💎 <span>Premium Chat</span></div>
+  <div class="sidebtn" onclick="openPanel('calc')">🧮 <span>Calculator</span></div>
+  <div class="sidebtn" onclick="openPanel('clock')">🕒 <span>Clock</span></div>
+  <div class="sidebtn" onclick="unlockAdmin()">🛠 <span>Admin</span></div>
+  <div class="sidebtn" onclick="openPanel('about')">ℹ️ <span>About</span></div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- BROWSER -->
+<div id="browser" class="panel active">
+  <div id="browserTop">
+    <input id="url" placeholder="Search or enter URL" style="flex:1"/>
+    <button onclick="go()">Go</button>
+  </div>
+  <iframe id="view" src="https://duckduckgo.com"></iframe>
+</div>
+
+<!-- API CHAT -->
+<div id="publicChat" class="panel">
+  <div class="chatBox" id="apiMsgs"></div>
+  <div class="chatInput">
+    <input id="apiInput" placeholder="Message"/>
+    <button onclick="sendAPI()">Send</button>
+  </div>
+</div>
+
+<!-- PREMIUM CHAT -->
+<div id="premiumChat" class="panel">
+  <div class="chatBox" id="fbMsgs"></div>
+  <div class="chatInput">
+    <input id="fbInput" placeholder="Premium message"/>
+    <button onclick="sendFB()">Send</button>
+  </div>
+</div>
+
+<!-- CALC -->
+<div id="calc" class="panel">
+  <input id="calcIn" placeholder="2+2"/>
+  <button onclick="calc()">Calculate</button>
+  <h2 id="calcOut"></h2>
+</div>
+
+<!-- CLOCK -->
+<div id="clock" class="panel">
+  <h1 id="time"></h1>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" class="panel">
+  <h2>Admin Panel</h2>
+  <div id="adminLog"></div>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="panel">
+  <h2>About</h2>
+  <p>Made 2026 By Williampitcher347@gmail.com</p>
+</div>
+
+</div>
+
+<!-- SCRIPTS -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
+  authDomain: "galaxia-chat-servers-2.firebaseapp.com",
+  databaseURL: "https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
+  projectId: "galaxia-chat-servers-2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.openPanel = id=>{
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+};
+
+window.unlockSite=()=>{
+  if(lockCode.value==="2013") lock.style.display="none";
+  else alert("Wrong code");
+};
+
+window.go=()=>{
+  const q=url.value.trim();
+  view.src = q.startsWith("http") ? q : "https://duckduckgo.com/?q="+encodeURIComponent(q);
+};
+
+window.calc=()=>{
+  try{calcOut.textContent=eval(calcIn.value)}
+  catch{calcOut.textContent="Error"}
+};
+
+setInterval(()=>time.textContent=new Date().toLocaleTimeString(),1000);
+
+const apiURL="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
+fetch(apiURL).then(r=>r.json()).then(d=>{
+  d.forEach(m=>apiMsgs.innerHTML+=`<div class="msg">${m.text}</div>`);
+});
+window.sendAPI=()=>{
+  fetch(apiURL,{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({text:apiInput.value})});
+  apiInput.value="";
+};
+
+onValue(ref(db,"messages"),snap=>{
+  fbMsgs.innerHTML="";
+  snap.forEach(c=>{
+    fbMsgs.innerHTML+=`<div class="msg">${c.val().text}</div>`;
+  });
+});
+window.sendFB=()=>{
+  push(ref(db,"messages"),{text:fbInput.value});
+  fbInput.value="";
+};
+
+window.unlockPremium=()=>{
+  const c=prompt("Premium Code");
+  if(c==="William2013") openPanel("premiumChat");
+};
+
+window.unlockAdmin=()=>{
+  const c=prompt("Admin Code");
+  if(c==="WP2013") openPanel("admin");
+};
 </script>
 
 </body>
