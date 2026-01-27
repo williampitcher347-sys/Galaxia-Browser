@@ -1,309 +1,609 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Galaxia</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-:root{
-  --bg:#05070d;
-  --panel:#0b1224;
-  --blue:#2ea0ff;
-  --text:#e8f0ff;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  height:100vh;
-  background:radial-gradient(circle at top,#0d1f44,#05070d);
-  font-family:Segoe UI,system-ui;
-  color:var(--text);
-  overflow:hidden;
 }
 
-/* overlays */
-.overlay{
-  position:fixed;
-  inset:0;
-  background:#02040ae6;
+/* LOCK */
+#lock{position:fixed;inset:0;background:black;display:flex;align-items:center;justify-content:center;z-index:999}
+#lockBox{background:var(--glass);padding:35px;border-radius:22px;box-shadow:var(--glow);text-align:center}
+#lockBox input{width:100%;margin-top:12px;padding:10px;background:black;border:1px solid var(--accent);color:white;border-radius:14px}
+#lock{
+  position:fixed;inset:0;
+  background:black;
   display:flex;
   align-items:center;
   justify-content:center;
   z-index:999;
 }
-.modal{
-  background:var(--panel);
-  padding:28px;
-  border-radius:20px;
-  width:340px;
+#lockBox{
+  background:var(--glass);
+  padding:35px;
+  border-radius:22px;
+  box-shadow:var(--glow);
   text-align:center;
 }
-.modal input{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:none;
-  margin-top:10px;
-}
-.modal button{
+#lockBox input{
   width:100%;
   margin-top:12px;
-  padding:12px;
-  border-radius:14px;
-  border:none;
-  background:var(--blue);
+  padding:10px;
+  background:black;
+  border:1px solid var(--accent);
   color:white;
-  cursor:pointer;
-}
-
-/* layout */
-.app{display:flex;height:100%}
-.sidebar{
-  width:240px;
-  padding:20px;
-  background:linear-gradient(180deg,#0b1224,#05070d);
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-.sidebar button{
-  padding:14px;
-  border-radius:16px;
-  border:none;
-  background:#111f3f;
-  color:var(--text);
-  cursor:pointer;
-}
-.sidebar button:hover{background:var(--blue)}
-
-.main{flex:1;padding:24px}
-.panel{
-  display:none;
-  height:100%;
-  background:var(--panel);
-  border-radius:20px;
-  padding:20px;
-}
-.panel.active{display:flex;flex-direction:column}
-
-/* chat */
-.chatBox{
-  flex:1;
-  background:#02040a;
-  border-radius:16px;
-  padding:14px;
-  overflow-y:auto;
-}
-.msg{
-  margin-bottom:8px;
-  padding:10px 14px;
   border-radius:14px;
-  background:#0b1a36;
 }
-.msg strong{color:var(--blue)}
-.chatInput{
+
+/* TOP */
+#top{height:56px;display:flex;gap:10px;align-items:center;padding:0 14px;background:var(--glass)}
+#url{flex:1;background:black;border:1px solid var(--accent);color:white;padding:9px;border-radius:14px}
+button{background:black;border:1px solid var(--accent);color:white;padding:9px 16px;border-radius:14px;cursor:pointer}
+#top{
+  height:56px;
   display:flex;
   gap:10px;
-  margin-top:12px;
+  align-items:center;
+  padding:0 14px;
+  background:var(--glass);
 }
-.chatInput input{
+#url{
   flex:1;
-  padding:12px;
-  border-radius:12px;
-  border:none;
-  background:#02040a;
-  color:var(--text);
-}
-.chatInput button{
-  padding:12px 18px;
-  border-radius:12px;
-  border:none;
-  background:var(--blue);
+  background:black;
+  border:1px solid var(--accent);
   color:white;
+  padding:9px;
+  border-radius:14px;
 }
+button{
+  background:black;
+  border:1px solid var(--accent);
+  color:white;
+  padding:9px 16px;
+  border-radius:14px;
+  cursor:pointer;
+}
+button:hover{box-shadow:var(--glow)}
 
-/* search */
-.searchBar{display:flex;gap:10px;margin-bottom:12px}
-.searchBar input{
-  flex:1;
-  padding:12px;
-  border-radius:12px;
-  border:none;
+/* LAYOUT */
+#main{display:flex;height:calc(100vh - 56px)}
+#sidebar{width:220px;background:rgba(0,0,0,.55);display:flex;flex-direction:column;padding:10px;gap:8px}
+.sidebtn{padding:14px;border-radius:18px;cursor:pointer;background:rgba(0,0,0,.6)}
+.sidebtn.active{background:var(--glass);box-shadow:var(--glow);border:1px solid var(--accent)}
+#sidebar{
+  width:230px;
+  background:rgba(0,0,0,.55);
+  display:flex;
+  flex-direction:column;
+  padding:10px;
+  gap:8px;
 }
-iframe{
-  flex:1;
-  border:none;
+.sidebtn{
+  padding:14px;
+  border-radius:18px;
+  cursor:pointer;
+  background:rgba(0,0,0,.6);
+}
+.sidebtn.active{
+  background:var(--glass);
+  border:1px solid var(--accent);
+  box-shadow:var(--glow);
+}
+#content{flex:1}
+.page{display:none;height:100%}
+.page.active{display:block}
+@@ -44,21 +102,63 @@
+/* CHAT */
+.chatBox{display:flex;flex-direction:column;height:100%}
+.chatHeader{padding:12px}
+.chatHeader input{background:black;border:1px solid var(--accent);color:white;padding:8px;border-radius:12px}
+.chatHeader input{
+  background:black;
+  border:1px solid var(--accent);
+  color:white;
+  padding:8px;
+  border-radius:12px;
+}
+.messages{flex:1;overflow-y:auto;padding:15px}
+.msg{margin-bottom:10px;padding:10px 14px;background:rgba(0,0,0,.55);border-radius:16px}
+.msg{
+  margin-bottom:10px;
+  padding:10px 14px;
+  background:rgba(0,0,0,.55);
   border-radius:16px;
 }
-</style>
-</head>
+.sendBar{display:flex;gap:10px;padding:12px}
+.sendBar input{flex:1;background:black;border:1px solid var(--accent);color:white;padding:10px;border-radius:14px}
+.sendBar input{
+  flex:1;
+  background:black;
+  border:1px solid var(--accent);
+  color:white;
+  padding:10px;
+  border-radius:14px;
+}
+
+/* CALCULATOR */
+#calc{display:flex;justify-content:center;align-items:center}
+#calcBox{background:var(--glass);padding:20px;border-radius:22px;box-shadow:var(--glow);width:280px}
+#calcDisplay{width:100%;padding:10px;font-size:18px;background:black;color:white;border:1px solid var(--accent);border-radius:12px;margin-bottom:10px}
+.calcGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+#calcBox{
+  margin:auto;
+  background:var(--glass);
+  padding:20px;
+  border-radius:22px;
+  box-shadow:var(--glow);
+  width:280px;
+}
+#calcDisplay{
+  width:100%;
+  padding:10px;
+  background:black;
+  color:white;
+  border:1px solid var(--accent);
+  border-radius:12px;
+  margin-bottom:10px;
+}
+.calcGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+/* CLOCK */
+#clock{display:flex;justify-content:center;align-items:center}
+#clockBox{background:var(--glass);padding:40px;border-radius:25px;box-shadow:var(--glow);text-align:center}
+#clockBox{
+  margin:auto;
+  background:var(--glass);
+  padding:40px;
+  border-radius:26px;
+  box-shadow:var(--glow);
+  text-align:center;
+}
+#time{font-size:36px}
+#date{opacity:.8;margin-top:10px}
+
+@@ -69,11 +169,12 @@
 
 <body>
 
-<!-- locks -->
-<div id="siteLock" class="overlay">
-  <div class="modal">
-    <h3>🔒 Enter Site Code</h3>
-    <input id="siteCode">
+<!-- SITE LOCK -->
+<div id="lock">
+  <div id="lockBox">
+    <h2>Access Locked</h2>
+    <input id="lockInput" placeholder="Enter Code">
+    <button onclick="unlock()">Unlock</button>
     <button onclick="unlockSite()">Unlock</button>
   </div>
 </div>
 
-<div id="nameLock" class="overlay" style="display:none">
-  <div class="modal">
-    <h3>Choose Username</h3>
-    <input id="nameInput">
-    <button onclick="saveName()">Continue</button>
-  </div>
-</div>
-
-<div id="premiumLock" class="overlay" style="display:none">
-  <div class="modal">
-    <h3>Premium Chat</h3>
-    <input id="premiumCode">
-    <button onclick="unlockPremium()">Unlock</button>
-  </div>
-</div>
-
-<div class="app">
-  <div class="sidebar">
-    <button onclick="openPanel('api')">🛰 API Chat</button>
-    <button onclick="openPremium()">💎 Premium Chat</button>
-    <button onclick="openPanel('search')">🔍 Search</button>
-  </div>
-
-  <div class="main">
-    <div id="api" class="panel active">
-      <h2>API Chat (Public)</h2>
-      <div id="apiBox" class="chatBox"></div>
-      <div class="chatInput">
-        <input id="apiMsg">
-        <button onclick="sendApi()">Send</button>
-      </div>
-    </div>
-
-    <div id="premium" class="panel">
-      <h2>Premium Chat</h2>
-      <div id="premiumBox" class="chatBox"></div>
-      <div class="chatInput">
-        <input id="premiumMsg">
-        <button onclick="sendPremium()">Send</button>
-      </div>
-    </div>
-
-    <div id="search" class="panel">
-      <h2>Search</h2>
-      <div class="searchBar">
-        <input id="searchInput">
-        <button onclick="doSearch()">Go</button>
-      </div>
-      <iframe id="browser"></iframe>
+@@ -86,7 +187,7 @@ <h2>Access Locked</h2>
+<div id="sidebar">
+  <div class="sidebtn active" onclick="openTab('web',this)">🌐 Web</div>
+  <div class="sidebtn" onclick="openTab('fbchat',this)">💬 Firebase Chat</div>
+  <div class="sidebtn" onclick="openTab('apichat',this)">🔗 API Chat</div>
+  <div class="sidebtn" onclick="openAPIChat(this)">🔐 API Chat</div>
+  <div class="sidebtn" onclick="openTab('calc',this)">🧮 Calculator</div>
+  <div class="sidebtn" onclick="openTab('clock',this)">🕒 Clock</div>
+  <div class="sidebtn" onclick="openTab('about',this)">ℹ About</div>
+@@ -133,7 +234,7 @@ <h2>Access Locked</h2>
+      <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('/')">÷</button>
+      <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="press('*')">×</button>
+      <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button onclick="press('-')">−</button>
+      <button onclick="press('0')">0</button><button onclick="press('.')">.</button><button onclick="calc()">=</button><button onclick="press('+')">+</button>
+      <button onclick="press('0')">0</button><button onclick="press('.')">.</button><button onclick="calculate()">=</button><button onclick="press('+')">+</button>
+      <button onclick="clearCalc()" style="grid-column:span 4">Clear</button>
     </div>
   </div>
+@@ -153,22 +254,107 @@ <h2>Access Locked</h2>
+</div>
 </div>
 
+<!-- FIREBASE -->
 <script type="module">
-/* Firebase */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig={
   apiKey:"AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
+  authDomain:"galaxia-chat-servers-2.firebaseapp.com",
   databaseURL:"https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
-  projectId:"galaxia-chat-servers-2"
+  projectId:"galaxia-chat-servers-2",
+  messagingSenderId:"873031202387",
+  appId:"1:873031202387:web:d860385de907946ff378a6"
 };
 
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
+const chatRef=ref(db,"messages");
 
-/* state */
-let username=localStorage.getItem("galaxiaUser");
-let premiumUnlocked=false;
-const API_URL="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
-
-/* locks */
-window.unlockSite=()=>{
-  if(siteCode.value==="2013"){
-    siteLock.style.display="none";
-    if(!username) nameLock.style.display="flex";
-  }
-}
-window.saveName=()=>{
-  if(nameInput.value.trim()){
-    username=nameInput.value.trim();
-    localStorage.setItem("galaxiaUser",username);
-    nameLock.style.display="none";
-  }
-}
-window.openPremium=()=>{
-  if(!premiumUnlocked) premiumLock.style.display="flex";
-  else openPanel("premium");
-}
-window.unlockPremium=()=>{
-  if(premiumCode.value==="William2013"){
-    premiumUnlocked=true;
-    premiumLock.style.display="none";
-    openPanel("premium");
-    listenFirebase();
-  }
-}
-
-/* panels */
-window.openPanel=id=>{
-  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-/* search */
-window.doSearch=()=>{
-  browser.src="https://duckduckgo.com/?q="+encodeURIComponent(searchInput.value);
-}
-
-/* API chat */
-async function loadApi(){
-  const res=await fetch(API_URL);
-  const data=await res.json();
-  apiBox.innerHTML="";
-  data.forEach(m=>{
+onValue(chatRef,snap=>{
+  fbMessages.innerHTML="";
+  snap.forEach(c=>{
+    const m=c.val();
     const d=document.createElement("div");
     d.className="msg";
-    d.innerHTML=`<strong>${m.user}</strong>: ${m.text}`;
-    apiBox.appendChild(d);
+    d.textContent=m.user+": "+m.text;
+    fbMessages.appendChild(d);
   });
-  apiBox.scrollTop=apiBox.scrollHeight;
-}
-window.sendApi=async()=>{
-  if(!apiMsg.value) return;
-  await fetch(API_URL,{
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({user:username,text:apiMsg.value})
-  });
-  apiMsg.value="";
-  loadApi();
-}
-setInterval(loadApi,2000);
-loadApi();
+  fbMessages.scrollTop=fbMessages.scrollHeight;
+});
 
-/* Firebase premium chat */
-function listenFirebase(){
-  onChildAdded(ref(db,"premium"),snap=>{
-    const m=snap.val();
-    const d=document.createElement("div");
-    d.className="msg";
-    d.innerHTML=`<strong>${m.user}</strong>: ${m.text}`;
-    premiumBox.appendChild(d);
-    premiumBox.scrollTop=premiumBox.scrollHeight;
+window.sendFB=()=>{
+  if(!fbInput.value.trim())return;
+  push(chatRef,{
+    user:localStorage.fbName||"User",
+    text:fbInput.value,
+    time:Date.now()
   });
-}
-window.sendPremium=()=>{
-  if(premiumMsg.value){
-    push(ref(db,"premium"),{user:username,text:premiumMsg.value});
-    premiumMsg.value="";
-  }
-}
+  fbInput.value="";
+};
 </script>
 
-</body>
-</html>
+<script>
+/* NAV */
+/* API CHAT */
+const API="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
+async function loadAPI(){
+  const r=await fetch(API);
+  const d=await r.json();
+  apiMessages.innerHTML="";
+  d.forEach(m=>{
+    const div=document.createElement("div");
+    div.className="msg";
+    div.textContent=m.user+": "+m.text;
+    apiMessages.appendChild(div);
+  });
+}
+setInterval(loadAPI,4000);
+async function sendAPI(){
+  if(!apiInput.value.trim())return;
+  await fetch(API,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({user:localStorage.apiName||"User",text:apiInput.value})
+  });
+  apiInput.value="";
+  loadAPI();
+}
+
+/* NAV + LOCKS */
+function openTab(id,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".sidebtn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  el.classList.add("active");
+}
+function go(){let v=url.value.trim();if(!v.startsWith("http"))v="https://"+v;browser.src=v}
+function unlock(){if(lockInput.value==="2013")lock.style.display="none";else alert("Wrong code")}
+function openAPIChat(el){
+  if(localStorage.apiUnlocked!=="yes"){
+    const code=prompt("Enter API Chat Code");
+    if(code!=="Williamp1") return alert("Wrong code");
+    localStorage.apiUnlocked="yes";
+  }
+  openTab("apichat",el);
+  loadAPI();
+}
+function unlockSite(){
+  if(lockInput.value==="2013")lock.style.display="none";
+  else alert("Wrong code");
+}
+function go(){
+  let v=url.value.trim();
+  if(!v.startsWith("http"))v="https://"+v;
+  browser.src=v;
+}
+
+/* CALC */
+let calcVal="";
+function press(v){calcVal+=v;calcDisplay.value=calcVal}
+function clearCalc(){calcVal="";calcDisplay.value=""}
+function calc(){try{calcVal=eval(calcVal).toString();calcDisplay.value=calcVal}catch{calcDisplay.value="Error"}}
+function calculate(){
+  try{calcVal=eval(calcVal).toString();calcDisplay.value=calcVal}
+  catch{calcDisplay.value="Error"}
+}
+
+/* CLOCK */
+setInterval(()=>{}
+
+/* LOCK */
+#lock{position:fixed;inset:0;background:black;display:flex;align-items:center;justify-content:center;z-index:999}
+#lockBox{background:var(--glass);padding:35px;border-radius:22px;box-shadow:var(--glow);text-align:center}
+#lockBox input{width:100%;margin-top:12px;padding:10px;background:black;border:1px solid var(--accent);color:white;border-radius:14px}
+#lock{
+  position:fixed;inset:0;
+  background:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+#lockBox{
+  background:var(--glass);
+  padding:35px;
+  border-radius:22px;
+  box-shadow:var(--glow);
+  text-align:center;
+}
+#lockBox input{
+  width:100%;
+  margin-top:12px;
+  padding:10px;
+  background:black;
+  border:1px solid var(--accent);
+  color:white;
+  border-radius:14px;
+}
+
+/* TOP */
+#top{height:56px;display:flex;gap:10px;align-items:center;padding:0 14px;background:var(--glass)}
+#url{flex:1;background:black;border:1px solid var(--accent);color:white;padding:9px;border-radius:14px}
+button{background:black;border:1px solid var(--accent);color:white;padding:9px 16px;border-radius:14px;cursor:pointer}
+#top{
+  height:56px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:0 14px;
+  background:var(--glass);
+}
+#url{
+  flex:1;
+  background:black;
+  border:1px solid var(--accent);
+  color:white;
+  padding:9px;
+  border-radius:14px;
+}
+button{
+  background:black;
+  border:1px solid var(--accent);
+  color:white;
+  padding:9px 16px;
+  border-radius:14px;
+  cursor:pointer;
+}
+button:hover{box-shadow:var(--glow)}
+
+/* LAYOUT */
+#main{display:flex;height:calc(100vh - 56px)}
+#sidebar{width:220px;background:rgba(0,0,0,.55);display:flex;flex-direction:column;padding:10px;gap:8px}
+.sidebtn{padding:14px;border-radius:18px;cursor:pointer;background:rgba(0,0,0,.6)}
+.sidebtn.active{background:var(--glass);box-shadow:var(--glow);border:1px solid var(--accent)}
+#sidebar{
+  width:230px;
+  background:rgba(0,0,0,.55);
+  display:flex;
+  flex-direction:column;
+  padding:10px;
+  gap:8px;
+}
+.sidebtn{
+  padding:14px;
+  border-radius:18px;
+  cursor:pointer;
+  background:rgba(0,0,0,.6);
+}
+.sidebtn.active{
+  background:var(--glass);
+  border:1px solid var(--accent);
+  box-shadow:var(--glow);
+}
+#content{flex:1}
+.page{display:none;height:100%}
+.page.active{display:block}
+@@ -44,21 +102,63 @@
+/* CHAT */
+.chatBox{display:flex;flex-direction:column;height:100%}
+.chatHeader{padding:12px}
+.chatHeader input{background:black;border:1px solid var(--accent);color:white;padding:8px;border-radius:12px}
+.chatHeader input{
+  background:black;
+  border:1px solid var(--accent);
+  color:white;
+  padding:8px;
+  border-radius:12px;
+}
+.messages{flex:1;overflow-y:auto;padding:15px}
+.msg{margin-bottom:10px;padding:10px 14px;background:rgba(0,0,0,.55);border-radius:16px}
+.msg{
+  margin-bottom:10px;
+  padding:10px 14px;
+  background:rgba(0,0,0,.55);
+  border-radius:16px;
+}
+.sendBar{display:flex;gap:10px;padding:12px}
+.sendBar input{flex:1;background:black;border:1px solid var(--accent);color:white;padding:10px;border-radius:14px}
+.sendBar input{
+  flex:1;
+  background:black;
+  border:1px solid var(--accent);
+  color:white;
+  padding:10px;
+  border-radius:14px;
+}
+
+/* CALCULATOR */
+#calc{display:flex;justify-content:center;align-items:center}
+#calcBox{background:var(--glass);padding:20px;border-radius:22px;box-shadow:var(--glow);width:280px}
+#calcDisplay{width:100%;padding:10px;font-size:18px;background:black;color:white;border:1px solid var(--accent);border-radius:12px;margin-bottom:10px}
+.calcGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+#calcBox{
+  margin:auto;
+  background:var(--glass);
+  padding:20px;
+  border-radius:22px;
+  box-shadow:var(--glow);
+  width:280px;
+}
+#calcDisplay{
+  width:100%;
+  padding:10px;
+  background:black;
+  color:white;
+  border:1px solid var(--accent);
+  border-radius:12px;
+  margin-bottom:10px;
+}
+.calcGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+/* CLOCK */
+#clock{display:flex;justify-content:center;align-items:center}
+#clockBox{background:var(--glass);padding:40px;border-radius:25px;box-shadow:var(--glow);text-align:center}
+#clockBox{
+  margin:auto;
+  background:var(--glass);
+  padding:40px;
+  border-radius:26px;
+  box-shadow:var(--glow);
+  text-align:center;
+}
+#time{font-size:36px}
+#date{opacity:.8;margin-top:10px}
+
+@@ -69,11 +169,12 @@
+
+<body>
+
+<!-- SITE LOCK -->
+<div id="lock">
+  <div id="lockBox">
+    <h2>Access Locked</h2>
+    <input id="lockInput" placeholder="Enter Code">
+    <button onclick="unlock()">Unlock</button>
+    <button onclick="unlockSite()">Unlock</button>
+  </div>
+</div>
+
+@@ -86,7 +187,7 @@ <h2>Access Locked</h2>
+<div id="sidebar">
+  <div class="sidebtn active" onclick="openTab('web',this)">🌐 Web</div>
+  <div class="sidebtn" onclick="openTab('fbchat',this)">💬 Firebase Chat</div>
+  <div class="sidebtn" onclick="openTab('apichat',this)">🔗 API Chat</div>
+  <div class="sidebtn" onclick="openAPIChat(this)">🔐 API Chat</div>
+  <div class="sidebtn" onclick="openTab('calc',this)">🧮 Calculator</div>
+  <div class="sidebtn" onclick="openTab('clock',this)">🕒 Clock</div>
+  <div class="sidebtn" onclick="openTab('about',this)">ℹ About</div>
+@@ -133,7 +234,7 @@ <h2>Access Locked</h2>
+      <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('/')">÷</button>
+      <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="press('*')">×</button>
+      <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button onclick="press('-')">−</button>
+      <button onclick="press('0')">0</button><button onclick="press('.')">.</button><button onclick="calc()">=</button><button onclick="press('+')">+</button>
+      <button onclick="press('0')">0</button><button onclick="press('.')">.</button><button onclick="calculate()">=</button><button onclick="press('+')">+</button>
+      <button onclick="clearCalc()" style="grid-column:span 4">Clear</button>
+    </div>
+  </div>
+@@ -153,22 +254,107 @@ <h2>Access Locked</h2>
+</div>
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
+  authDomain:"galaxia-chat-servers-2.firebaseapp.com",
+  databaseURL:"https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
+  projectId:"galaxia-chat-servers-2",
+  messagingSenderId:"873031202387",
+  appId:"1:873031202387:web:d860385de907946ff378a6"
+};
+
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
+const chatRef=ref(db,"messages");
+
+onValue(chatRef,snap=>{
+  fbMessages.innerHTML="";
+  snap.forEach(c=>{
+    const m=c.val();
+    const d=document.createElement("div");
+    d.className="msg";
+    d.textContent=m.user+": "+m.text;
+    fbMessages.appendChild(d);
+  });
+  fbMessages.scrollTop=fbMessages.scrollHeight;
+});
+
+window.sendFB=()=>{
+  if(!fbInput.value.trim())return;
+  push(chatRef,{
+    user:localStorage.fbName||"User",
+    text:fbInput.value,
+    time:Date.now()
+  });
+  fbInput.value="";
+};
+</script>
+
+<script>
+/* NAV */
+/* API CHAT */
+const API="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
+async function loadAPI(){
+  const r=await fetch(API);
+  const d=await r.json();
+  apiMessages.innerHTML="";
+  d.forEach(m=>{
+    const div=document.createElement("div");
+    div.className="msg";
+    div.textContent=m.user+": "+m.text;
+    apiMessages.appendChild(div);
+  });
+}
+setInterval(loadAPI,4000);
+async function sendAPI(){
+  if(!apiInput.value.trim())return;
+  await fetch(API,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({user:localStorage.apiName||"User",text:apiInput.value})
+  });
+  apiInput.value="";
+  loadAPI();
+}
+
+/* NAV + LOCKS */
+function openTab(id,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".sidebtn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  el.classList.add("active");
+}
+function go(){let v=url.value.trim();if(!v.startsWith("http"))v="https://"+v;browser.src=v}
+function unlock(){if(lockInput.value==="2013")lock.style.display="none";else alert("Wrong code")}
+function openAPIChat(el){
+  if(localStorage.apiUnlocked!=="yes"){
+    const code=prompt("Enter API Chat Code");
+    if(code!=="Williamp1") return alert("Wrong code");
+    localStorage.apiUnlocked="yes";
+  }
+  openTab("apichat",el);
+  loadAPI();
+}
+function unlockSite(){
+  if(lockInput.value==="2013")lock.style.display="none";
+  else alert("Wrong code");
+}
+function go(){
+  let v=url.value.trim();
+  if(!v.startsWith("http"))v="https://"+v;
+  browser.src=v;
+}
+
+/* CALC */
+let calcVal="";
+function press(v){calcVal+=v;calcDisplay.value=calcVal}
+function clearCalc(){calcVal="";calcDisplay.value=""}
+function calc(){try{calcVal=eval(calcVal).toString();calcDisplay.value=calcVal}catch{calcDisplay.value="Error"}}
+function calculate(){
+  try{calcVal=eval(calcVal).toString();calcDisplay.value=calcVal}
+  catch{calcDisplay.value="Error"}
+}
+
+/* CLOCK */
+setInterval(()=>{
