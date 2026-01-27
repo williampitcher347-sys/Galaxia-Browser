@@ -3,365 +3,264 @@
 <head>
 <meta charset="UTF-8">
 <title>Galaxia Browser</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --glass:rgba(10,25,45,.75);
-  --accent:#00aaff;
-  --glow:0 0 25px rgba(0,170,255,.45);
-}
-*{box-sizing:border-box;font-family:Orbitron}
+/* ===== GLOBAL ===== */
+*{box-sizing:border-box;font-family:Segoe UI,Roboto}
 body{
   margin:0;
-  background:radial-gradient(circle at top,#0a1f3d,#02040a);
-  color:white;
+  background:radial-gradient(circle at top,#0a1a3a,#000);
+  color:#9fd3ff;
   overflow:hidden;
 }
+button,input{
+  border:none;
+  border-radius:14px;
+  padding:10px;
+  background:#0d2b55;
+  color:#9fd3ff;
+}
+button:hover{background:#124080}
+input{outline:none}
 
-/* LOCK */
+/* ===== LOCK ===== */
 #lock{
   position:fixed;inset:0;
-  background:black;
+  background:#000;
   display:flex;
   align-items:center;
   justify-content:center;
   z-index:999;
 }
 #lockBox{
-  background:var(--glass);
-  padding:35px;
+  background:#020b1c;
+  padding:40px;
   border-radius:22px;
-  box-shadow:var(--glow);
-  text-align:center;
-}
-#lockBox input{
-  width:100%;
-  margin-top:12px;
-  padding:10px;
-  background:black;
-  border:1px solid var(--accent);
-  color:white;
-  border-radius:14px;
+  box-shadow:0 0 30px #1aa3ff;
 }
 
-/* TOP */
-#top{
-  height:56px;
-  display:flex;
-  gap:10px;
-  align-items:center;
-  padding:0 14px;
-  background:var(--glass);
-}
-#url{
-  flex:1;
-  background:black;
-  border:1px solid var(--accent);
-  color:white;
-  padding:9px;
-  border-radius:14px;
-}
-button{
-  background:black;
-  border:1px solid var(--accent);
-  color:white;
-  padding:9px 16px;
-  border-radius:14px;
-  cursor:pointer;
-}
-button:hover{box-shadow:var(--glow)}
-
-/* LAYOUT */
-#main{display:flex;height:calc(100vh - 56px)}
-#sidebar{
-  width:230px;
-  background:rgba(0,0,0,.55);
+/* ===== LAYOUT ===== */
+#app{display:flex;height:100vh}
+#side{
+  width:90px;
+  background:#020b1c;
   display:flex;
   flex-direction:column;
+  align-items:center;
   padding:10px;
-  gap:8px;
+  gap:10px;
 }
 .sidebtn{
-  padding:14px;
-  border-radius:18px;
+  width:70px;
+  height:70px;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
-  background:rgba(0,0,0,.6);
+  background:#081a33;
 }
-.sidebtn.active{
-  background:var(--glass);
-  border:1px solid var(--accent);
-  box-shadow:var(--glow);
-}
-#content{flex:1}
+.sidebtn.active{box-shadow:0 0 15px #1aa3ff}
+
+#main{flex:1;padding:20px;overflow:hidden}
 .page{display:none;height:100%}
 .page.active{display:block}
-iframe{width:100%;height:100%;border:none}
 
-/* CHAT */
-.chatBox{display:flex;flex-direction:column;height:100%}
-.chatHeader{padding:12px}
-.chatHeader input{
-  background:black;
-  border:1px solid var(--accent);
-  color:white;
-  padding:8px;
-  border-radius:12px;
-}
-.messages{flex:1;overflow-y:auto;padding:15px}
-.msg{
-  margin-bottom:10px;
-  padding:10px 14px;
-  background:rgba(0,0,0,.55);
-  border-radius:16px;
-}
-.sendBar{display:flex;gap:10px;padding:12px}
-.sendBar input{
-  flex:1;
-  background:black;
-  border:1px solid var(--accent);
-  color:white;
+/* ===== CHAT ===== */
+.chatBox{
+  height:80%;
+  overflow:auto;
+  background:#020b1c;
+  border-radius:20px;
   padding:10px;
-  border-radius:14px;
 }
+.msg{margin:5px 0;padding:8px;border-radius:14px;background:#081a33}
 
-/* CALCULATOR */
-#calcBox{
-  margin:auto;
-  background:var(--glass);
-  padding:20px;
-  border-radius:22px;
-  box-shadow:var(--glow);
-  width:280px;
-}
-#calcDisplay{
-  width:100%;
-  padding:10px;
-  background:black;
-  color:white;
-  border:1px solid var(--accent);
-  border-radius:12px;
-  margin-bottom:10px;
-}
-.calcGrid{
+/* ===== TOOLS ===== */
+#calcGrid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:8px;
+  gap:10px;
 }
+#calcGrid button{height:60px}
 
-/* CLOCK */
-#clockBox{
-  margin:auto;
-  background:var(--glass);
-  padding:40px;
-  border-radius:26px;
-  box-shadow:var(--glow);
-  text-align:center;
+/* ===== ADMIN ===== */
+.adminBtn{
+  margin-left:10px;
+  background:#401010;
 }
-#time{font-size:36px}
-#date{opacity:.8;margin-top:10px}
-
-/* ABOUT */
-#about{padding:30px;opacity:.85}
 </style>
 </head>
 
 <body>
 
-<!-- SITE LOCK -->
+<!-- LOCK -->
 <div id="lock">
   <div id="lockBox">
-    <h2>Access Locked</h2>
-    <input id="lockInput" placeholder="Enter Code">
+    <h2>Enter Access Code</h2>
+    <input id="lockCode" placeholder="Code">
     <button onclick="unlockSite()">Unlock</button>
   </div>
 </div>
 
-<div id="top">
-  <input id="url" placeholder="Search or enter URL">
-  <button onclick="go()">Go</button>
+<div id="app">
+
+<!-- SIDEBAR -->
+<div id="side">
+  <div class="sidebtn active" onclick="openTab('browser',this)">🌐</div>
+  <div class="sidebtn" onclick="openTab('apiChat',this)">💬</div>
+  <div class="sidebtn" onclick="unlockPremium()">💎</div>
+  <div class="sidebtn" onclick="openTab('calc',this)">🧮</div>
+  <div class="sidebtn" onclick="openTab('clock',this)">🕒</div>
+  <div class="sidebtn" onclick="unlockAdmin()">🛡</div>
 </div>
 
+<!-- MAIN -->
 <div id="main">
-<div id="sidebar">
-  <div class="sidebtn active" onclick="openTab('web',this)">🌐 Web</div>
-  <div class="sidebtn" onclick="openTab('fbchat',this)">💬 Firebase Chat</div>
-  <div class="sidebtn" onclick="openAPIChat(this)">🔐 API Chat</div>
-  <div class="sidebtn" onclick="openTab('calc',this)">🧮 Calculator</div>
-  <div class="sidebtn" onclick="openTab('clock',this)">🕒 Clock</div>
-  <div class="sidebtn" onclick="openTab('about',this)">ℹ About</div>
+
+<!-- BROWSER -->
+<div id="browser" class="page active">
+  <input id="url" placeholder="Search or URL">
+  <button onclick="go()">Go</button>
+  <iframe id="frame" style="width:100%;height:90%;border-radius:20px" src="https://duckduckgo.com"></iframe>
 </div>
 
-<div id="content">
-
-<div id="web" class="page active">
-  <iframe id="browser" src="https://duckduckgo.com"></iframe>
+<!-- API CHAT -->
+<div id="apiChat" class="page">
+  <h2>API Chat (Public)</h2>
+  <div id="apiMsgs" class="chatBox"></div>
+  <input id="apiInput"><button onclick="sendAPI()">Send</button>
 </div>
 
-<div id="fbchat" class="page">
-  <div class="chatBox">
-    <div class="chatHeader">
-      Username <input id="fbName">
-      <button onclick="localStorage.fbName=fbName.value">Save</button>
-    </div>
-    <div id="fbMessages" class="messages"></div>
-    <div class="sendBar">
-      <input id="fbInput">
-      <button onclick="sendFB()">Send</button>
-    </div>
-  </div>
+<!-- FIREBASE CHAT -->
+<div id="fbChat" class="page">
+  <h2>Firebase Chat (Premium)</h2>
+  <div id="fbMsgs" class="chatBox"></div>
+  <input id="fbInput"><button onclick="sendFB()">Send</button>
 </div>
 
-<div id="apichat" class="page">
-  <div class="chatBox">
-    <div class="chatHeader">
-      Username <input id="apiName">
-      <button onclick="localStorage.apiName=apiName.value">Save</button>
-    </div>
-    <div id="apiMessages" class="messages"></div>
-    <div class="sendBar">
-      <input id="apiInput">
-      <button onclick="sendAPI()">Send</button>
-    </div>
-  </div>
-</div>
-
+<!-- CALCULATOR -->
 <div id="calc" class="page">
-  <div id="calcBox">
-    <input id="calcDisplay" disabled>
-    <div class="calcGrid">
-      <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('/')">÷</button>
-      <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="press('*')">×</button>
-      <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button onclick="press('-')">−</button>
-      <button onclick="press('0')">0</button><button onclick="press('.')">.</button><button onclick="calculate()">=</button><button onclick="press('+')">+</button>
-      <button onclick="clearCalc()" style="grid-column:span 4">Clear</button>
-    </div>
-  </div>
+  <input id="calcOut" readonly>
+  <div id="calcGrid"></div>
 </div>
 
+<!-- CLOCK -->
 <div id="clock" class="page">
-  <div id="clockBox">
-    <div id="time"></div>
-    <div id="date"></div>
-  </div>
+  <h1 id="time"></h1>
+  <p id="date"></p>
 </div>
 
-<div id="about" class="page">
-  <p>Made 2026 By Williampitcher347@gmail.com</p>
+<!-- ADMIN -->
+<div id="admin" class="page">
+  <h2>Admin Panel</h2>
+  <div id="adminMsgs"></div>
 </div>
 
 </div>
 </div>
 
-<!-- FIREBASE -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+/* ===== DEVICE ===== */
+if(!localStorage.device) localStorage.device=crypto.randomUUID();
+const DEVICE=localStorage.device;
 
-const firebaseConfig={
-  apiKey:"AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
-  authDomain:"galaxia-chat-servers-2.firebaseapp.com",
-  databaseURL:"https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
-  projectId:"galaxia-chat-servers-2",
-  messagingSenderId:"873031202387",
-  appId:"1:873031202387:web:d860385de907946ff378a6"
-};
-
-const app=initializeApp(firebaseConfig);
-const db=getDatabase(app);
-const chatRef=ref(db,"messages");
-
-onValue(chatRef,snap=>{
-  fbMessages.innerHTML="";
-  snap.forEach(c=>{
-    const m=c.val();
-    const d=document.createElement("div");
-    d.className="msg";
-    d.textContent=m.user+": "+m.text;
-    fbMessages.appendChild(d);
-  });
-  fbMessages.scrollTop=fbMessages.scrollHeight;
-});
-
-window.sendFB=()=>{
-  if(!fbInput.value.trim())return;
-  push(chatRef,{
-    user:localStorage.fbName||"User",
-    text:fbInput.value,
-    time:Date.now()
-  });
-  fbInput.value="";
-};
-</script>
-
-<script>
-/* API CHAT */
-const API="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
-async function loadAPI(){
-  const r=await fetch(API);
-  const d=await r.json();
-  apiMessages.innerHTML="";
-  d.forEach(m=>{
-    const div=document.createElement("div");
-    div.className="msg";
-    div.textContent=m.user+": "+m.text;
-    apiMessages.appendChild(div);
-  });
-}
-setInterval(loadAPI,4000);
-async function sendAPI(){
-  if(!apiInput.value.trim())return;
-  await fetch(API,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({user:localStorage.apiName||"User",text:apiInput.value})
-  });
-  apiInput.value="";
-  loadAPI();
+/* ===== SITE LOCK ===== */
+function unlockSite(){
+  if(lockCode.value==="2013"){
+    lock.style.display="none";
+  } else alert("Wrong code");
 }
 
-/* NAV + LOCKS */
-function openTab(id,el){
+/* ===== NAV ===== */
+window.openTab=(id,el)=>{
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.querySelectorAll(".sidebtn").forEach(b=>b.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-  el.classList.add("active");
-}
-function openAPIChat(el){
-  if(localStorage.apiUnlocked!=="yes"){
-    const code=prompt("Enter API Chat Code");
-    if(code!=="Williamp1") return alert("Wrong code");
-    localStorage.apiUnlocked="yes";
-  }
-  openTab("apichat",el);
-  loadAPI();
-}
-function unlockSite(){
-  if(lockInput.value==="2013")lock.style.display="none";
-  else alert("Wrong code");
-}
-function go(){
-  let v=url.value.trim();
-  if(!v.startsWith("http"))v="https://"+v;
-  browser.src=v;
-}
+  if(el) el.classList.add("active");
+};
 
-/* CALC */
-let calcVal="";
-function press(v){calcVal+=v;calcDisplay.value=calcVal}
-function clearCalc(){calcVal="";calcDisplay.value=""}
-function calculate(){
-  try{calcVal=eval(calcVal).toString();calcDisplay.value=calcVal}
-  catch{calcDisplay.value="Error"}
-}
+/* ===== BROWSER ===== */
+window.go=()=>{
+  let u=url.value;
+  if(!u.startsWith("http")) u="https://duckduckgo.com/?q="+encodeURIComponent(u);
+  frame.src=u;
+};
 
-/* CLOCK */
+/* ===== API CHAT ===== */
+const API="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
+async function loadAPI(){
+  const d=await fetch(API).then(r=>r.json());
+  apiMsgs.innerHTML="";
+  d.forEach(m=>apiMsgs.innerHTML+=`<div class="msg">${m.user}: ${m.text}</div>`);
+}
+setInterval(loadAPI,2000);
+window.sendAPI=async()=>{
+  await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
+  body:JSON.stringify({user:getUser(),text:apiInput.value})});
+  apiInput.value="";
+};
+
+/* ===== PREMIUM LOCK ===== */
+window.unlockPremium=()=>{
+  if(prompt("Premium Code")==="William2013"){
+    openTab("fbChat");
+  } else alert("Denied");
+};
+
+/* ===== FIREBASE ===== */
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getDatabase,ref,push,onValue,set,remove} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const app=initializeApp({
+  apiKey:"AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
+  authDomain:"galaxia-chat-servers-2.firebaseapp.com",
+  databaseURL:"https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
+  projectId:"galaxia-chat-servers-2"
+});
+const db=getDatabase(app);
+
+onValue(ref(db,"messages"),s=>{
+  fbMsgs.innerHTML="";
+  s.forEach(c=>{
+    const m=c.val();
+    fbMsgs.innerHTML+=`<div class="msg">${m.user}: ${m.text}</div>`;
+    adminMsgs.innerHTML+=`<div class="msg">
+      ${m.user}: ${m.text}
+      <button class="adminBtn" onclick="ban('${m.device}')">Ban</button>
+      <button class="adminBtn" onclick="mute('${m.device}')">Mute</button>
+    </div>`;
+  });
+});
+
+window.sendFB=()=>{
+  push(ref(db,"messages"),{user:getUser(),text:fbInput.value,device:DEVICE});
+  fbInput.value="";
+};
+
+/* ===== ADMIN ===== */
+window.unlockAdmin=()=>{
+  if(prompt("Admin Code")==="WP2013") openTab("admin");
+};
+
+/* ===== TOOLS ===== */
+const btns="789/456*123-0.=+".split("");
+btns.forEach(b=>{
+  let x=document.createElement("button");
+  x.textContent=b;
+  x.onclick=()=>calcOut.value+=b==="="?eval(calcOut.value):b;
+  calcGrid.appendChild(x);
+});
 setInterval(()=>{
   const d=new Date();
   time.textContent=d.toLocaleTimeString();
   date.textContent=d.toDateString();
 },1000);
+
+/* ===== ACCOUNT ===== */
+function getUser(){
+  return localStorage.user||"Guest";
+}
 </script>
 
 </body>
