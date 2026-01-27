@@ -3,123 +3,163 @@
 <head>
 <meta charset="UTF-8">
 <title>Galaxia</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{
-  --bg:#05070c;
-  --panel:#0b1424;
-  --blue:#2ea3ff;
-  --blue2:#0b5cff;
+:root {
+  --bg: #05070d;
+  --panel: #0b1224;
+  --blue: #1e90ff;
+  --blue2: #3aa0ff;
+  --text: #dbe7ff;
 }
-*{box-sizing:border-box;font-family:Inter,system-ui}
 
-body{
-  margin:0;
-  background:radial-gradient(circle at top,#081a33,#05070c);
-  color:white;
-  height:100vh;
-  overflow:hidden;
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: radial-gradient(circle at top, #0b1c3d, #05070d);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* LOCK */
-#lock{
-  position:fixed;inset:0;
-  background:#05070c;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:999;
-}
-#lockBox{
-  background:var(--panel);
-  padding:36px;
-  border-radius:22px;
-  text-align:center;
-  box-shadow:0 0 50px #2ea3ff44;
+#lockScreen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, #0b1c3d, #02040a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
 }
 
-/* INPUTS */
-input,button{
-  background:#0e1a33;
-  color:white;
-  border:none;
-  border-radius:14px;
-  padding:12px 16px;
-}
-button{
-  cursor:pointer;
-  background:linear-gradient(135deg,var(--blue),var(--blue2));
-}
-button:hover{opacity:.9}
-
-/* SIDEBAR */
-#sidebar{
-  position:fixed;
-  left:0;top:0;bottom:0;
-  width:220px;
-  background:#070f1f;
-  padding-top:10px;
-}
-.sidebtn{
-  display:flex;
-  gap:12px;
-  padding:16px;
-  margin:10px;
-  border-radius:18px;
-  cursor:pointer;
-  align-items:center;
-}
-.sidebtn:hover{background:#2ea3ff22}
-
-/* MAIN */
-#main{
-  margin-left:240px;
-  padding:26px;
-  height:100vh;
+.lockBox {
+  background: var(--panel);
+  padding: 30px;
+  border-radius: 20px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 0 40px #1e90ff55;
 }
 
-/* PANELS */
-.panel{
-  display:none;
-  height:calc(100vh - 52px);
-  background:rgba(11,20,36,.9);
-  border-radius:26px;
-  padding:26px;
+.lockBox input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  margin-top: 10px;
+  background: #02040a;
+  color: var(--text);
 }
-.panel.active{display:block}
 
-/* BROWSER */
-#browserTop{display:flex;gap:12px;margin-bottom:16px}
-iframe{
-  width:100%;
-  height:100%;
-  border:none;
-  border-radius:18px;
+.lockBox button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--blue);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
 }
+
+/* LAYOUT */
+.app {
+  display: flex;
+  height: 100%;
+}
+
+.sidebar {
+  width: 230px;
+  background: linear-gradient(180deg, #0b1224, #05070d);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebar button {
+  padding: 14px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(145deg, #122a55, #0b1224);
+  color: var(--text);
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sidebar button:hover {
+  background: linear-gradient(145deg, #1e90ff, #3aa0ff);
+  color: #fff;
+}
+
+.main {
+  flex: 1;
+  padding: 25px;
+  overflow: hidden;
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: 20px;
+  height: 100%;
+  padding: 20px;
+  display: none;
+  flex-direction: column;
+}
+
+.panel.active { display: flex; }
 
 /* CHAT */
-.chatBox{
-  height:75%;
-  overflow-y:auto;
-  padding-right:6px;
+.chatBox {
+  flex: 1;
+  overflow-y: auto;
+  background: #02040a;
+  border-radius: 16px;
+  padding: 15px;
+  margin-bottom: 12px;
 }
-.msg{
-  background:#0e1a33;
-  margin:10px 0;
-  padding:12px;
-  border-radius:16px;
-  max-width:70%;
+
+.msg {
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: #0b1224;
 }
-.chatInput{
-  display:flex;
-  gap:10px;
-  margin-top:14px;
+
+.chatInput {
+  display: flex;
+  gap: 10px;
 }
-.name{
-  font-size:12px;
-  opacity:.7;
-  margin-bottom:4px;
+
+.chatInput input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  background: #02040a;
+  color: var(--text);
+}
+
+.chatInput button {
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: none;
+  background: var(--blue);
+  color: white;
+  cursor: pointer;
+}
+
+/* UTIL */
+.center {
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
 }
 </style>
 </head>
@@ -127,176 +167,122 @@ iframe{
 <body>
 
 <!-- LOCK -->
-<div id="lock">
-  <div id="lockBox">
-    <h2>🔒 Galaxia Locked</h2>
-    <input id="lockCode" placeholder="Enter code">
-    <br><br>
-    <button onclick="unlockSite()">Unlock</button>
+<div id="lockScreen">
+  <div class="lockBox">
+    <h2>🔒 Galaxia Lock</h2>
+    <input id="lockCode" placeholder="Enter Code">
+    <button onclick="unlock()">Unlock</button>
   </div>
 </div>
 
-<!-- SIDEBAR -->
-<div id="sidebar">
-  <div class="sidebtn" onclick="openPanel('browser')">🌐 Browser</div>
-  <div class="sidebtn" onclick="openPanel('apiChat')">💬 Public Chat</div>
-  <div class="sidebtn" onclick="openPremium()">💎 Premium Chat</div>
-  <div class="sidebtn" onclick="openPanel('calc')">🧮 Calculator</div>
-  <div class="sidebtn" onclick="openPanel('clock')">🕒 Clock</div>
-  <div class="sidebtn" onclick="openAdmin()">🛠 Admin</div>
-  <div class="sidebtn" onclick="openPanel('about')">ℹ️ About</div>
-</div>
-
-<div id="main">
-
-<!-- BROWSER -->
-<div id="browser" class="panel active">
-  <div id="browserTop">
-    <input id="search" placeholder="Search or URL" style="flex:1">
-    <button onclick="go()">Go</button>
+<div class="app">
+  <div class="sidebar">
+    <button onclick="openPanel('public')">🌍 Public Chat</button>
+    <button onclick="openPanel('premium')">💎 Premium Chat</button>
+    <button onclick="openPanel('calc')">🧮 Calculator</button>
+    <button onclick="openPanel('clock')">🕒 Clock</button>
   </div>
-  <iframe id="view" src="https://duckduckgo.com"></iframe>
-</div>
 
-<!-- PUBLIC CHAT -->
-<div id="apiChat" class="panel">
-  <input id="apiName" placeholder="Your name">
-  <div class="chatBox" id="apiMsgs"></div>
-  <div class="chatInput">
-    <input id="apiInput" placeholder="Message">
-    <button onclick="sendAPI()">Send</button>
+  <div class="main">
+    <!-- PUBLIC CHAT -->
+    <div id="public" class="panel active">
+      <h2>Public Chat</h2>
+      <div class="chatBox" id="publicBox"></div>
+      <div class="chatInput">
+        <input id="publicMsg" placeholder="Message">
+        <button onclick="sendPublic()">Send</button>
+      </div>
+    </div>
+
+    <!-- PREMIUM CHAT -->
+    <div id="premium" class="panel">
+      <h2>Premium Chat</h2>
+      <div class="chatBox" id="premiumBox"></div>
+      <div class="chatInput">
+        <input id="premiumMsg" placeholder="Message">
+        <button onclick="sendPremium()">Send</button>
+      </div>
+    </div>
+
+    <!-- CALC -->
+    <div id="calc" class="panel center">
+      <div>
+        <input id="calcIn" placeholder="2+2">
+        <button onclick="doCalc()">=</button>
+        <div id="calcOut"></div>
+      </div>
+    </div>
+
+    <!-- CLOCK -->
+    <div id="clock" class="panel center">
+      <div id="clockTime"></div>
+    </div>
   </div>
-</div>
-
-<!-- PREMIUM CHAT -->
-<div id="premiumChat" class="panel">
-  <input id="fbName" placeholder="Your name">
-  <div class="chatBox" id="fbMsgs"></div>
-  <div class="chatInput">
-    <input id="fbInput" placeholder="Premium message">
-    <button onclick="sendFB()">Send</button>
-  </div>
-</div>
-
-<!-- CALC -->
-<div id="calc" class="panel">
-  <input id="calcIn" placeholder="2+2">
-  <button onclick="calculate()">Calculate</button>
-  <h2 id="calcOut"></h2>
-</div>
-
-<!-- CLOCK -->
-<div id="clock" class="panel">
-  <h1 id="time"></h1>
-</div>
-
-<!-- ADMIN -->
-<div id="admin" class="panel">
-  <h2>Admin Panel</h2>
-  <button onclick="clearPremium()">Clear Premium Chat</button>
-</div>
-
-<!-- ABOUT -->
-<div id="about" class="panel">
-  <h2>About</h2>
-  <p>Made 2026 by Williampitcher347@gmail.com</p>
-</div>
-
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const firebaseConfig={
- apiKey:"AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
- databaseURL:"https://galaxia-chat-servers-2-default-rtdb.firebaseio.com"
+const firebaseConfig = {
+  apiKey: "AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
+  authDomain: "galaxia-chat-servers-2.firebaseapp.com",
+  databaseURL: "https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
+  projectId: "galaxia-chat-servers-2"
 };
-const app=initializeApp(firebaseConfig);
-const db=getDatabase(app);
 
-/* PANEL */
-window.openPanel=id=>{
- document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
- document.getElementById(id).classList.add('active');
-};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* CHAT LISTENERS */
+function listen(path, box) {
+  onChildAdded(ref(db, path), snap => {
+    const d = snap.val();
+    const div = document.createElement("div");
+    div.className = "msg";
+    div.textContent = d.text;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  });
+}
+
+listen("public", publicBox);
+listen("premium", premiumBox);
+
+/* SEND */
+window.sendPublic = () => {
+  push(ref(db,"public"), { text: publicMsg.value });
+  publicMsg.value="";
+}
+
+window.sendPremium = () => {
+  push(ref(db,"premium"), { text: premiumMsg.value });
+  premiumMsg.value="";
+}
+
+/* UI */
+window.openPanel = id => {
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
 
 /* LOCK */
-if(localStorage.unlocked==="yes") lock.style.display="none";
-window.unlockSite=()=>{
- if(lockCode.value==="2013"){
-  localStorage.unlocked="yes";
-  lock.style.display="none";
- } else alert("Wrong code");
-};
-
-/* BROWSER */
-window.go=()=>{
- const q=search.value.trim();
- view.src=q.startsWith("http")?q:`https://duckduckgo.com/?q=${encodeURIComponent(q)}`;
-};
-
-/* CLOCK */
-setInterval(()=>time.textContent=new Date().toLocaleTimeString(),1000);
+window.unlock = () => {
+  if (lockCode.value === "2013") {
+    lockScreen.style.display = "none";
+  }
+}
 
 /* CALC */
-window.calculate=()=>{
- try{calcOut.textContent=Function(`return ${calcIn.value}`)();}
- catch{calcOut.textContent="Error";}
-};
-
-/* PUBLIC CHAT */
-const apiURL="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
-async function loadAPI(){
- const r=await fetch(apiURL);
- const d=await r.json();
- apiMsgs.innerHTML="";
- d.forEach(m=>{
-  apiMsgs.innerHTML+=`<div class="msg"><div class="name">${m.name}</div>${m.text}</div>`;
- });
- apiMsgs.scrollTop=apiMsgs.scrollHeight;
+window.doCalc = () => {
+  try { calcOut.textContent = eval(calcIn.value); }
+  catch { calcOut.textContent = "Error"; }
 }
-loadAPI();
 
-window.sendAPI=async()=>{
- if(!apiInput.value||!apiName.value) return;
- await fetch(apiURL,{
-  method:"POST",
-  headers:{'Content-Type':'application/json'},
-  body:JSON.stringify({name:apiName.value,text:apiInput.value})
- });
- apiInput.value="";
- loadAPI();
-};
-
-/* PREMIUM CHAT — FIXED PATH */
-const premiumRef = ref(db,"premiumMessages");
-
-onValue(premiumRef,snap=>{
- fbMsgs.innerHTML="";
- snap.forEach(c=>{
-  const m=c.val();
-  fbMsgs.innerHTML+=`<div class="msg"><div class="name">${m.name}</div>${m.text}</div>`;
- });
- fbMsgs.scrollTop=fbMsgs.scrollHeight;
-});
-
-window.sendFB=()=>{
- if(!fbInput.value||!fbName.value) return;
- push(premiumRef,{name:fbName.value,text:fbInput.value});
- fbInput.value="";
-};
-
-/* UNLOCKS */
-window.openPremium=()=>{
- if(prompt("Premium Code")==="William2013") openPanel("premiumChat");
-};
-window.openAdmin=()=>{
- if(prompt("Admin Code")==="WP2013") openPanel("admin");
-};
-window.clearPremium=()=>{
- remove(premiumRef);
-};
+/* CLOCK */
+setInterval(()=>{
+  clockTime.textContent = new Date().toLocaleTimeString();
+},1000);
 </script>
 
 </body>
