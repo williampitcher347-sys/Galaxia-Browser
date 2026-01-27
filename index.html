@@ -12,7 +12,9 @@
   --blue:#2ea3ff;
   --blue2:#0b5cff;
 }
+
 *{box-sizing:border-box;font-family:Inter,system-ui}
+
 body{
   margin:0;
   background:radial-gradient(circle at top,#081a33,#05070c);
@@ -25,16 +27,20 @@ body{
 #lock{
   position:fixed;inset:0;
   background:#05070c;
-  display:flex;align-items:center;justify-content:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   z-index:999;
 }
 #lockBox{
   background:var(--panel);
-  padding:32px;
+  padding:34px;
   border-radius:22px;
   text-align:center;
   box-shadow:0 0 50px #2ea3ff44;
 }
+
+/* INPUTS */
 input,button{
   background:#0e1a33;
   color:white;
@@ -50,12 +56,12 @@ button:hover{opacity:.9}
 
 /* SIDEBAR */
 #sidebar{
-  position:fixed;left:0;top:0;bottom:0;
-  width:72px;
+  position:fixed;
+  left:0;top:0;bottom:0;
+  width:210px;                 /* FIXED WIDTH */
   background:#070f1f;
-  transition:.3s;
+  padding-top:10px;
 }
-#sidebar:hover{width:210px}
 .sidebtn{
   display:flex;
   gap:12px;
@@ -66,54 +72,59 @@ button:hover{opacity:.9}
   align-items:center;
 }
 .sidebtn:hover{background:#2ea3ff22}
-.sidebtn span{white-space:nowrap}
 
 /* MAIN */
 #main{
-  margin-left:72px;
-  padding:20px;
+  margin-left:230px;           /* FIX SPACING */
+  padding:24px;
   height:100vh;
 }
+
+/* PANELS */
 .panel{
   display:none;
-  height:calc(100vh - 40px);
-  background:rgba(11,20,36,.85);
+  height:calc(100vh - 48px);
+  background:rgba(11,20,36,.88);
   border-radius:24px;
-  padding:20px;
+  padding:24px;
 }
 .panel.active{display:block}
 
 /* BROWSER */
-#browserTop{display:flex;gap:10px;margin-bottom:10px}
+#browserTop{display:flex;gap:12px;margin-bottom:14px}
 iframe{
   width:100%;
   height:100%;
   border:none;
   border-radius:18px;
-  background:black;
 }
 
 /* CHAT */
 .chatBox{
-  height:85%;
+  height:78%;
   overflow-y:auto;
+  padding-right:6px;
 }
 .msg{
   background:#0e1a33;
-  margin:8px;
+  margin:10px 0;
   padding:12px;
   border-radius:16px;
   max-width:70%;
 }
-.me{margin-left:auto;background:#0b5cff}
-.chatInput{display:flex;gap:10px;margin-top:10px}
-
-/* ADMIN */
-.adminRow{
-  background:#0e1a33;
-  padding:10px;
-  margin:8px 0;
-  border-radius:14px;
+.me{
+  margin-left:auto;
+  background:#0b5cff;
+}
+.chatInput{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+.name{
+  font-size:12px;
+  opacity:.7;
+  margin-bottom:4px;
 }
 </style>
 </head>
@@ -132,13 +143,13 @@ iframe{
 
 <!-- SIDEBAR -->
 <div id="sidebar">
-  <div class="sidebtn" onclick="openPanel('browser')">🌐 <span>Browser</span></div>
-  <div class="sidebtn" onclick="openPanel('apiChat')">💬 <span>Public Chat</span></div>
-  <div class="sidebtn" onclick="unlockPremium()">💎 <span>Premium Chat</span></div>
-  <div class="sidebtn" onclick="openPanel('calc')">🧮 <span>Calculator</span></div>
-  <div class="sidebtn" onclick="openPanel('clock')">🕒 <span>Clock</span></div>
-  <div class="sidebtn" onclick="unlockAdmin()">🛠 <span>Admin</span></div>
-  <div class="sidebtn" onclick="openPanel('about')">ℹ️ <span>About</span></div>
+  <div class="sidebtn" onclick="openPanel('browser')">🌐 Browser</div>
+  <div class="sidebtn" onclick="openPanel('apiChat')">💬 Public Chat</div>
+  <div class="sidebtn" onclick="unlockPremium()">💎 Premium Chat</div>
+  <div class="sidebtn" onclick="openPanel('calc')">🧮 Calculator</div>
+  <div class="sidebtn" onclick="openPanel('clock')">🕒 Clock</div>
+  <div class="sidebtn" onclick="unlockAdmin()">🛠 Admin</div>
+  <div class="sidebtn" onclick="openPanel('about')">ℹ️ About</div>
 </div>
 
 <div id="main">
@@ -154,6 +165,7 @@ iframe{
 
 <!-- API CHAT -->
 <div id="apiChat" class="panel">
+  <input id="apiName" placeholder="Your name">
   <div class="chatBox" id="apiMsgs"></div>
   <div class="chatInput">
     <input id="apiInput" placeholder="Message">
@@ -163,6 +175,7 @@ iframe{
 
 <!-- PREMIUM CHAT -->
 <div id="premiumChat" class="panel">
+  <input id="fbName" placeholder="Your name">
   <div class="chatBox" id="fbMsgs"></div>
   <div class="chatInput">
     <input id="fbInput" placeholder="Premium message">
@@ -170,7 +183,7 @@ iframe{
   </div>
 </div>
 
-<!-- CALCULATOR -->
+<!-- CALC -->
 <div id="calc" class="panel">
   <input id="calcIn" placeholder="2+2">
   <button onclick="calculate()">Calculate</button>
@@ -207,7 +220,7 @@ const firebaseConfig={
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
 
-/* GLOBAL */
+/* UTIL */
 window.openPanel=id=>{
  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
  document.getElementById(id).classList.add('active');
@@ -239,22 +252,42 @@ window.calculate=()=>{
 
 /* API CHAT */
 const apiURL="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
-fetch(apiURL).then(r=>r.json()).then(d=>{
+
+async function loadAPI(){
+ const r=await fetch(apiURL);
+ const d=await r.json();
  apiMsgs.innerHTML="";
- d.forEach(m=>apiMsgs.innerHTML+=`<div class="msg">${m.text}</div>`);
-});
-window.sendAPI=()=>{
- fetch(apiURL,{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({text:apiInput.value})});
+ d.forEach(m=>{
+  apiMsgs.innerHTML+=`<div class="msg"><div class="name">${m.name}</div>${m.text}</div>`;
+ });
+ apiMsgs.scrollTop=apiMsgs.scrollHeight;
+}
+loadAPI();
+
+window.sendAPI=async()=>{
+ if(!apiInput.value||!apiName.value) return;
+ await fetch(apiURL,{
+  method:"POST",
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({name:apiName.value,text:apiInput.value})
+ });
  apiInput.value="";
+ loadAPI();
 };
 
 /* PREMIUM CHAT */
 onValue(ref(db,"messages"),snap=>{
  fbMsgs.innerHTML="";
- snap.forEach(c=>fbMsgs.innerHTML+=`<div class="msg">${c.val().text}</div>`);
+ snap.forEach(c=>{
+  const m=c.val();
+  fbMsgs.innerHTML+=`<div class="msg"><div class="name">${m.name}</div>${m.text}</div>`;
+ });
+ fbMsgs.scrollTop=fbMsgs.scrollHeight;
 });
+
 window.sendFB=()=>{
- push(ref(db,"messages"),{text:fbInput.value});
+ if(!fbInput.value||!fbName.value) return;
+ push(ref(db,"messages"),{name:fbName.value,text:fbInput.value});
  fbInput.value="";
 };
 
