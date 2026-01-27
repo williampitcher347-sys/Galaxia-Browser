@@ -12,7 +12,6 @@
   --blue:#2ea3ff;
   --blue2:#0b5cff;
 }
-
 *{box-sizing:border-box;font-family:Inter,system-ui}
 
 body{
@@ -34,7 +33,7 @@ body{
 }
 #lockBox{
   background:var(--panel);
-  padding:34px;
+  padding:36px;
   border-radius:22px;
   text-align:center;
   box-shadow:0 0 50px #2ea3ff44;
@@ -58,7 +57,7 @@ button:hover{opacity:.9}
 #sidebar{
   position:fixed;
   left:0;top:0;bottom:0;
-  width:210px;                 /* FIXED WIDTH */
+  width:220px;
   background:#070f1f;
   padding-top:10px;
 }
@@ -75,23 +74,23 @@ button:hover{opacity:.9}
 
 /* MAIN */
 #main{
-  margin-left:230px;           /* FIX SPACING */
-  padding:24px;
+  margin-left:240px;
+  padding:26px;
   height:100vh;
 }
 
 /* PANELS */
 .panel{
   display:none;
-  height:calc(100vh - 48px);
-  background:rgba(11,20,36,.88);
-  border-radius:24px;
-  padding:24px;
+  height:calc(100vh - 52px);
+  background:rgba(11,20,36,.9);
+  border-radius:26px;
+  padding:26px;
 }
 .panel.active{display:block}
 
 /* BROWSER */
-#browserTop{display:flex;gap:12px;margin-bottom:14px}
+#browserTop{display:flex;gap:12px;margin-bottom:16px}
 iframe{
   width:100%;
   height:100%;
@@ -101,7 +100,7 @@ iframe{
 
 /* CHAT */
 .chatBox{
-  height:78%;
+  height:75%;
   overflow-y:auto;
   padding-right:6px;
 }
@@ -111,10 +110,6 @@ iframe{
   padding:12px;
   border-radius:16px;
   max-width:70%;
-}
-.me{
-  margin-left:auto;
-  background:#0b5cff;
 }
 .chatInput{
   display:flex;
@@ -145,10 +140,10 @@ iframe{
 <div id="sidebar">
   <div class="sidebtn" onclick="openPanel('browser')">🌐 Browser</div>
   <div class="sidebtn" onclick="openPanel('apiChat')">💬 Public Chat</div>
-  <div class="sidebtn" onclick="unlockPremium()">💎 Premium Chat</div>
+  <div class="sidebtn" onclick="openPremium()">💎 Premium Chat</div>
   <div class="sidebtn" onclick="openPanel('calc')">🧮 Calculator</div>
   <div class="sidebtn" onclick="openPanel('clock')">🕒 Clock</div>
-  <div class="sidebtn" onclick="unlockAdmin()">🛠 Admin</div>
+  <div class="sidebtn" onclick="openAdmin()">🛠 Admin</div>
   <div class="sidebtn" onclick="openPanel('about')">ℹ️ About</div>
 </div>
 
@@ -163,7 +158,7 @@ iframe{
   <iframe id="view" src="https://duckduckgo.com"></iframe>
 </div>
 
-<!-- API CHAT -->
+<!-- PUBLIC CHAT -->
 <div id="apiChat" class="panel">
   <input id="apiName" placeholder="Your name">
   <div class="chatBox" id="apiMsgs"></div>
@@ -198,7 +193,7 @@ iframe{
 <!-- ADMIN -->
 <div id="admin" class="panel">
   <h2>Admin Panel</h2>
-  <button onclick="clearFirebase()">Clear Premium Chat</button>
+  <button onclick="clearPremium()">Clear Premium Chat</button>
 </div>
 
 <!-- ABOUT -->
@@ -220,7 +215,7 @@ const firebaseConfig={
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
 
-/* UTIL */
+/* PANEL */
 window.openPanel=id=>{
  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
  document.getElementById(id).classList.add('active');
@@ -250,9 +245,8 @@ window.calculate=()=>{
  catch{calcOut.textContent="Error";}
 };
 
-/* API CHAT */
+/* PUBLIC CHAT */
 const apiURL="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
-
 async function loadAPI(){
  const r=await fetch(apiURL);
  const d=await r.json();
@@ -275,8 +269,10 @@ window.sendAPI=async()=>{
  loadAPI();
 };
 
-/* PREMIUM CHAT */
-onValue(ref(db,"messages"),snap=>{
+/* PREMIUM CHAT — FIXED PATH */
+const premiumRef = ref(db,"premiumMessages");
+
+onValue(premiumRef,snap=>{
  fbMsgs.innerHTML="";
  snap.forEach(c=>{
   const m=c.val();
@@ -287,19 +283,19 @@ onValue(ref(db,"messages"),snap=>{
 
 window.sendFB=()=>{
  if(!fbInput.value||!fbName.value) return;
- push(ref(db,"messages"),{name:fbName.value,text:fbInput.value});
+ push(premiumRef,{name:fbName.value,text:fbInput.value});
  fbInput.value="";
 };
 
 /* UNLOCKS */
-window.unlockPremium=()=>{
+window.openPremium=()=>{
  if(prompt("Premium Code")==="William2013") openPanel("premiumChat");
 };
-window.unlockAdmin=()=>{
+window.openAdmin=()=>{
  if(prompt("Admin Code")==="WP2013") openPanel("admin");
 };
-window.clearFirebase=()=>{
- remove(ref(db,"messages"));
+window.clearPremium=()=>{
+ remove(premiumRef);
 };
 </script>
 
