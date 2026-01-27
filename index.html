@@ -9,99 +9,99 @@
 :root{
   --bg:#05070d;
   --panel:#0b1224;
-  --blue:#1e90ff;
-  --text:#e6eeff;
+  --blue:#2ea0ff;
+  --text:#e8f0ff;
 }
-
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Segoe UI,system-ui;
-  background:radial-gradient(circle at top,#0b1c3d,#05070d);
-  color:var(--text);
   height:100vh;
+  background:radial-gradient(circle at top,#0d1f44,#05070d);
+  font-family:Segoe UI,system-ui;
+  color:var(--text);
   overflow:hidden;
 }
 
-/* LOCKS */
+/* overlays */
 .overlay{
   position:fixed;
   inset:0;
-  background:#02040aee;
+  background:#02040ae6;
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:1000;
+  z-index:999;
 }
-.box{
+.modal{
   background:var(--panel);
-  padding:30px;
+  padding:28px;
   border-radius:20px;
-  width:320px;
+  width:340px;
   text-align:center;
 }
-.box input,.box button{
+.modal input{
   width:100%;
   padding:12px;
   border-radius:12px;
   border:none;
   margin-top:10px;
 }
-.box button{
+.modal button{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  border:none;
   background:var(--blue);
   color:white;
   cursor:pointer;
 }
 
-/* LAYOUT */
+/* layout */
 .app{display:flex;height:100%}
 .sidebar{
   width:240px;
   padding:20px;
+  background:linear-gradient(180deg,#0b1224,#05070d);
   display:flex;
   flex-direction:column;
   gap:14px;
-  background:linear-gradient(180deg,#0b1224,#05070d);
 }
 .sidebar button{
   padding:14px;
   border-radius:16px;
+  border:none;
   background:#111f3f;
   color:var(--text);
-  border:none;
   cursor:pointer;
 }
 .sidebar button:hover{background:var(--blue)}
 
-.main{
-  flex:1;
-  padding:24px;
-}
-
+.main{flex:1;padding:24px}
 .panel{
+  display:none;
+  height:100%;
   background:var(--panel);
   border-radius:20px;
   padding:20px;
-  height:100%;
-  display:none;
-  flex-direction:column;
 }
-.panel.active{display:flex}
+.panel.active{display:flex;flex-direction:column}
 
-/* CHAT */
+/* chat */
 .chatBox{
   flex:1;
   background:#02040a;
   border-radius:16px;
-  padding:15px;
+  padding:14px;
   overflow-y:auto;
 }
 .msg{
-  background:#0b1224;
-  border-radius:12px;
-  padding:8px 12px;
   margin-bottom:8px;
+  padding:10px 14px;
+  border-radius:14px;
+  background:#0b1a36;
 }
+.msg strong{color:var(--blue)}
 .chatInput{
   display:flex;
   gap:10px;
@@ -123,7 +123,14 @@ body{
   color:white;
 }
 
-/* SEARCH */
+/* search */
+.searchBar{display:flex;gap:10px;margin-bottom:12px}
+.searchBar input{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+}
 iframe{
   flex:1;
   border:none;
@@ -134,27 +141,25 @@ iframe{
 
 <body>
 
-<!-- SITE LOCK -->
+<!-- locks -->
 <div id="siteLock" class="overlay">
-  <div class="box">
+  <div class="modal">
     <h3>🔒 Enter Site Code</h3>
     <input id="siteCode">
     <button onclick="unlockSite()">Unlock</button>
   </div>
 </div>
 
-<!-- USERNAME -->
 <div id="nameLock" class="overlay" style="display:none">
-  <div class="box">
+  <div class="modal">
     <h3>Choose Username</h3>
-    <input id="usernameInput">
+    <input id="nameInput">
     <button onclick="saveName()">Continue</button>
   </div>
 </div>
 
-<!-- PREMIUM LOCK -->
 <div id="premiumLock" class="overlay" style="display:none">
-  <div class="box">
+  <div class="modal">
     <h3>Premium Chat</h3>
     <input id="premiumCode">
     <button onclick="unlockPremium()">Unlock</button>
@@ -163,18 +168,18 @@ iframe{
 
 <div class="app">
   <div class="sidebar">
-    <button onclick="openPanel('public')">🌍 Public Chat</button>
+    <button onclick="openPanel('api')">🛰 API Chat</button>
     <button onclick="openPremium()">💎 Premium Chat</button>
     <button onclick="openPanel('search')">🔍 Search</button>
   </div>
 
   <div class="main">
-    <div id="public" class="panel active">
-      <h2>Public Chat</h2>
-      <div id="publicBox" class="chatBox"></div>
+    <div id="api" class="panel active">
+      <h2>API Chat (Public)</h2>
+      <div id="apiBox" class="chatBox"></div>
       <div class="chatInput">
-        <input id="publicMsg">
-        <button onclick="sendPublic()">Send</button>
+        <input id="apiMsg">
+        <button onclick="sendApi()">Send</button>
       </div>
     </div>
 
@@ -189,12 +194,17 @@ iframe{
 
     <div id="search" class="panel">
       <h2>Search</h2>
-      <iframe src="https://duckduckgo.com/?t=h_&ia=web"></iframe>
+      <div class="searchBar">
+        <input id="searchInput">
+        <button onclick="doSearch()">Go</button>
+      </div>
+      <iframe id="browser"></iframe>
     </div>
   </div>
 </div>
 
 <script type="module">
+/* Firebase */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -207,10 +217,12 @@ const firebaseConfig={
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
 
+/* state */
 let username=localStorage.getItem("galaxiaUser");
 let premiumUnlocked=false;
+const API_URL="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
 
-/* LOCKS */
+/* locks */
 window.unlockSite=()=>{
   if(siteCode.value==="2013"){
     siteLock.style.display="none";
@@ -218,53 +230,75 @@ window.unlockSite=()=>{
   }
 }
 window.saveName=()=>{
-  if(usernameInput.value.trim()){
-    username=usernameInput.value.trim();
+  if(nameInput.value.trim()){
+    username=nameInput.value.trim();
     localStorage.setItem("galaxiaUser",username);
     nameLock.style.display="none";
   }
 }
 window.openPremium=()=>{
-  if(!premiumUnlocked){
-    premiumLock.style.display="flex";
-  }else openPanel("premium");
+  if(!premiumUnlocked) premiumLock.style.display="flex";
+  else openPanel("premium");
 }
 window.unlockPremium=()=>{
   if(premiumCode.value==="William2013"){
     premiumUnlocked=true;
     premiumLock.style.display="none";
     openPanel("premium");
-    listen("premium",premiumBox);
+    listenFirebase();
   }
 }
 
-/* UI */
+/* panels */
 window.openPanel=id=>{
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-/* CHAT */
-function listen(path,box){
-  onChildAdded(ref(db,path),snap=>{
-    const d=snap.val();
-    const div=document.createElement("div");
-    div.className="msg";
-    div.textContent=`${d.user}: ${d.text}`;
-    box.appendChild(div);
-    box.scrollTop=box.scrollHeight;
+/* search */
+window.doSearch=()=>{
+  browser.src="https://duckduckgo.com/?q="+encodeURIComponent(searchInput.value);
+}
+
+/* API chat */
+async function loadApi(){
+  const res=await fetch(API_URL);
+  const data=await res.json();
+  apiBox.innerHTML="";
+  data.forEach(m=>{
+    const d=document.createElement("div");
+    d.className="msg";
+    d.innerHTML=`<strong>${m.user}</strong>: ${m.text}`;
+    apiBox.appendChild(d);
+  });
+  apiBox.scrollTop=apiBox.scrollHeight;
+}
+window.sendApi=async()=>{
+  if(!apiMsg.value) return;
+  await fetch(API_URL,{
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({user:username,text:apiMsg.value})
+  });
+  apiMsg.value="";
+  loadApi();
+}
+setInterval(loadApi,2000);
+loadApi();
+
+/* Firebase premium chat */
+function listenFirebase(){
+  onChildAdded(ref(db,"premium"),snap=>{
+    const m=snap.val();
+    const d=document.createElement("div");
+    d.className="msg";
+    d.innerHTML=`<strong>${m.user}</strong>: ${m.text}`;
+    premiumBox.appendChild(d);
+    premiumBox.scrollTop=premiumBox.scrollHeight;
   });
 }
-listen("public",publicBox);
-
-window.sendPublic=()=>{
-  if(publicMsg.value){
-    push(ref(db,"public"),{user:username,text:publicMsg.value});
-    publicMsg.value="";
-  }
-}
 window.sendPremium=()=>{
-  if(premiumUnlocked && premiumMsg.value){
+  if(premiumMsg.value){
     push(ref(db,"premium"),{user:username,text:premiumMsg.value});
     premiumMsg.value="";
   }
