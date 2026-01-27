@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Galaxia v3</title>
+<title>Galaxia</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
@@ -10,9 +10,9 @@
 <style>
 :root{
   --bg:#020712;
-  --panel:rgba(8,16,32,.85);
+  --panel:rgba(8,16,32,.9);
   --blue:#00bfff;
-  --border:rgba(0,191,255,.25);
+  --border:rgba(0,191,255,.3);
 }
 
 *{box-sizing:border-box;font-family:Orbitron}
@@ -24,7 +24,7 @@ body{
   overflow:hidden;
 }
 
-/* LOCK SCREEN */
+/* LOCK */
 #lock{
   position:fixed;
   inset:0;
@@ -40,14 +40,14 @@ body{
   border-radius:30px;
   border:1px solid var(--border);
   text-align:center;
-  box-shadow:0 0 40px var(--blue);
+  box-shadow:0 0 50px var(--blue);
 }
 #lockBox input{
-  width:200px;
-  padding:12px;
+  width:220px;
+  padding:14px;
   border-radius:999px;
-  border:1px solid var(--border);
   background:black;
+  border:1px solid var(--border);
   color:var(--blue);
   text-align:center;
 }
@@ -61,17 +61,21 @@ body{
   background:var(--panel);
   border-bottom:1px solid var(--border);
 }
-#logo{color:var(--blue);font-size:20px;text-shadow:0 0 10px var(--blue)}
-#url{
+#logo{
+  color:var(--blue);
+  font-size:20px;
+  text-shadow:0 0 12px var(--blue);
+}
+#urlBox{
   flex:1;
-  margin-left:20px;
   display:flex;
   gap:10px;
+  margin-left:20px;
 }
-#url input{
+#urlBox input{
   flex:1;
+  padding:12px;
   border-radius:999px;
-  padding:10px;
   background:black;
   border:1px solid var(--border);
   color:white;
@@ -100,7 +104,7 @@ button:hover{transform:scale(1.05)}
 .tab{
   padding:14px;
   margin-bottom:10px;
-  border-radius:20px;
+  border-radius:22px;
   cursor:pointer;
 }
 .tab.active{
@@ -109,7 +113,7 @@ button:hover{transform:scale(1.05)}
 }
 
 /* CONTENT */
-#content{flex:1;position:relative}
+#content{flex:1}
 .panel{display:none;height:100%}
 .panel.active{display:block}
 
@@ -149,10 +153,11 @@ iframe{
 }
 
 /* SETTINGS */
+.center{display:flex;align-items:center;justify-content:center;height:100%}
 .card{
   background:var(--panel);
   padding:30px;
-  border-radius:24px;
+  border-radius:26px;
   border:1px solid var(--border);
   width:360px;
 }
@@ -165,34 +170,36 @@ iframe{
   border:1px solid var(--border);
   color:white;
 }
-.center{display:flex;align-items:center;justify-content:center;height:100%}
 </style>
 </head>
 
 <body>
 
+<!-- LOCK SCREEN -->
 <div id="lock">
   <div id="lockBox">
-    <h2>GALAXIA LOCK</h2>
+    <h2>GALAXIA ACCESS</h2>
     <input id="lockCode" placeholder="Enter Code">
     <br><br>
     <button onclick="unlock()">UNLOCK</button>
   </div>
 </div>
 
+<!-- TOP BAR -->
 <div id="topbar">
   <div id="logo">GALAXIA</div>
-  <div id="url">
+  <div id="urlBox">
     <input id="urlInput" placeholder="Search or URL">
     <button onclick="go()">GO</button>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <div id="tabs">
     <div class="tab active" onclick="openTab('web',this)">🌐 Web</div>
-    <div class="tab" onclick="openTab('chat1',this)">💬 Firebase Chat</div>
-    <div class="tab" onclick="openTab('chat2',this)">🧩 API Chat</div>
+    <div class="tab" onclick="openTab('fb',this)">💬 Firebase Chat</div>
+    <div class="tab" onclick="openTab('api',this)">🧩 API Chat</div>
     <div class="tab" onclick="openTab('settings',this)">⚙ Settings</div>
   </div>
 
@@ -201,7 +208,7 @@ iframe{
       <iframe id="browser" src="https://duckduckgo.com"></iframe>
     </div>
 
-    <div id="chat1" class="panel">
+    <div id="fb" class="panel">
       <div id="fbChat" class="chatBox"></div>
       <div class="chatInput">
         <input id="fbMsg" placeholder="Message">
@@ -209,7 +216,7 @@ iframe{
       </div>
     </div>
 
-    <div id="chat2" class="panel">
+    <div id="api" class="panel">
       <div id="apiChat" class="chatBox"></div>
       <div class="chatInput">
         <input id="apiMsg" placeholder="Message">
@@ -220,8 +227,8 @@ iframe{
     <div id="settings" class="panel center">
       <div class="card">
         <h3>Settings</h3>
-        <input id="fbUser" placeholder="Firebase Chat Username">
-        <input id="apiUser" placeholder="API Chat Username">
+        <input id="fbUser" placeholder="Firebase username">
+        <input id="apiUser" placeholder="API username">
         <button onclick="saveSettings()">Save</button>
       </div>
     </div>
@@ -232,11 +239,11 @@ iframe{
 /* LOCK */
 function unlock(){
   if(lockCode.value==="2013"){
+    sessionStorage.setItem("galaxiaUnlocked","1");
     lock.style.display="none";
-    sessionStorage.setItem("unlocked","1");
   }
 }
-if(sessionStorage.getItem("unlocked")==="1")lock.style.display="none";
+if(sessionStorage.getItem("galaxiaUnlocked")==="1")lock.style.display="none";
 
 /* TABS */
 function openTab(id,el){
@@ -279,8 +286,8 @@ async function loadAPI(){
     apiChat.appendChild(div);
   });
 }
-loadAPI();
 setInterval(loadAPI,5000);
+loadAPI();
 
 async function sendAPI(){
   if(!apiMsg.value)return;
@@ -294,25 +301,28 @@ async function sendAPI(){
 }
 </script>
 
-<!-- FIREBASE (ADD YOUR CONFIG) -->
+<!-- FIREBASE REALTIME DATABASE -->
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getFirestore,collection,addDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+/* 🔴 REPLACE WITH YOUR REAL CONFIG */
 const firebaseConfig={
   apiKey:"YOUR_KEY",
   authDomain:"YOUR_PROJECT.firebaseapp.com",
+  databaseURL:"https://YOUR_PROJECT-default-rtdb.firebaseio.com",
   projectId:"YOUR_PROJECT",
   appId:"APP_ID"
 };
 
 const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
+const db=getDatabase(app);
+const msgRef=ref(db,"messages");
 
-onSnapshot(collection(db,"messages"),snap=>{
+onValue(msgRef,snap=>{
   fbChat.innerHTML="";
-  snap.forEach(doc=>{
-    const m=doc.data();
+  snap.forEach(c=>{
+    const m=c.val();
     const div=document.createElement("div");
     div.className="msg";
     div.textContent=m.user+": "+m.text;
@@ -320,9 +330,9 @@ onSnapshot(collection(db,"messages"),snap=>{
   });
 });
 
-window.sendFirebase=async()=>{
+window.sendFirebase=()=>{
   if(!fbMsg.value)return;
-  await addDoc(collection(db,"messages"),{
+  push(msgRef,{
     user:localStorage.getItem("fbName")||"User",
     text:fbMsg.value,
     time:Date.now()
