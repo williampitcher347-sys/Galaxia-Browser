@@ -6,216 +6,190 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
-  --bg: #05070d;
-  --panel: #0b1224;
-  --blue: #1e90ff;
-  --blue2: #3aa0ff;
-  --text: #dbe7ff;
+:root{
+  --bg:#05070d;
+  --panel:#0b1224;
+  --blue:#1e90ff;
+  --text:#e6eeff;
 }
 
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: "Segoe UI", system-ui, sans-serif;
-  background: radial-gradient(circle at top, #0b1c3d, #05070d);
-  color: var(--text);
-  height: 100vh;
-  overflow: hidden;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Segoe UI,system-ui;
+  background:radial-gradient(circle at top,#0b1c3d,#05070d);
+  color:var(--text);
+  height:100vh;
+  overflow:hidden;
 }
 
-/* LOCK */
-#lockScreen {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle, #0b1c3d, #02040a);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
+/* LOCKS */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:#02040aee;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
 }
-
-.lockBox {
-  background: var(--panel);
-  padding: 30px;
-  border-radius: 20px;
-  width: 320px;
-  text-align: center;
-  box-shadow: 0 0 40px #1e90ff55;
+.box{
+  background:var(--panel);
+  padding:30px;
+  border-radius:20px;
+  width:320px;
+  text-align:center;
 }
-
-.lockBox input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  margin-top: 10px;
-  background: #02040a;
-  color: var(--text);
+.box input,.box button{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  margin-top:10px;
 }
-
-.lockBox button {
-  margin-top: 15px;
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: var(--blue);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
+.box button{
+  background:var(--blue);
+  color:white;
+  cursor:pointer;
 }
 
 /* LAYOUT */
-.app {
-  display: flex;
-  height: 100%;
+.app{display:flex;height:100%}
+.sidebar{
+  width:240px;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  background:linear-gradient(180deg,#0b1224,#05070d);
+}
+.sidebar button{
+  padding:14px;
+  border-radius:16px;
+  background:#111f3f;
+  color:var(--text);
+  border:none;
+  cursor:pointer;
+}
+.sidebar button:hover{background:var(--blue)}
+
+.main{
+  flex:1;
+  padding:24px;
 }
 
-.sidebar {
-  width: 230px;
-  background: linear-gradient(180deg, #0b1224, #05070d);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.panel{
+  background:var(--panel);
+  border-radius:20px;
+  padding:20px;
+  height:100%;
+  display:none;
+  flex-direction:column;
 }
-
-.sidebar button {
-  padding: 14px;
-  border-radius: 16px;
-  border: none;
-  background: linear-gradient(145deg, #122a55, #0b1224);
-  color: var(--text);
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.sidebar button:hover {
-  background: linear-gradient(145deg, #1e90ff, #3aa0ff);
-  color: #fff;
-}
-
-.main {
-  flex: 1;
-  padding: 25px;
-  overflow: hidden;
-}
-
-.panel {
-  background: var(--panel);
-  border-radius: 20px;
-  height: 100%;
-  padding: 20px;
-  display: none;
-  flex-direction: column;
-}
-
-.panel.active { display: flex; }
+.panel.active{display:flex}
 
 /* CHAT */
-.chatBox {
-  flex: 1;
-  overflow-y: auto;
-  background: #02040a;
-  border-radius: 16px;
-  padding: 15px;
-  margin-bottom: 12px;
+.chatBox{
+  flex:1;
+  background:#02040a;
+  border-radius:16px;
+  padding:15px;
+  overflow-y:auto;
+}
+.msg{
+  background:#0b1224;
+  border-radius:12px;
+  padding:8px 12px;
+  margin-bottom:8px;
+}
+.chatInput{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+}
+.chatInput input{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  background:#02040a;
+  color:var(--text);
+}
+.chatInput button{
+  padding:12px 18px;
+  border-radius:12px;
+  border:none;
+  background:var(--blue);
+  color:white;
 }
 
-.msg {
-  margin-bottom: 10px;
-  padding: 10px 14px;
-  border-radius: 14px;
-  background: #0b1224;
-}
-
-.chatInput {
-  display: flex;
-  gap: 10px;
-}
-
-.chatInput input {
-  flex: 1;
-  padding: 12px;
-  border-radius: 14px;
-  border: none;
-  background: #02040a;
-  color: var(--text);
-}
-
-.chatInput button {
-  padding: 12px 18px;
-  border-radius: 14px;
-  border: none;
-  background: var(--blue);
-  color: white;
-  cursor: pointer;
-}
-
-/* UTIL */
-.center {
-  justify-content: center;
-  align-items: center;
-  font-size: 22px;
+/* SEARCH */
+iframe{
+  flex:1;
+  border:none;
+  border-radius:16px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOCK -->
-<div id="lockScreen">
-  <div class="lockBox">
-    <h2>🔒 Galaxia Lock</h2>
-    <input id="lockCode" placeholder="Enter Code">
-    <button onclick="unlock()">Unlock</button>
+<!-- SITE LOCK -->
+<div id="siteLock" class="overlay">
+  <div class="box">
+    <h3>🔒 Enter Site Code</h3>
+    <input id="siteCode">
+    <button onclick="unlockSite()">Unlock</button>
+  </div>
+</div>
+
+<!-- USERNAME -->
+<div id="nameLock" class="overlay" style="display:none">
+  <div class="box">
+    <h3>Choose Username</h3>
+    <input id="usernameInput">
+    <button onclick="saveName()">Continue</button>
+  </div>
+</div>
+
+<!-- PREMIUM LOCK -->
+<div id="premiumLock" class="overlay" style="display:none">
+  <div class="box">
+    <h3>Premium Chat</h3>
+    <input id="premiumCode">
+    <button onclick="unlockPremium()">Unlock</button>
   </div>
 </div>
 
 <div class="app">
   <div class="sidebar">
     <button onclick="openPanel('public')">🌍 Public Chat</button>
-    <button onclick="openPanel('premium')">💎 Premium Chat</button>
-    <button onclick="openPanel('calc')">🧮 Calculator</button>
-    <button onclick="openPanel('clock')">🕒 Clock</button>
+    <button onclick="openPremium()">💎 Premium Chat</button>
+    <button onclick="openPanel('search')">🔍 Search</button>
   </div>
 
   <div class="main">
-    <!-- PUBLIC CHAT -->
     <div id="public" class="panel active">
       <h2>Public Chat</h2>
-      <div class="chatBox" id="publicBox"></div>
+      <div id="publicBox" class="chatBox"></div>
       <div class="chatInput">
-        <input id="publicMsg" placeholder="Message">
+        <input id="publicMsg">
         <button onclick="sendPublic()">Send</button>
       </div>
     </div>
 
-    <!-- PREMIUM CHAT -->
     <div id="premium" class="panel">
       <h2>Premium Chat</h2>
-      <div class="chatBox" id="premiumBox"></div>
+      <div id="premiumBox" class="chatBox"></div>
       <div class="chatInput">
-        <input id="premiumMsg" placeholder="Message">
+        <input id="premiumMsg">
         <button onclick="sendPremium()">Send</button>
       </div>
     </div>
 
-    <!-- CALC -->
-    <div id="calc" class="panel center">
-      <div>
-        <input id="calcIn" placeholder="2+2">
-        <button onclick="doCalc()">=</button>
-        <div id="calcOut"></div>
-      </div>
-    </div>
-
-    <!-- CLOCK -->
-    <div id="clock" class="panel center">
-      <div id="clockTime"></div>
+    <div id="search" class="panel">
+      <h2>Search</h2>
+      <iframe src="https://duckduckgo.com/?t=h_&ia=web"></iframe>
     </div>
   </div>
 </div>
@@ -224,65 +198,77 @@ body {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
-  authDomain: "galaxia-chat-servers-2.firebaseapp.com",
-  databaseURL: "https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
-  projectId: "galaxia-chat-servers-2"
+const firebaseConfig={
+  apiKey:"AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
+  databaseURL:"https://galaxia-chat-servers-2-default-rtdb.firebaseio.com",
+  projectId:"galaxia-chat-servers-2"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
 
-/* CHAT LISTENERS */
-function listen(path, box) {
-  onChildAdded(ref(db, path), snap => {
-    const d = snap.val();
-    const div = document.createElement("div");
-    div.className = "msg";
-    div.textContent = d.text;
-    box.appendChild(div);
-    box.scrollTop = box.scrollHeight;
-  });
+let username=localStorage.getItem("galaxiaUser");
+let premiumUnlocked=false;
+
+/* LOCKS */
+window.unlockSite=()=>{
+  if(siteCode.value==="2013"){
+    siteLock.style.display="none";
+    if(!username) nameLock.style.display="flex";
+  }
 }
-
-listen("public", publicBox);
-listen("premium", premiumBox);
-
-/* SEND */
-window.sendPublic = () => {
-  push(ref(db,"public"), { text: publicMsg.value });
-  publicMsg.value="";
+window.saveName=()=>{
+  if(usernameInput.value.trim()){
+    username=usernameInput.value.trim();
+    localStorage.setItem("galaxiaUser",username);
+    nameLock.style.display="none";
+  }
 }
-
-window.sendPremium = () => {
-  push(ref(db,"premium"), { text: premiumMsg.value });
-  premiumMsg.value="";
+window.openPremium=()=>{
+  if(!premiumUnlocked){
+    premiumLock.style.display="flex";
+  }else openPanel("premium");
+}
+window.unlockPremium=()=>{
+  if(premiumCode.value==="William2013"){
+    premiumUnlocked=true;
+    premiumLock.style.display="none";
+    openPanel("premium");
+    listen("premium",premiumBox);
+  }
 }
 
 /* UI */
-window.openPanel = id => {
+window.openPanel=id=>{
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-/* LOCK */
-window.unlock = () => {
-  if (lockCode.value === "2013") {
-    lockScreen.style.display = "none";
+/* CHAT */
+function listen(path,box){
+  onChildAdded(ref(db,path),snap=>{
+    const d=snap.val();
+    const div=document.createElement("div");
+    div.className="msg";
+    div.textContent=`${d.user}: ${d.text}`;
+    box.appendChild(div);
+    box.scrollTop=box.scrollHeight;
+  });
+}
+listen("public",publicBox);
+
+window.sendPublic=()=>{
+  if(publicMsg.value){
+    push(ref(db,"public"),{user:username,text:publicMsg.value});
+    publicMsg.value="";
   }
 }
-
-/* CALC */
-window.doCalc = () => {
-  try { calcOut.textContent = eval(calcIn.value); }
-  catch { calcOut.textContent = "Error"; }
+window.sendPremium=()=>{
+  if(premiumUnlocked && premiumMsg.value){
+    push(ref(db,"premium"),{user:username,text:premiumMsg.value});
+    premiumMsg.value="";
+  }
 }
-
-/* CLOCK */
-setInterval(()=>{
-  clockTime.textContent = new Date().toLocaleTimeString();
-},1000);
 </script>
 
 </body>
