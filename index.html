@@ -2,244 +2,1103 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Galaxia Browser</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+<title>Galaxia OS & Browser</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--glass:rgba(10,25,45,.75);--accent:#00aaff;--glow:0 0 25px rgba(0,170,255,.45)}
-*{box-sizing:border-box;font-family:Orbitron}
-body{margin:0;background:radial-gradient(circle at top,#0a1f3d,#02040a);color:white;overflow:hidden}
-
-/* LOCK */
-#lock,#updatePanel{
-  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:999
+:root {
+  --bg-dark: #02040a;
+  --glass: rgba(10, 25, 45, 0.75);
+  --glass-border: rgba(0, 170, 255, 0.3);
+  --glass-hover: rgba(0, 170, 255, 0.15);
+  --accent: #00aaff;
+  --accent-glow: rgba(0, 170, 255, 0.5);
+  --danger: #ff4444;
+  --text-main: #e2f1ff;
+  --text-muted: #7f9bb3;
+  --glow: 0 0 20px rgba(0, 170, 255, 0.45);
+  --glow-strong: 0 0 35px rgba(0, 170, 255, 0.85);
 }
-#lock{background:black}
-#lockBox,#updateBox{
-  background:var(--glass);padding:35px;border-radius:22px;
-  box-shadow:0 0 35px rgba(0,170,255,.8);text-align:center;animation:pop .5s
-}
-@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
-input,button{
-  background:black;border:1px solid var(--accent);color:white;
-  padding:10px;border-radius:14px
-}
-button{cursor:pointer}
-button:hover{box-shadow:var(--glow)}
 
-/* TOP */
-#top{height:56px;display:flex;gap:10px;align-items:center;padding:0 14px;background:var(--glass)}
-#url{flex:1}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Orbitron', sans-serif;
+  user-select: none;
+}
 
-/* LAYOUT */
-#main{display:flex;height:calc(100vh - 56px)}
-#sidebar{width:230px;background:rgba(0,0,0,.55);padding:12px;display:flex;flex-direction:column;gap:10px}
-.sidebtn{padding:14px;border-radius:18px;cursor:pointer}
-.sidebtn.active{background:var(--glass);border:1px solid var(--accent);box-shadow:var(--glow)}
-#content{flex:1;padding:10px}
-.page{display:none;height:100%}
-.page.active{display:block}
-iframe{width:100%;height:100%;border:none;border-radius:16px}
+body {
+  background: radial-gradient(circle at 50% 20%, #0a1f3d 0%, #02040a 100%);
+  color: var(--text-main);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+#bgCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+input, button, select, textarea {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+input, select, textarea {
+  background: rgba(0, 5, 15, 0.85);
+  border: 1px solid var(--glass-border);
+  color: var(--text-main);
+  padding: 10px 16px;
+  border-radius: 12px;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+}
+
+button {
+  background: rgba(0, 20, 40, 0.8);
+  border: 1px solid var(--glass-border);
+  color: var(--text-main);
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+button:hover {
+  background: var(--glass-hover);
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+  transform: translateY(-1px);
+}
+
+button.danger-btn {
+  border-color: rgba(255, 68, 68, 0.4);
+  color: var(--danger);
+}
+button.danger-btn:hover {
+  background: rgba(255, 68, 68, 0.2);
+  border-color: var(--danger);
+  box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 4, 10, 0.92);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-box {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  padding: 32px;
+  border-radius: 24px;
+  box-shadow: var(--glow-strong);
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-box.wide {
+  max-width: 800px;
+}
+
+@keyframes modalPop {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-box h2 {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+  text-shadow: 0 0 10px var(--accent);
+  letter-spacing: 2px;
+}
+
+#topNav {
+  height: 60px;
+  background: var(--glass);
+  border-bottom: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+}
+
+.brand-badge {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #00aaff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-right: 12px;
+  border-right: 1px solid var(--glass-border);
+}
+
+.nav-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-btn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 1rem;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--glass-border);
+}
+
+#urlInput {
+  flex: 1;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.05rem;
+}
+
+#mainLayout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+#sidebar {
+  width: 240px;
+  background: rgba(2, 8, 20, 0.7);
+  border-right: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebtn {
+  padding: 14px 18px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.sidebtn:hover {
+  color: var(--text-main);
+  background: rgba(0, 170, 255, 0.08);
+  border-color: rgba(0, 170, 255, 0.2);
+}
+
+.sidebtn.active {
+  background: var(--glass);
+  border-color: var(--accent);
+  color: var(--text-main);
+  box-shadow: var(--glow);
+}
+
+#content {
+  flex: 1;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page {
+  display: none;
+  height: 100%;
+  width: 100%;
+  animation: fadeIn 0.3s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#web {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+  gap: 10px;
+}
+
+#web.active {
+  display: flex;
+}
+
+.quick-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+#browserContainer {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #000;
+}
 
 /* CHAT */
-.chatBox{display:flex;flex-direction:column;height:100%;gap:10px}
-.messages{flex:1;overflow-y:auto;padding:10px}
-.msg{margin-bottom:8px;padding:10px;background:rgba(0,0,0,.6);border-radius:14px}
-.sendBar{display:flex;gap:8px}
-
-/* CALC */
-#calcBox,#clockBox{
-  margin:auto;background:var(--glass);padding:25px;border-radius:22px;
-  box-shadow:var(--glow);width:280px;text-align:center
+.chatBox {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: var(--glow);
 }
-.calcGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-#calcDisplay{width:100%;margin-bottom:10px}
 
-/* ABOUT */
-#about{padding:30px;opacity:.85}
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.user-id-badge {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  background: rgba(0, 170, 255, 0.15);
+  border: 1px solid var(--accent);
+  padding: 4px 10px;
+  border-radius: 12px;
+  color: var(--accent);
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.msg {
+  background: rgba(0, 10, 25, 0.7);
+  border: 1px solid rgba(0, 170, 255, 0.2);
+  padding: 12px 16px;
+  border-radius: 16px;
+  max-width: 80%;
+  align-self: flex-start;
+  word-break: break-word;
+}
+
+.msg .author {
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.msg .uid {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.75rem;
+}
+
+.msg .text {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.05rem;
+}
+
+.msg-img {
+  max-width: 100%;
+  max-height: 250px;
+  border-radius: 12px;
+  margin-top: 8px;
+  border: 1px solid var(--glass-border);
+}
+
+.sendBar {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.sendBar input {
+  flex: 1;
+}
+
+/* ADMIN PANEL STYLES */
+.admin-tab-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 10px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  text-align: left;
+}
+
+.admin-card {
+  background: rgba(0, 5, 15, 0.7);
+  border: 1px solid var(--glass-border);
+  padding: 16px;
+  border-radius: 16px;
+}
+
+.admin-card h3 {
+  font-size: 1rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.admin-list {
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 25, 45, 0.6);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.95rem;
+}
+
+/* CALCULATOR & CLOCK */
+#calcBox {
+  margin: 10px auto;
+  background: var(--glass);
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glow);
+  width: 340px;
+}
+
+#calcDisplay {
+  width: 100%;
+  height: 60px;
+  margin-bottom: 16px;
+  font-size: 1.6rem;
+  text-align: right;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  color: var(--accent);
+}
+
+.calcGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.calcGrid button {
+  padding: 14px;
+  font-size: 1.1rem;
+  border-radius: 12px;
+}
+
+#clockBox {
+  margin: 30px auto;
+  background: var(--glass);
+  padding: 40px 30px;
+  border-radius: 28px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glow-strong);
+  width: 380px;
+  text-align: center;
+}
+
+#time {
+  font-size: 3rem;
+  font-weight: 800;
+  text-shadow: 0 0 20px var(--accent);
+  margin-bottom: 8px;
+}
+
+#date {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+}
+
+#aboutCard {
+  max-width: 650px;
+  margin: 10px auto;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  padding: 30px;
+  box-shadow: var(--glow);
+  text-align: center;
+}
 </style>
 </head>
 <body>
 
-<!-- LOCK -->
-<div id="lock">
-  <div id="lockBox">
-    <h2>Access Locked</h2>
-    <input id="lockInput" placeholder="Enter Code">
-    <br><br>
-    <button onclick="unlockSite()">Unlock</button>
-  </div>
-</div>
+<canvas id="bgCanvas"></canvas>
 
-<!-- UPDATE LOG -->
-<div id="updatePanel" style="display:none">
-  <div id="updateBox">
-    <h2>Update Logs</h2>
-    <p>
-      ✔ Public API Chat<br>
-      ✔ Locked Premium Firebase Chat<br>
-      ✔ Fixed UI & Search<br>
-      ✔ Calculator & Clock Working
-    </p>
-    <button onclick="updatePanel.style.display='none'">OK</button>
-  </div>
-</div>
+<div id="app">
 
-<div id="top">
-  <input id="url" placeholder="Search or enter URL">
-  <button onclick="go()">Go</button>
-</div>
-
-<div id="main">
-<div id="sidebar">
-  <div class="sidebtn active" onclick="openTab('web',this)">🌐 Web</div>
-  <div class="sidebtn" onclick="openTab('apichat',this)">💬 Public Chat</div>
-  <div class="sidebtn" onclick="openFirebaseChat(this)">🔐 Premium Chat</div>
-  <div class="sidebtn" onclick="openTab('calc',this)">🧮 Calculator</div>
-  <div class="sidebtn" onclick="openTab('clock',this)">🕒 Clock</div>
-  <div class="sidebtn" onclick="openTab('about',this)">ℹ About</div>
-</div>
-
-<div id="content">
-
-<div id="web" class="page active">
-  <iframe id="browser" src="https://duckduckgo.com"></iframe>
-</div>
-
-<div id="apichat" class="page">
-  <div class="chatBox">
-    <input id="apiName" placeholder="Username">
-    <div id="apiMessages" class="messages"></div>
-    <div class="sendBar">
-      <input id="apiInput" placeholder="Message">
-      <button onclick="sendAPI()">Send</button>
+  <!-- LOCK MODAL -->
+  <div id="lock" class="modal-overlay">
+    <div class="modal-box">
+      <h2>GALAXIA SYSTEM</h2>
+      <p style="font-family:'Rajdhani'; color:var(--text-muted); margin-bottom:20px;">
+        Security passkey required to access workstation.
+      </p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <input type="password" id="lockInput" placeholder="Enter Access Code" autofocus>
+        <button onclick="unlockSite()">Unlock System</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="fbchat" class="page">
-  <div class="chatBox">
-    <input id="fbName" placeholder="Username">
-    <div id="fbMessages" class="messages"></div>
-    <div class="sendBar">
-      <input id="fbInput" placeholder="Message">
-      <button onclick="sendFB()">Send</button>
+  <!-- ADMIN PASSCODE MODAL -->
+  <div id="adminLockModal" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <h2 style="color:var(--danger)">ADMIN SECURITY</h2>
+      <p style="font-family:'Rajdhani'; color:var(--text-muted); margin-bottom:16px;">
+        Triple Ctrl+E trigger recognized. Enter Administrator Passcode:
+      </p>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <input type="password" id="adminCodeInput" placeholder="Auth key" autofocus>
+        <button onclick="unlockAdminPanel()">Access Dashboard</button>
+        <button class="danger-btn" onclick="closeAdminLockModal()">Cancel</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="calc" class="page">
-  <div id="calcBox">
-    <input id="calcDisplay" disabled>
-    <div class="calcGrid">
-      <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('/')">÷</button>
-      <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="press('*')">×</button>
-      <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button onclick="press('-')">−</button>
-      <button onclick="press('0')">0</button><button onclick="press('.')">.</button><button onclick="calc()">=</button><button onclick="press('+')">+</button>
-      <button onclick="clearCalc()" style="grid-column:span 4">Clear</button>
+  <!-- ADMIN PANEL DASHBOARD -->
+  <div id="adminPanelModal" class="modal-overlay" style="display:none">
+    <div class="modal-box wide">
+      <h2>SYSTEM ADMINISTRATION</h2>
+      
+      <div class="admin-grid">
+        <!-- USER & BAN MANAGEMENT -->
+        <div class="admin-card">
+          <h3>👤 BAN MANAGER (ONLINE/OFFLINE)</h3>
+          <div style="display:flex; gap:8px; margin-bottom:12px;">
+            <input id="banUidInput" placeholder="User ID (e.g., GAL-123456)">
+            <button onclick="banUserManual()">Ban ID</button>
+          </div>
+          <div class="admin-list" id="bannedUsersList"></div>
+        </div>
+
+        <!-- ACTIVE GAMES / SITES MANAGEMENT -->
+        <div class="admin-card">
+          <h3>🎮 ACTIVE GAMES & SITES MANAGER</h3>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+            <input id="newSiteTitle" placeholder="Site/Game Title">
+            <input id="newSiteUrl" placeholder="Site/Game URL">
+            <button onclick="addActiveSite()">Add to Launcher</button>
+          </div>
+          <div class="admin-list" id="activeSitesList"></div>
+        </div>
+      </div>
+
+      <!-- CHAT AUDIT LOG -->
+      <div class="admin-card" style="margin-top:16px;">
+        <h3>📜 NETWORK CHAT AUDIT LOGS</h3>
+        <div class="admin-list" id="adminAuditLogs" style="max-height:160px;"></div>
+      </div>
+
+      <div style="margin-top:20px; text-align:right;">
+        <button class="danger-btn" onclick="closeAdminPanel()">Close Admin Dashboard</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="clock" class="page">
-  <div id="clockBox">
-    <h2 id="time"></h2>
-    <div id="date"></div>
+  <!-- TOP NAV BAR -->
+  <div id="topNav">
+    <div class="brand-badge">GALAXIA</div>
+    <div class="nav-controls">
+      <button class="nav-btn" onclick="goHome()" title="Home">🏠</button>
+      <button class="nav-btn" onclick="browserBack()" title="Back">◄</button>
+      <button class="nav-btn" onclick="browserForward()" title="Forward">►</button>
+      <button class="nav-btn" onclick="browserReload()" title="Reload">↻</button>
+    </div>
+    <input id="urlInput" placeholder="Search web or enter target URL..." onkeydown="if(event.key==='Enter')go()">
+    <button onclick="go()">Go</button>
   </div>
+
+  <!-- MAIN LAYOUT -->
+  <div id="mainLayout">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+      <div class="sidebtn active" onclick="openTab('web', this)">
+        <span>🌐</span> <span>Web Browser</span>
+      </div>
+      <div class="sidebtn" onclick="openTab('fbchat', this)">
+        <span>💬</span> <span>Galaxia Chat</span>
+      </div>
+      <div class="sidebtn" onclick="openTab('calc', this)">
+        <span>🧮</span> <span>Calculator</span>
+      </div>
+      <div class="sidebtn" onclick="openTab('clock', this)">
+        <span>🕒</span> <span>Clock & Stats</span>
+      </div>
+      <div class="sidebtn" onclick="openTab('about', this)">
+        <span>ℹ️</span> <span>About</span>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div id="content">
+
+      <!-- BROWSER PAGE -->
+      <div id="web" class="page active">
+        <div class="quick-bar" id="gameQuickBar">
+          <div class="chip" onclick="goHome()">🏠 Galaxia Home</div>
+          <!-- Dynamic Game/Site Chips load here -->
+        </div>
+        <div id="browserContainer">
+          <iframe id="browser"></iframe>
+        </div>
+      </div>
+
+      <!-- FIREBASE MAIN CHAT -->
+      <div id="fbchat" class="page">
+        <div class="chatBox">
+          <div class="chat-header">
+            <span>GALAXIA MATRIX NETWORK</span>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="user-id-badge" id="myUidBadge">ID: GAL-000000</span>
+              <input id="fbName" style="width:140px" placeholder="Handle..." value="User">
+            </div>
+          </div>
+          <div id="fbMessages" class="messages"></div>
+          <div class="sendBar">
+            <input id="fbInput" placeholder="Type message..." onkeydown="if(event.key==='Enter')sendFB()">
+            <button onclick="triggerImageUpload()">📷 Image</button>
+            <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImageFile(this)">
+            <button onclick="sendFB()">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALCULATOR -->
+      <div id="calc" class="page">
+        <div id="calcBox">
+          <input id="calcDisplay" readonly placeholder="0">
+          <div class="calcGrid">
+            <button style="background:rgba(255,75,75,0.2)" onclick="clearCalc()">C</button>
+            <button onclick="press('(')">(</button>
+            <button onclick="press(')')">)</button>
+            <button style="color:var(--accent)" onclick="press('/')">÷</button>
+
+            <button onclick="press('7')">7</button>
+            <button onclick="press('8')">8</button>
+            <button onclick="press('9')">9</button>
+            <button style="color:var(--accent)" onclick="press('*')">×</button>
+
+            <button onclick="press('4')">4</button>
+            <button onclick="press('5')">5</button>
+            <button onclick="press('6')">6</button>
+            <button style="color:var(--accent)" onclick="press('-')">−</button>
+
+            <button onclick="press('1')">1</button>
+            <button onclick="press('2')">2</button>
+            <button onclick="press('3')">3</button>
+            <button style="color:var(--accent)" onclick="press('+')">+</button>
+
+            <button onclick="press('0')">0</button>
+            <button onclick="press('.')">.</button>
+            <button onclick="backspaceCalc()">⌫</button>
+            <button style="background:var(--accent); color:black;" onclick="calc()">=</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLOCK & STATS -->
+      <div id="clock" class="page">
+        <div id="clockBox">
+          <div id="time">00:00:00</div>
+          <div id="date">LOADING...</div>
+          <div style="margin-top:20px; font-family:'Rajdhani'; color:var(--text-muted);">
+            Session Uptime: <span id="uptimeVal" style="color:var(--accent); font-weight:700;">0s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <div id="about" class="page">
+        <div id="aboutCard">
+          <h2>GALAXIA OS BROWSER</h2>
+          <p style="font-family:'Rajdhani'; color:var(--text-muted); margin-top:10px;">
+            Legacy Galaxia Environment. Features image chat, active game management, and system administration tools.
+          </p>
+          <div style="margin-top:20px; padding:12px; background:rgba(0,0,0,0.5); border-radius:12px; font-family:'Rajdhani'; font-size:0.9rem;">
+            ⚠️ Notice: External sites that restrict embedding (<code>X-Frame-Options</code>) must be loaded through proxy links or standalone frames.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
-<div id="about" class="page">
-  <p>Made 2026 By Williampitcher347@gmail.com</p>
-</div>
-
-</div>
-</div>
-
-<!-- FIREBASE -->
+<!-- FIREBASE REALTIME ENGINE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-const app=initializeApp({
-  apiKey:"AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
-  databaseURL:"https://galaxia-chat-servers-2-default-rtdb.firebaseio.com"
+const app = initializeApp({
+  apiKey: "AIzaSyCPLk7btD2izv-d0u8GrlQV2VIwphrSkMU",
+  databaseURL: "https://galaxia-chat-servers-2-default-rtdb.firebaseio.com"
 });
-const db=getDatabase(app);
-const chatRef=ref(db,"messages");
+const db = getDatabase(app);
+const chatRef = ref(db, "messages");
+const banRef = ref(db, "banned_users");
+const siteRef = ref(db, "active_sites");
 
-onValue(chatRef,s=>{
-  fbMessages.innerHTML="";
-  s.forEach(c=>{
-    const m=c.val();
-    fbMessages.innerHTML+=`<div class="msg">${m.user}: ${m.text}</div>`;
+let bannedList = {};
+let activeSites = {};
+let allChatMessages = [];
+
+// PERSISTENT DEVICE USER ID GENERATOR
+let myUid = localStorage.getItem("galaxia_uid");
+if (!myUid) {
+  myUid = "GAL-" + Math.floor(100000 + Math.random() * 900000);
+  localStorage.setItem("galaxia_uid", myUid);
+}
+document.getElementById("myUidBadge").textContent = "ID: " + myUid;
+
+// BANNED USERS LISTENER
+onValue(banRef, (snapshot) => {
+  bannedList = snapshot.val() || {};
+  renderBannedList();
+});
+
+// ACTIVE SITES LISTENER
+onValue(siteRef, (snapshot) => {
+  activeSites = snapshot.val() || {};
+  renderActiveSites();
+  window.updateHomePageGames();
+});
+
+// MESSAGES LISTENER
+onValue(chatRef, (snapshot) => {
+  const fbMessages = document.getElementById("fbMessages");
+  fbMessages.innerHTML = "";
+  allChatMessages = [];
+
+  snapshot.forEach((child) => {
+    const m = child.val();
+    m.key = child.key;
+    allChatMessages.push(m);
+
+    const div = document.createElement("div");
+    div.className = "msg";
+    
+    let imgHtml = m.image ? `<br><img class="msg-img" src="${m.image}" alt="Attachment">` : "";
+    
+    div.innerHTML = `
+      <div class="author">
+        <span>${escapeHtml(m.user || 'User')}</span>
+        <span class="uid">${escapeHtml(m.uid || 'UNKNOWN')}</span>
+      </div>
+      <div class="text">${escapeHtml(m.text || '')}</div>
+      ${imgHtml}
+    `;
+    fbMessages.appendChild(div);
   });
-  fbMessages.scrollTop=fbMessages.scrollHeight;
+  fbMessages.scrollTop = fbMessages.scrollHeight;
+  renderAuditLogs();
 });
 
-window.sendFB=()=>{
-  if(!fbInput.value)return;
-  push(chatRef,{user:fbName.value||"User",text:fbInput.value});
-  fbInput.value="";
+// SEND MESSAGE FUNCTION
+window.sendFB = (imagePayload = null) => {
+  if (bannedList[myUid]) {
+    alert("⛔ ACCESS DENIED: You have been banned from sending chat messages.");
+    return;
+  }
+
+  const fbInput = document.getElementById("fbInput");
+  const fbName = document.getElementById("fbName");
+  const text = fbInput.value.trim();
+
+  if (!text && !imagePayload) return;
+
+  push(chatRef, {
+    uid: myUid,
+    user: fbName.value.trim() || "User",
+    text: text,
+    image: imagePayload || null,
+    timestamp: Date.now()
+  });
+
+  fbInput.value = "";
 };
+
+// IMAGE ATTACHMENT HANDLERS
+window.triggerImageUpload = () => {
+  const choice = confirm("Press OK to upload an image file, or Cancel to enter an Image URL.");
+  if (choice) {
+    document.getElementById("imgFileInput").click();
+  } else {
+    const url = prompt("Enter Direct Image URL:");
+    if (url) window.sendFB(url);
+  }
+};
+
+window.handleImageFile = (input) => {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    window.sendFB(e.target.result);
+  };
+  reader.readAsDataURL(input.files[0]);
+};
+
+// ADMIN ACTIONS (BAN & GAMES)
+window.banUserManual = () => {
+  const input = document.getElementById("banUidInput");
+  const targetUid = input.value.trim();
+  if (!targetUid) return;
+  set(ref(db, "banned_users/" + targetUid), true);
+  input.value = "";
+};
+
+window.unbanUser = (targetUid) => {
+  remove(ref(db, "banned_users/" + targetUid));
+};
+
+window.addActiveSite = () => {
+  const title = document.getElementById("newSiteTitle").value.trim();
+  const url = document.getElementById("newSiteUrl").value.trim();
+  if (!title || !url) return alert("Enter both Title and URL.");
+
+  push(siteRef, { title, url });
+  document.getElementById("newSiteTitle").value = "";
+  document.getElementById("newSiteUrl").value = "";
+};
+
+window.removeActiveSite = (key) => {
+  remove(ref(db, "active_sites/" + key));
+};
+
+function renderBannedList() {
+  const container = document.getElementById("bannedUsersList");
+  container.innerHTML = "";
+  const keys = Object.keys(bannedList);
+
+  if (keys.length === 0) {
+    container.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">No users currently banned.</div>`;
+    return;
+  }
+
+  keys.forEach(uid => {
+    const div = document.createElement("div");
+    div.className = "admin-list-item";
+    div.innerHTML = `
+      <span>🚫 ${uid}</span>
+      <button class="danger-btn" style="padding:4px 8px; font-size:0.8rem;" onclick="unbanUser('${uid}')">Unban</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function renderActiveSites() {
+  const bar = document.getElementById("gameQuickBar");
+  const list = document.getElementById("activeSitesList");
+  
+  // Clear dynamic items
+  bar.querySelectorAll(".dynamic-chip").forEach(c => c.remove());
+  list.innerHTML = "";
+
+  Object.keys(activeSites).forEach(key => {
+    const site = activeSites[key];
+
+    // Quick Bar Chip
+    const chip = document.createElement("div");
+    chip.className = "chip dynamic-chip";
+    chip.innerHTML = `🎮 ${escapeHtml(site.title)}`;
+    chip.onclick = () => window.loadURL(site.url);
+    bar.appendChild(chip);
+
+    // Admin List
+    const item = document.createElement("div");
+    item.className = "admin-list-item";
+    item.innerHTML = `
+      <span>🎮 <strong>${escapeHtml(site.title)}</strong></span>
+      <button class="danger-btn" style="padding:4px 8px; font-size:0.8rem;" onclick="removeActiveSite('${key}')">Delete</button>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function renderAuditLogs() {
+  const logsContainer = document.getElementById("adminAuditLogs");
+  logsContainer.innerHTML = "";
+
+  allChatMessages.slice(-15).reverse().forEach(m => {
+    const item = document.createElement("div");
+    item.className = "admin-list-item";
+    item.innerHTML = `
+      <span><strong>${escapeHtml(m.user)}</strong> (${escapeHtml(m.uid)}): ${escapeHtml(m.text || '[Image]')}</span>
+      <button class="danger-btn" style="padding:2px 6px; font-size:0.75rem;" onclick="set(ref(db, 'banned_users/${m.uid}'), true)">Ban UID</button>
+    `;
+    logsContainer.appendChild(item);
+  });
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
+}
 </script>
 
 <script>
-/* API CHAT */
-const API="https://696fdb3ca06046ce61880d4c.mockapi.io/Galaxia-messages";
-async function loadAPI(){
-  const r=await fetch(API);const d=await r.json();
-  apiMessages.innerHTML=d.map(m=>`<div class="msg">${m.user}: ${m.text}</div>`).join("");
-}
-setInterval(loadAPI,3000);
-async function sendAPI(){
-  if(!apiInput.value)return;
-  await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
-  body:JSON.stringify({user:apiName.value||"User",text:apiInput.value})});
-  apiInput.value="";loadAPI();
-}
+/* STARFIELD BACKGROUND */
+const canvas = document.getElementById("bgCanvas");
+const ctx = canvas.getContext("2d");
+let stars = [];
 
-/* NAV */
-function openTab(id,el){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.querySelectorAll(".sidebtn").forEach(b=>b.classList.remove("active"));
-  document.getElementById(id).classList.add("active");el.classList.add("active");
-}
-function openFirebaseChat(el){
-  if(localStorage.fbUnlocked!=="yes"){
-    const c=prompt("Premium Chat Code");
-    if(c!=="2013")return alert("Wrong code");
-    localStorage.fbUnlocked="yes";
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  stars = [];
+  for (let i = 0; i < Math.floor((canvas.width * canvas.height) / 3000); i++) {
+    stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, radius: Math.random() * 1.5, alpha: Math.random(), speed: Math.random() * 0.02 + 0.005 });
   }
-  openTab("fbchat",el);
 }
 
-/* LOCK */
-function unlockSite(){
-  if(lockInput.value==="2013"){
-    lock.style.display="none";
-    updatePanel.style.display="flex";
-  } else alert("Wrong code");
+function animateStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    s.alpha += s.speed;
+    if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0, 170, 255, ${Math.abs(s.alpha)})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(animateStars);
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+animateStars();
+
+/* TRIPLE CTRL+E TRAP FOR ADMIN PANEL */
+let ctrlECount = 0;
+let ctrlETimer = null;
+
+window.addEventListener("keydown", (e) => {
+  if (e.ctrlKey && (e.key === "e" || e.key === "E")) {
+    e.preventDefault();
+    ctrlECount++;
+    
+    clearTimeout(ctrlETimer);
+    ctrlETimer = setTimeout(() => { ctrlECount = 0; }, 1500);
+
+    if (ctrlECount >= 3) {
+      ctrlECount = 0;
+      document.getElementById("adminLockModal").style.display = "flex";
+      document.getElementById("adminCodeInput").focus();
+    }
+  }
+});
+
+function unlockAdminPanel() {
+  const code = document.getElementById("adminCodeInput").value;
+  if (code === "1010") {
+    document.getElementById("adminLockModal").style.display = "none";
+    document.getElementById("adminPanelModal").style.display = "flex";
+    document.getElementById("adminCodeInput").value = "";
+  } else {
+    alert("Incorrect Security Code");
+  }
 }
 
-/* BROWSER */
-function go(){
-  let v=url.value.trim();
-  if(!v.startsWith("http"))v="https://duckduckgo.com/?q="+encodeURIComponent(v);
-  browser.src=v;
+function closeAdminLockModal() { document.getElementById("adminLockModal").style.display = "none"; }
+function closeAdminPanel() { document.getElementById("adminPanelModal").style.display = "none"; }
+
+/* HOME ENGINE */
+function goHome() {
+  const frame = document.getElementById("browser");
+  frame.srcdoc = buildHomeHtml();
+  document.getElementById("urlInput").value = "galaxia://home";
 }
 
-/* CALC */
-let cv="";
-function press(v){cv+=v;calcDisplay.value=cv}
-function clearCalc(){cv="";calcDisplay.value=""}
-function calc(){try{cv=eval(cv).toString();calcDisplay.value=cv}catch{calcDisplay.value="Error"}}
+function buildHomeHtml() {
+  return `
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body { margin:0; background:#02040a; color:#e2f1ff; font-family:'Orbitron',sans-serif; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; padding:20px; }
+    h1 { font-size:2.8rem; background:linear-gradient(135deg, #00aaff, #a855f7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px; }
+    p { font-family:'Rajdhani',sans-serif; color:#7f9bb3; font-size:1.2rem; max-width:550px; line-height:1.5; margin-bottom:24px; }
+    .box { background:rgba(10,25,45,0.85); border:1px solid rgba(0,170,255,0.4); padding:36px; border-radius:24px; box-shadow:0 0 35px rgba(0,170,255,0.3); max-width:600px; width:100%; }
+  </style>
+  </head>
+  <body>
+    <div class="box">
+      <h1>GALAXIA BROWSER</h1>
+      <p>Welcome to Galaxia Home Workstation.<br>Select a fast shortcut or use the top address bar to explore.</p>
+    </div>
+  </body>
+  </html>
+  `;
+}
+
+window.updateHomePageGames = () => {
+  const b = document.getElementById("browser");
+  if (b.srcdoc) goHome();
+};
+
+/* SYSTEM CONTROL */
+function openTab(id, el) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".sidebtn").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if (el) el.classList.add("active");
+}
+
+function unlockSite() {
+  if (document.getElementById("lockInput").value === "2013") {
+    document.getElementById("lock").style.display = "none";
+  } else alert("Incorrect Passcode");
+}
+document.getElementById("lockInput").addEventListener("keydown", (e) => { if (e.key === "Enter") unlockSite(); });
+
+function loadURL(u) {
+  document.getElementById("urlInput").value = u;
+  go();
+}
+window.loadURL = loadURL;
+
+function go() {
+  const inp = document.getElementById("urlInput");
+  let v = inp.value.trim();
+  if (!v) return;
+  if (v === "galaxia://home") { goHome(); return; }
+  
+  const frame = document.getElementById("browser");
+  frame.removeAttribute("srcdoc");
+  
+  if (!v.startsWith("http://") && !v.startsWith("https://")) {
+    if (v.includes(".") && !v.includes(" ")) {
+      v = "https://" + v;
+    } else {
+      v = "https://bing.com/search?q=" + encodeURIComponent(v);
+    }
+  }
+  frame.src = v;
+}
+
+function browserBack() { try { document.getElementById("browser").contentWindow.history.back(); } catch(e){} }
+function browserForward() { try { document.getElementById("browser").contentWindow.history.forward(); } catch(e){} }
+function browserReload() { const b = document.getElementById("browser"); if(b.srcdoc) { goHome(); } else { b.src = b.src; } }
+
+/* CALCULATOR */
+let cv = "";
+function press(v) { cv += v; document.getElementById("calcDisplay").value = cv; }
+function clearCalc() { cv = ""; document.getElementById("calcDisplay").value = ""; }
+function backspaceCalc() { cv = cv.slice(0, -1); document.getElementById("calcDisplay").value = cv; }
+function calc() { try { cv = eval(cv).toString(); document.getElementById("calcDisplay").value = cv; } catch { document.getElementById("calcDisplay").value = "Error"; cv = ""; } }
 
 /* CLOCK */
-setInterval(()=>{
-  const d=new Date();
-  time.textContent=d.toLocaleTimeString();
-  date.textContent=d.toDateString();
-},1000);
+let uptime = 0;
+setInterval(() => {
+  const d = new Date();
+  document.getElementById("time").textContent = d.toLocaleTimeString();
+  document.getElementById("date").textContent = d.toDateString();
+  uptime++;
+  document.getElementById("uptimeVal").textContent = `${Math.floor(uptime/60)}m ${uptime%60}s`;
+}, 1000);
+
+// Initialize home on startup
+goHome();
 </script>
 </body>
 </html>
